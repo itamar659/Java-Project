@@ -1,10 +1,10 @@
-package logic;
+package logic.timeTable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Teacher {
+public class Teacher implements Cloneable {
 
     private String TeacherID;
     private String name;
@@ -49,5 +49,19 @@ public class Teacher {
     @Override
     public int hashCode() {
         return Objects.hash(TeacherID);
+    }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "TeacherID='" + TeacherID + '\'' +
+                ", name='" + name + '\'' +
+                ", teachesCourses=" + teachesCourses +
+                '}';
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

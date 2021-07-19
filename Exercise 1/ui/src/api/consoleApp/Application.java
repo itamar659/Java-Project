@@ -4,6 +4,7 @@ import api.consoleApp.menu.MainMenu;
 import api.consoleApp.menu.Menu;
 import api.consoleApp.menu.MenuItem;
 import logic.*;
+import logic.timeTable.TimeTable;
 
 import java.util.*;
 
@@ -47,10 +48,6 @@ public class Application {
         mainMenu.setCurrentMenu(createFunctionalMenuFromEnum());
     }
 
-    void TEMPPPPPPPP() {
-        engine.Test();
-    }
-
     private Menu createFunctionalMenuFromEnum() {
         Menu theMenu = new Menu("Main Menu");
 
@@ -61,8 +58,7 @@ public class Application {
 
             switch (option) {
                 case LOAD_FILE_TO_SYSTEM:
-//                    currentMenuItem.setMethod(this::openXMLFile);
-                    currentMenuItem.setMethod(this::TEMPPPPPPPP);
+                    currentMenuItem.setMethod(this::openXMLFile);
                     break;
                 case SHOW_SETTINGS:
                     currentMenuItem.setMethod(this::showSettingsNProperties);
@@ -86,15 +82,21 @@ public class Application {
     }
 
     private void openXMLFile() {
+        engine.Test(); // TODO: DELETE
+
         if (engine.isRunning()) {
             System.out.println("The algorithm now running. Please wait for it to complete.");
-            // TODO: Add stop method for the algorithm.
+            // TODO: Add stop method for the algorithm. than stop the algorithm if he wants.
             return;
         }
 
         // Get the file XML from the user
         System.out.println("Please enter the full path of the XML file contains the properties and settings for the application: ");
         String filePath = scanner.nextLine();
+        String result = engine.loadXMLFile(filePath);
+        if (result != null) {
+
+        }
 
         // Check if exists.
         // TODO: Check if the file exists and the path is valid. """INSIDE LOGIC"""
@@ -123,26 +125,26 @@ public class Application {
         }
 
         // Schedule properties
-        Schedule schedule = engine.getSchedule();
-        if (schedule == null) {
+        TimeTable timeTable = engine.getSchedule();
+        if (timeTable == null) {
             System.out.println("Not found any schedule in the system."); // Shouldn't come to here
             return;
         }
 
         // Display courses information
-        System.out.println(EngineOutput.getCoursesDetails(schedule));
+        System.out.println(EngineOutput.getCoursesDetails(timeTable));
 
         // TODO: Make sure every course the teacher teaches is valid course!
         // TODO: Need to do that while adding the courses from the XML.
         // TODO: Also defense if any case, wont crash the program - Already done!
         // Display teachers information
-        System.out.println(EngineOutput.getTeachersDetails(schedule));
+        System.out.println(EngineOutput.getTeachersDetails(timeTable));
 
         // TODO: Make sure every course the teacher teaches is valid course!
         // TODO: Need to do that while adding the courses from the XML.
         // TODO: Also defense if any case, wont crash the program - Already done!
         // Display classes information
-        System.out.println(EngineOutput.getClassesDetails(schedule));
+        System.out.println(EngineOutput.getClassesDetails(timeTable));
 
         System.out.println();
 

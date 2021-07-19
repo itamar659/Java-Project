@@ -1,6 +1,10 @@
 package api.consoleApp;
 
 import logic.*;
+import logic.timeTable.Class;
+import logic.timeTable.Course;
+import logic.timeTable.TimeTable;
+import logic.timeTable.Teacher;
 
 import java.util.*;
 
@@ -12,8 +16,8 @@ public class EngineOutput {
     public EngineOutput(Engine engine) {
     }
 
-    public static String getCoursesDetails(Schedule schedule) {
-        List<Course> courses = schedule.getCourses();
+    public static String getCoursesDetails(TimeTable timeTable) {
+        List<Course> courses = timeTable.getCourses();
         StringBuilder strBuilder = new StringBuilder();
 
         courses.sort(Comparator.comparing(Course::getCourseID));
@@ -29,8 +33,8 @@ public class EngineOutput {
         return strBuilder.toString();
     }
 
-    public static String getTeachersDetails(Schedule schedule) {
-        List<Teacher> teachers = schedule.getTeachers();
+    public static String getTeachersDetails(TimeTable timeTable) {
+        List<Teacher> teachers = timeTable.getTeachers();
         StringBuilder strBuilder = new StringBuilder();
 
         teachers.sort(Comparator.comparing(Teacher::getTeacherID));
@@ -45,7 +49,7 @@ public class EngineOutput {
 
             // Write all the courses this teacher teaches
             for (String courseID : teacher.getTeachesCoursesIDs()) {
-                Course course = schedule.findCourse(courseID);
+                Course course = timeTable.findCourse(courseID);
 
                 if (course == null) {
                     strBuilder.append(String.format("%s%sCourse ID %s NOT FOUND in courses database%s",
@@ -60,15 +64,15 @@ public class EngineOutput {
         return strBuilder.toString();
     }
 
-    public static String getClassesDetails(Schedule schedule) {
-        List<StudentsClass> classes = schedule.getClasses();
+    public static String getClassesDetails(TimeTable timeTable) {
+        List<Class> classes = timeTable.getClasses();
         StringBuilder strBuilder = new StringBuilder();
 
-        classes.sort(Comparator.comparing(StudentsClass::getClassID));
+        classes.sort(Comparator.comparing(Class::getClassID));
         strBuilder.append(String.format("Number of classes: %d%s", classes.size(), newLine));
 
         // Write all the information about every class
-        for (StudentsClass sclass : classes) {
+        for (Class sclass : classes) {
             strBuilder.append(String.format("%sClass ID: %s (%s)%s",
                     indents, sclass.getClassID(), sclass.getName(), newLine));
             strBuilder.append(String.format("%sCourses in schedule (total %d):%s",
@@ -76,7 +80,7 @@ public class EngineOutput {
 
             // Write the courses for the current class
             for (Map.Entry<String, Integer> courseID2Hours : sclass.getCourseID2Hours().entrySet()) {
-                Course course = schedule.findCourse(courseID2Hours.getKey());
+                Course course = timeTable.findCourse(courseID2Hours.getKey());
 
                 if (course == null) {
                     strBuilder.append(String.format("%s%sCourse ID %s NOT FOUND in courses database%s",
