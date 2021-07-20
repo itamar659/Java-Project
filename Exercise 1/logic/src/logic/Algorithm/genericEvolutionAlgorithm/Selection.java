@@ -1,6 +1,8 @@
 package logic.Algorithm.genericEvolutionAlgorithm;
 
-public interface Selection {
+import logic.validation.Validateable;
+
+public interface Selection extends Parameterizable, Validateable {
 
     Population select(Population population);
 }

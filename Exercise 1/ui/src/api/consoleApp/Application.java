@@ -82,8 +82,6 @@ public class Application {
     }
 
     private void openXMLFile() {
-        engine.Test(); // TODO: DELETE
-
         if (engine.isRunning()) {
             System.out.println("The algorithm now running. Please wait for it to complete.");
             // TODO: Add stop method for the algorithm. than stop the algorithm if he wants.
@@ -95,17 +93,11 @@ public class Application {
         String filePath = scanner.nextLine();
         String result = engine.loadXMLFile(filePath);
         if (result != null) {
-
+            System.out.println(result);
+            return;
         }
 
-        // Check if exists.
-        // TODO: Check if the file exists and the path is valid. """INSIDE LOGIC"""
-        System.out.println("The file exists.");
-
-        // Check if the syntax is valid.
-        // TODO: Check if the context of the file is good and create a new properties. """INSIDE LOGIC"""
-        System.out.println("The file have a valid syntax.");
-
+        // If already have results, ask before replace
         if (engine.isCompletedRun()) {
             if (!confirmUserWantToEraseTheResults()) {
                 return;
@@ -115,8 +107,7 @@ public class Application {
         }
 
         // Load the new settings to the algorithm and time table.
-        // TODO: if the syntax is valid, clear everything done in the program and load the properties. """INSIDE LOGIC"""
-        System.out.println("The file loaded correctly! New settings and properties have been created.");
+        System.out.println("The file loaded correctly (hopefully)! New settings and properties have been created.");
     }
 
     private void showSettingsNProperties() {
@@ -124,52 +115,71 @@ public class Application {
             return;
         }
 
-        // Schedule properties
-        TimeTable timeTable = engine.getSchedule();
-        if (timeTable == null) {
-            System.out.println("Not found any schedule in the system."); // Shouldn't come to here
+        if (engine.getAlgorithmSettings() == null) {
+            // Shouldn't come to here. In case it would, something messed up with my programming skills
+            System.out.println("Error! The engine for evolution algorithm not setup correctly. Forgot to initialize the engine settings.");
             return;
         }
 
         // Display courses information
-        System.out.println(EngineOutput.getCoursesDetails(timeTable));
+        System.out.println(EngineOutput.getCoursesDetails(engine.getAlgorithmSettings()));
 
-        // TODO: Make sure every course the teacher teaches is valid course!
-        // TODO: Need to do that while adding the courses from the XML.
-        // TODO: Also defense if any case, wont crash the program - Already done!
         // Display teachers information
-        System.out.println(EngineOutput.getTeachersDetails(timeTable));
+        System.out.println(EngineOutput.getTeachersDetails(engine.getAlgorithmSettings()));
 
-        // TODO: Make sure every course the teacher teaches is valid course!
-        // TODO: Need to do that while adding the courses from the XML.
-        // TODO: Also defense if any case, wont crash the program - Already done!
         // Display classes information
-        System.out.println(EngineOutput.getClassesDetails(timeTable));
+        System.out.println(EngineOutput.getClassesDetails(engine.getAlgorithmSettings()));
 
-        System.out.println();
+        // Display rules
+        System.out.println(EngineOutput.getRulesDetails(engine.getAlgorithmSettings()));
 
-        // Display rules // TODO:
-
-        // Algorithm settings // TODO:
+        // Algorithm settings
+        System.out.println(EngineOutput.getEvoAlgorithmDetails(engine.getAlgorithmSettings()));
     }
 
     private void runAlgorithm() {
         if (!isFileLoadedWrapper()) {
             return;
+
         } else if (engine.isRunning()) {
             System.out.println("The algorithm already running.");
             // TODO: Show progress
             return;
+
         } else if (engine.isCompletedRun()) {
             if (!confirmUserWantToEraseTheResults()) {
                 return;
             }
 
-            // TODO: Erase everything.
+            // TODO: Erase last result.
         }
 
+
+        // Input number of generations OR back to main menu
+        int generations = -1;
+
+        do {
+            System.out.println("Please insert the maximum number of generations:");
+            String input = scanner.nextLine();
+            try {
+                generations = Integer.parseInt(input);
+                if (generations < 0) {
+                    System.out.println("The number of generations can not be a negative value.");
+                }
+            } catch (NumberFormatException ignored) {
+                System.out.println("Please insert a natural number (0 to back to the main menu).");
+            }
+
+
+        } while (generations < 0);
+
+        if (generations == 0) {
+            return;
+        }
+
+        // Start the algorithm
         System.out.println("Starting the algorithm");
-        // TODO: Start the algorithm
+        engine.startAlgorithm(generations);
 
         // TODO: Use "events" to be able to show the progress of the run.
     }
@@ -205,8 +215,7 @@ public class Application {
 
     private boolean isFileLoadedWrapper() {
         if (!engine.isFileLoaded()) {
-            System.out.println("There are no properties to display.");
-            System.out.println("You first need to open an XML file with the correct format of the properties and the settings for the application.");
+            System.out.println("Please open first an XML file with the correct format of the application.");
             return false;
         }
 

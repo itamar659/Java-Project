@@ -1,7 +1,7 @@
 package logic.Algorithm;
 
 import logic.Algorithm.genericEvolutionAlgorithm.Problem;
-import logic.Algorithm.genericEvolutionAlgorithm.Rules;
+import logic.timeTable.rules.base.Rules;
 import logic.Algorithm.genericEvolutionAlgorithm.Solution;
 import logic.timeTable.Class;
 import logic.timeTable.Course;
@@ -84,7 +84,7 @@ public class TimeTableProblem implements Problem {
         // TODO: If the teacher doesn't teach that course, change a teacher / course
         // TODO: Also if the class doesn't study this course, change the class / course
 
-        TimeTableSolution solution = new TimeTableSolution();
+        TimeTableSolution solution = new TimeTableSolution(this);
         solution.setRules(this.rules);
 
         final int maxLessons = classes.size() * days * hours;

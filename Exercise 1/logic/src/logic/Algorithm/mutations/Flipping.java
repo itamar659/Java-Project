@@ -7,6 +7,7 @@ import logic.Algorithm.genericEvolutionAlgorithm.Mutation;
 import logic.Algorithm.genericEvolutionAlgorithm.Population;
 import logic.Algorithm.genericEvolutionAlgorithm.Problem;
 import logic.Algorithm.genericEvolutionAlgorithm.Solution;
+import logic.validation.ValidationResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +21,15 @@ public class Flipping implements Mutation {
 
     private static final Random rand = new Random();
 
-    private int maxTuples;
+    private int maxTupples;
     private Component component;
 
-    public int getMaxTuples() {
-        return maxTuples;
+    public int getMaxTupples() {
+        return maxTupples;
     }
 
-    public void setMaxTuples(int maxTuples) {
-        this.maxTuples = maxTuples;
+    public void setMaxTupples(int maxTupples) {
+        this.maxTupples = maxTupples;
     }
 
     public String getComponent() {
@@ -37,6 +38,28 @@ public class Flipping implements Mutation {
 
     public void setComponent(String component) {
         this.component = Component.valueOf(component);
+    }
+
+    @Override
+    public void setValue(String parameterName, Object value) {
+        if (parameterName.equals("MaxTupples")) {
+            setMaxTupples(Integer.parseInt(value.toString()));
+        } else if (parameterName.equals("Component")) {
+            setComponent((String) value);
+        } else {
+            throw new IllegalArgumentException("Not found parameter name in " + this.getClass().getSimpleName());
+        }
+    }
+
+    @Override
+    public Object getValue(String parameterName) {
+        if (parameterName.equals("MaxTupples")) {
+            return getMaxTupples();
+        } else if (parameterName.equals("Component")) {
+            return getComponent();
+        } else {
+            throw new IllegalArgumentException("Not found parameter name in " + this.getClass().getSimpleName());
+        }
     }
 
     @Override
@@ -53,7 +76,7 @@ public class Flipping implements Mutation {
         TimeTableProblem theProblem = (TimeTableProblem) problem;
 
         // Get the lessons to mutate
-        int numOfMutates = rand.nextInt(this.maxTuples) + 1;
+        int numOfMutates = rand.nextInt(this.maxTupples) + 1;
         List<Lesson> lessonsChosen = new ArrayList<>(numOfMutates);
 
         for (int i = 0; i < numOfMutates; i++) {
@@ -90,5 +113,22 @@ public class Flipping implements Mutation {
                     break;
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Flipping{" +
+                "maxTuples=" + maxTupples +
+                ", component=" + component +
+                '}';
+    }
+
+    @Override
+    public ValidationResult checkValidation() {
+        if (maxTupples < 0) {
+            return new ValidationResult(false, "'MaxTuples' has to be positive value");
+        }
+
+        return new ValidationResult(true);
     }
 }

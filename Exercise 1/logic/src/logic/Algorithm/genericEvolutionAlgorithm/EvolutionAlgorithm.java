@@ -44,6 +44,10 @@ public abstract class EvolutionAlgorithm {
         return mutations;
     }
 
+    public void setMutations(Set<Mutation> mutations) {
+        this.mutations = mutations;
+    }
+
     public void addMutation(Mutation mutation) {
         this.mutations.add(mutation);
     }

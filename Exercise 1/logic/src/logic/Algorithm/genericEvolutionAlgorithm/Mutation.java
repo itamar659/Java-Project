@@ -1,6 +1,8 @@
 package logic.Algorithm.genericEvolutionAlgorithm;
 
-public interface Mutation {
+import logic.validation.Validateable;
+
+public interface Mutation extends Parameterizable, Validateable {
 
     void mutatePopulation(Population population, float mutateChance, Problem problem);
 }

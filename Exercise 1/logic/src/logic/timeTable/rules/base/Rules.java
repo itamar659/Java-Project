@@ -1,4 +1,6 @@
-package logic.Algorithm.genericEvolutionAlgorithm;
+package logic.timeTable.rules.base;
+
+import logic.timeTable.rules.base.Rule;
 
 import java.util.ArrayList;
 import java.util.List;

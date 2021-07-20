@@ -1,9 +1,11 @@
 package api.consoleApp;
 
 import logic.*;
+import logic.Algorithm.genericEvolutionAlgorithm.Mutation;
+import logic.timeTable.rules.base.Rule;
+import logic.timeTable.rules.base.Rules;
 import logic.timeTable.Class;
 import logic.timeTable.Course;
-import logic.timeTable.TimeTable;
 import logic.timeTable.Teacher;
 
 import java.util.*;
@@ -16,8 +18,8 @@ public class EngineOutput {
     public EngineOutput(Engine engine) {
     }
 
-    public static String getCoursesDetails(TimeTable timeTable) {
-        List<Course> courses = timeTable.getCourses();
+    public static String getCoursesDetails(evoEngineSettingsWrapper evoEngineSettings) {
+        List<Course> courses = evoEngineSettings.getCourses();
         StringBuilder strBuilder = new StringBuilder();
 
         courses.sort(Comparator.comparing(Course::getCourseID));
@@ -33,8 +35,8 @@ public class EngineOutput {
         return strBuilder.toString();
     }
 
-    public static String getTeachersDetails(TimeTable timeTable) {
-        List<Teacher> teachers = timeTable.getTeachers();
+    public static String getTeachersDetails(evoEngineSettingsWrapper evoEngineSettings) {
+        List<Teacher> teachers = evoEngineSettings.getTeachers();
         StringBuilder strBuilder = new StringBuilder();
 
         teachers.sort(Comparator.comparing(Teacher::getTeacherID));
@@ -49,7 +51,7 @@ public class EngineOutput {
 
             // Write all the courses this teacher teaches
             for (String courseID : teacher.getTeachesCoursesIDs()) {
-                Course course = timeTable.findCourse(courseID);
+                Course course = evoEngineSettings.findCourse(courseID);
 
                 if (course == null) {
                     strBuilder.append(String.format("%s%sCourse ID %s NOT FOUND in courses database%s",
@@ -64,8 +66,8 @@ public class EngineOutput {
         return strBuilder.toString();
     }
 
-    public static String getClassesDetails(TimeTable timeTable) {
-        List<Class> classes = timeTable.getClasses();
+    public static String getClassesDetails(evoEngineSettingsWrapper evoEngineSettings) {
+        List<Class> classes = evoEngineSettings.getClasses();
         StringBuilder strBuilder = new StringBuilder();
 
         classes.sort(Comparator.comparing(Class::getClassID));
@@ -80,7 +82,7 @@ public class EngineOutput {
 
             // Write the courses for the current class
             for (Map.Entry<String, Integer> courseID2Hours : sclass.getCourseID2Hours().entrySet()) {
-                Course course = timeTable.findCourse(courseID2Hours.getKey());
+                Course course = evoEngineSettings.findCourse(courseID2Hours.getKey());
 
                 if (course == null) {
                     strBuilder.append(String.format("%s%sCourse ID %s NOT FOUND in courses database%s",
@@ -90,6 +92,37 @@ public class EngineOutput {
                             indents, indents, courseID2Hours.getValue(), course.getName(), course.getCourseID(), newLine));
                 }
             }
+        }
+
+        return strBuilder.toString();
+    }
+
+    public static String getRulesDetails(evoEngineSettingsWrapper evoEngineSettings) {
+        Rules rules = evoEngineSettings.getRules();
+        StringBuilder strBuilder = new StringBuilder();
+
+        strBuilder.append(String.format("Number of rules: %d%s", rules.getListOfRules().size(), newLine));
+        int index = 1;
+        for (Rule rule : rules.getListOfRules()) {
+            strBuilder.append(String.format("%s%d. %s - %s%s", indents, index, rule.getRuleName(), rule.getType(), newLine));
+            index++;
+        }
+
+        return strBuilder.toString();
+    }
+
+    public static String getEvoAlgorithmDetails(evoEngineSettingsWrapper algorithmSettings) {
+        StringBuilder strBuilder = new StringBuilder();
+
+        strBuilder.append(String.format("Population size: %d%s", algorithmSettings.getPopulationSize(), newLine));
+        strBuilder.append(String.format("Selection operator: %s%s", algorithmSettings.getSelection().toString(), newLine));
+        strBuilder.append(String.format("Crossover operator: %s%s", algorithmSettings.getCrossover().toString(), newLine));
+
+        strBuilder.append(String.format("Num of Mutation operators: %d%s", algorithmSettings.getMutations().size(), newLine));
+        int index = 1;
+        for (Mutation mutation : algorithmSettings.getMutations()) {
+            strBuilder.append(String.format("%s%d. %s%s", indents, index, mutation.toString(), newLine));
+            index++;
         }
 
         return strBuilder.toString();

@@ -5,12 +5,14 @@ import logic.Algorithm.TimeTableSolution;
 import logic.Algorithm.genericEvolutionAlgorithm.Crossover;
 import logic.Algorithm.genericEvolutionAlgorithm.Population;
 import logic.Algorithm.genericEvolutionAlgorithm.Solution;
+import logic.validation.Validateable;
+import logic.validation.ValidationResult;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class DayTimeOriented implements Crossover {
+public class DayTimeOriented implements Crossover, Validateable {
 
     private static final Random rand = new Random();
 
@@ -21,32 +23,8 @@ public class DayTimeOriented implements Crossover {
     }
 
     public void setCuttingPoints(int cuttingPoints) {
+        // Can be bigger from the population. it'll cut every single block
         this.cuttingPoints = cuttingPoints;
-    }
-
-    private static int compareLessons(Lesson o1, Lesson o2) {
-        if (o1.getDay() < o2.getDay()) {
-            return -1;
-        }
-        if (o1.getDay() > o2.getDay()) {
-            return 1;
-        }
-
-        if (o1.getHour() < o2.getHour()) {
-            return  -1;
-        }
-        if (o1.getHour() > o2.getHour()) {
-            return  1;
-        }
-
-        if (o1.getaClass().getClassID().compareTo(o2.getaClass().getClassID()) < 0) {
-            return  -1;
-        }
-        if (o1.getaClass().getClassID().compareTo(o2.getaClass().getClassID()) > 0) {
-            return 1;
-        }
-
-        return o1.getTeacher().getTeacherID().compareTo(o2.getTeacher().getTeacherID());
     }
 
     // Very generic method (but may not answer every crossover)
@@ -128,8 +106,8 @@ public class DayTimeOriented implements Crossover {
 
 
         // Now we can put the one each other and do the split.
-        TimeTableSolution child1 = new TimeTableSolution();
-        TimeTableSolution child2 = new TimeTableSolution();
+        TimeTableSolution child1 = new TimeTableSolution(((TimeTableSolution) father).getProblem());
+        TimeTableSolution child2 = new TimeTableSolution(((TimeTableSolution) father).getProblem());
         child1.setRules(((TimeTableSolution) father).getRules());
         child2.setRules(((TimeTableSolution) father).getRules());
 
@@ -159,5 +137,46 @@ public class DayTimeOriented implements Crossover {
         if (child2.getLessons().size() > 0) children.add(child2);
 
         return children;
+    }
+
+    @Override
+    public String toString() {
+        return "DayTimeOriented{" +
+                "cutting-points=" + cuttingPoints +
+                '}';
+    }
+
+    @Override
+    public ValidationResult checkValidation() {
+        if (cuttingPoints < 0) {
+            return new ValidationResult(false, "'CuttingPoints' has to be positive value");
+        }
+
+        return new ValidationResult(true);
+    }
+
+    private static int compareLessons(Lesson o1, Lesson o2) {
+        if (o1.getDay() < o2.getDay()) {
+            return -1;
+        }
+        if (o1.getDay() > o2.getDay()) {
+            return 1;
+        }
+
+        if (o1.getHour() < o2.getHour()) {
+            return  -1;
+        }
+        if (o1.getHour() > o2.getHour()) {
+            return  1;
+        }
+
+        if (o1.getaClass().getClassID().compareTo(o2.getaClass().getClassID()) < 0) {
+            return  -1;
+        }
+        if (o1.getaClass().getClassID().compareTo(o2.getaClass().getClassID()) > 0) {
+            return 1;
+        }
+
+        return o1.getTeacher().getTeacherID().compareTo(o2.getTeacher().getTeacherID());
     }
 }
