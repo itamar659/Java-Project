@@ -1,7 +1,7 @@
 package api.consoleApp;
 
 import logic.*;
-import logic.Algorithm.genericEvolutionAlgorithm.Mutation;
+import logic.algorithm.genericEvolutionAlgorithm.Mutation;
 import logic.timeTable.rules.base.Rule;
 import logic.timeTable.rules.base.Rules;
 import logic.timeTable.Class;

@@ -1,7 +1,7 @@
-package logic.Algorithm.selections;
+package logic.algorithm.selections;
 
-import logic.Algorithm.genericEvolutionAlgorithm.Population;
-import logic.Algorithm.genericEvolutionAlgorithm.Selection;
+import logic.algorithm.genericEvolutionAlgorithm.Population;
+import logic.algorithm.genericEvolutionAlgorithm.Selection;
 import logic.validation.ValidationResult;
 
 public class Truncation implements Selection {

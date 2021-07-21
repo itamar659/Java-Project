@@ -1,9 +1,9 @@
-package logic.Algorithm;
+package logic.algorithm;
 
 import logic.timeTable.Class;
 import logic.timeTable.rules.base.Rule;
 import logic.timeTable.rules.base.Rules;
-import logic.Algorithm.genericEvolutionAlgorithm.Solution;
+import logic.algorithm.genericEvolutionAlgorithm.Solution;
 import logic.timeTable.Lesson;
 
 import java.util.ArrayList;

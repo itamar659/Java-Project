@@ -1,8 +1,8 @@
-package logic.Algorithm;
+package logic.algorithm;
 
-import logic.Algorithm.genericEvolutionAlgorithm.Problem;
+import logic.algorithm.genericEvolutionAlgorithm.Problem;
 import logic.timeTable.rules.base.Rules;
-import logic.Algorithm.genericEvolutionAlgorithm.Solution;
+import logic.algorithm.genericEvolutionAlgorithm.Solution;
 import logic.timeTable.Class;
 import logic.timeTable.Course;
 import logic.timeTable.Lesson;

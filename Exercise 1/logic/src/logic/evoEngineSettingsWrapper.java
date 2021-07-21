@@ -1,10 +1,10 @@
 package logic;
 
-import logic.Algorithm.TimeTableEvolutionAlgorithm;
-import logic.Algorithm.genericEvolutionAlgorithm.Crossover;
-import logic.Algorithm.genericEvolutionAlgorithm.Mutation;
+import logic.algorithm.TimeTableEvolutionAlgorithm;
+import logic.algorithm.genericEvolutionAlgorithm.Crossover;
+import logic.algorithm.genericEvolutionAlgorithm.Mutation;
 import logic.timeTable.rules.base.Rules;
-import logic.Algorithm.genericEvolutionAlgorithm.Selection;
+import logic.algorithm.genericEvolutionAlgorithm.Selection;
 import logic.timeTable.Class;
 import logic.timeTable.Course;
 import logic.timeTable.Teacher;
@@ -59,7 +59,6 @@ public class evoEngineSettingsWrapper {
     public evoEngineSettingsWrapper(TimeTableEvolutionAlgorithm TTEAlgorithm) {
         this.TTEAlgorithm = TTEAlgorithm;
     }
-
 
     public Course findCourse(String courseID) {
         for (Course currentCourse : TTEAlgorithm.getProblem().getCourses()) {

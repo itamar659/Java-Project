@@ -1,4 +1,4 @@
-package api.consoleApp.menu;
+package logic.actions;
 
 @FunctionalInterface
 public interface Action {

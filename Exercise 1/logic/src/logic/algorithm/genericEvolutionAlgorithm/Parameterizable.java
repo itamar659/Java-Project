@@ -1,4 +1,4 @@
-package logic.Algorithm.genericEvolutionAlgorithm;
+package logic.algorithm.genericEvolutionAlgorithm;
 
 public interface Parameterizable {
 

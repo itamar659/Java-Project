@@ -1,7 +1,7 @@
 package logic.timeTable.rules;
 
 import logic.timeTable.rules.base.Rule;
-import logic.Algorithm.genericEvolutionAlgorithm.Solution;
+import logic.algorithm.genericEvolutionAlgorithm.Solution;
 import logic.validation.ValidationResult;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 

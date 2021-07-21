@@ -1,14 +1,17 @@
 package logic;
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
-import logic.Algorithm.factory.*;
-import logic.Algorithm.TimeTableProblem;
-import logic.Algorithm.genericEvolutionAlgorithm.*;
-import logic.Algorithm.selections.Truncation;
-import logic.Algorithm.crossovers.DayTimeOriented;
-import logic.Algorithm.mutations.Flipping;
+import logic.actions.Action;
+import logic.actions.ParameterizedAction;
+import logic.algorithm.TimeTableSolution;
+import logic.algorithm.factory.*;
+import logic.algorithm.TimeTableProblem;
+import logic.algorithm.genericEvolutionAlgorithm.*;
+import logic.algorithm.selections.Truncation;
+import logic.algorithm.crossovers.DayTimeOriented;
+import logic.algorithm.mutations.Flipping;
 import logic.schema.generated.*;
-import logic.Algorithm.TimeTableEvolutionAlgorithm;
+import logic.algorithm.TimeTableEvolutionAlgorithm;
 import logic.timeTable.*;
 import logic.timeTable.Class;
 import logic.timeTable.rules.base.Rule;
@@ -22,15 +25,12 @@ import java.util.*;
 
 public class Engine {
 
-//    public enum State {
-//        INIT, FILE_LOADED, RUNNING, COMPLETED;
-//    }
-//    private State state;
+    public enum State {
+        IDLE, RUNNING, COMPLETED;
+    }
 
-
-    private boolean isCompletedRun;
     private boolean isFileLoaded;
-    private boolean isRunning;
+    private State state;
 
     private final EvolutionAlgorithm evolutionAlgorithm;
     private final evoEngineSettingsWrapper algorithmSettings;
@@ -39,21 +39,43 @@ public class Engine {
         return algorithmSettings;
     }
 
-    public boolean isCompletedRun() {
-        return isCompletedRun;
-    }
-
     public boolean isFileLoaded() {
         return isFileLoaded;
     }
 
-    public boolean isRunning() {
-        return isRunning;
+    public State getState() {
+        return state;
+    }
+
+    public void addEndOfGenerationListener(Action action) {
+        evolutionAlgorithm.addEndOfGenerationListener(action);
+    }
+
+    public void addFinishAlgorithmListener(Action action) {
+        evolutionAlgorithm.addFinishAlgorithmListener(action);
+    }
+
+    public  int getMaxGenerations() {
+        return evolutionAlgorithm.getMaxGenerations();
+    }
+
+    public  int getCurrentGeneration() {
+        return evolutionAlgorithm.getCurrentGeneration();
+    }
+
+    public void setUpdateEveryGeneration(int everyGens) {
+        evolutionAlgorithm.setListenEveryGeneration(everyGens);
+    }
+
+    // TODO: Change TimeTableSolution to TimeTable ??? (Wrapper)
+    public TimeTableSolution getBestResult() {
+        return (TimeTableSolution) evolutionAlgorithm.getPopulation().getSolutionByIndex(0);
     }
 
     public Engine() {
         TimeTableEvolutionAlgorithm algorithm = new TimeTableEvolutionAlgorithm();
 
+        this.state = State.IDLE;
         this.evolutionAlgorithm = algorithm;
         this.algorithmSettings = new evoEngineSettingsWrapper(algorithm);
     }
@@ -360,6 +382,8 @@ public class Engine {
     }
 
     public void startAlgorithm(int generations) {
+        this.state = State.RUNNING;
         evolutionAlgorithm.runAlgorithm(generations);
+        this.state = State.COMPLETED;
     }
 }

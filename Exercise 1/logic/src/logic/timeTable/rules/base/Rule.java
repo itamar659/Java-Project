@@ -1,6 +1,6 @@
 package logic.timeTable.rules.base;
 
-import logic.Algorithm.genericEvolutionAlgorithm.Solution;
+import logic.algorithm.genericEvolutionAlgorithm.Solution;
 import logic.validation.Validateable;
 
 public abstract class Rule implements Validateable {

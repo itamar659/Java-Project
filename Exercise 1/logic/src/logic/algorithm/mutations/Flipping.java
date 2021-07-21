@@ -1,12 +1,12 @@
-package logic.Algorithm.mutations;
+package logic.algorithm.mutations;
 
 import logic.timeTable.Lesson;
-import logic.Algorithm.TimeTableProblem;
-import logic.Algorithm.TimeTableSolution;
-import logic.Algorithm.genericEvolutionAlgorithm.Mutation;
-import logic.Algorithm.genericEvolutionAlgorithm.Population;
-import logic.Algorithm.genericEvolutionAlgorithm.Problem;
-import logic.Algorithm.genericEvolutionAlgorithm.Solution;
+import logic.algorithm.TimeTableProblem;
+import logic.algorithm.TimeTableSolution;
+import logic.algorithm.genericEvolutionAlgorithm.Mutation;
+import logic.algorithm.genericEvolutionAlgorithm.Population;
+import logic.algorithm.genericEvolutionAlgorithm.Problem;
+import logic.algorithm.genericEvolutionAlgorithm.Solution;
 import logic.validation.ValidationResult;
 
 import java.util.ArrayList;

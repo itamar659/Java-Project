@@ -1,7 +1,7 @@
-package logic.Algorithm;
+package logic.algorithm;
 
-import logic.Algorithm.genericEvolutionAlgorithm.Population;
-import logic.Algorithm.genericEvolutionAlgorithm.Problem;
+import logic.algorithm.genericEvolutionAlgorithm.Population;
+import logic.algorithm.genericEvolutionAlgorithm.Problem;
 
 public class TimeTablePopulation extends Population {
 

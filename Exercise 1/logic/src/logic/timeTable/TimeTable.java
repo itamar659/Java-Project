@@ -1,6 +1,6 @@
 package logic.timeTable;
 
-import logic.Algorithm.TimeTableSolution;
+import logic.algorithm.TimeTableSolution;
 import logic.timeTable.rules.base.Rules;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
-package logic.Algorithm.factory;
+package logic.algorithm.factory;
 
-import logic.Algorithm.genericEvolutionAlgorithm.Parameterizable;
+import logic.algorithm.genericEvolutionAlgorithm.Parameterizable;
 
 // TODO: Wtf is this class? create a whole class a single method? Try something else...
 //  Works for now.

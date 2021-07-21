@@ -1,5 +1,7 @@
 package api.consoleApp.menu;
 
+import logic.actions.Action;
+
 public class MenuItem extends BaseMenuItem {
 
     private Action method;

@@ -1,8 +1,6 @@
-package logic.Algorithm.factory;
+package logic.algorithm.factory;
 
-import logic.Algorithm.crossovers.DayTimeOriented;
-import logic.Algorithm.genericEvolutionAlgorithm.Crossover;
-import logic.Algorithm.mutations.Flipping;
+import logic.algorithm.crossovers.DayTimeOriented;
 
 public class CrossoverFactory {
 

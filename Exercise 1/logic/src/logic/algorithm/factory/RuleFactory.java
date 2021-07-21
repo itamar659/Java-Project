@@ -1,4 +1,4 @@
-package logic.Algorithm.factory;
+package logic.algorithm.factory;
 
 import logic.timeTable.rules.*;
 

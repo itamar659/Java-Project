@@ -1,6 +1,6 @@
-package logic.Algorithm.factory;
+package logic.algorithm.factory;
 
-import logic.Algorithm.mutations.Flipping;
+import logic.algorithm.mutations.Flipping;
 
 public class MutationFactory {
 

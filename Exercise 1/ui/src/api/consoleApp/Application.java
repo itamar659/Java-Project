@@ -4,7 +4,6 @@ import api.consoleApp.menu.MainMenu;
 import api.consoleApp.menu.Menu;
 import api.consoleApp.menu.MenuItem;
 import logic.*;
-import logic.timeTable.TimeTable;
 
 import java.util.*;
 
@@ -37,6 +36,22 @@ public class Application {
         initializeMenu();
         scanner = new Scanner(System.in);
         engine = new Engine();
+        engine.addEndOfGenerationListener(this::displayAlgorithmProgressUpdateToUser);
+        engine.addFinishAlgorithmListener(this::displayAlgorithmFinishedToUser);
+        engine.setUpdateEveryGeneration(25);
+    }
+
+    private void displayAlgorithmFinishedToUser() {
+        System.out.println("Algorithm finished!");
+    }
+
+    private void displayAlgorithmProgressUpdateToUser() {
+        // TODO: also show best fitness
+        float progressPercentage = ((float) engine.getCurrentGeneration()) / engine.getMaxGenerations() * 100f;
+        System.out.printf("Progress (%.2f%%): %d / %d generations%n",
+                progressPercentage, engine.getCurrentGeneration(), engine.getMaxGenerations());
+        System.out.printf("Current best fitness: %f%n", 5f);
+        System.out.println("----------");
     }
 
     public void run() {
@@ -82,7 +97,7 @@ public class Application {
     }
 
     private void openXMLFile() {
-        if (engine.isRunning()) {
+        if (engine.getState() == Engine.State.RUNNING) {
             System.out.println("The algorithm now running. Please wait for it to complete.");
             // TODO: Add stop method for the algorithm. than stop the algorithm if he wants.
             return;
@@ -98,7 +113,7 @@ public class Application {
         }
 
         // If already have results, ask before replace
-        if (engine.isCompletedRun()) {
+        if (engine.getState() == Engine.State.COMPLETED) {
             if (!confirmUserWantToEraseTheResults()) {
                 return;
             }
@@ -141,12 +156,12 @@ public class Application {
         if (!isFileLoadedWrapper()) {
             return;
 
-        } else if (engine.isRunning()) {
+        } else if (engine.getState() == Engine.State.RUNNING) {
             System.out.println("The algorithm already running.");
             // TODO: Show progress
             return;
 
-        } else if (engine.isCompletedRun()) {
+        } else if (engine.getState() == Engine.State.COMPLETED) {
             if (!confirmUserWantToEraseTheResults()) {
                 return;
             }
@@ -163,48 +178,61 @@ public class Application {
             String input = scanner.nextLine();
             try {
                 generations = Integer.parseInt(input);
-                if (generations < 0) {
-                    System.out.println("The number of generations can not be a negative value.");
+                if (generations < 100) {
+                    System.out.println("The number of generations has to be 100 or greater.");
                 }
             } catch (NumberFormatException ignored) {
-                System.out.println("Please insert a natural number (0 to back to the main menu).");
+                System.out.println("Please insert a natural number.");
             }
+        } while (generations < 100);
 
+        // Input the update value
+        int updateEvery = -1;
 
-        } while (generations < 0);
-
-        if (generations == 0) {
-            return;
-        }
+        do {
+            System.out.println("Enter every how many generations do you want to be updated:");
+            String input = scanner.nextLine();
+            try {
+                updateEvery = Integer.parseInt(input);
+                if (updateEvery < 1) {
+                    System.out.println("The number has to be above 1.");
+                }
+            } catch (NumberFormatException ignored) {
+                System.out.println("Please insert a natural number.");
+            }
+        } while (updateEvery < 1);
 
         // Start the algorithm
-        System.out.println("Starting the algorithm");
+        System.out.printf("Starting the algorithm%n%n");
+        engine.setUpdateEveryGeneration(updateEvery);
         engine.startAlgorithm(generations);
-
-        // TODO: Use "events" to be able to show the progress of the run.
     }
 
     private void showBestResult() {
         if (!isFileLoadedWrapper()) {
             return;
-        } else if (!engine.isCompletedRun() && !engine.isRunning()) {
+        } else if (engine.getState() == Engine.State.IDLE) {
             System.out.println("There are no results. Please run the algorithm first."); // TODO: Copy code #1
             return;
         }
 
-        System.out.println("Please enter the following parameters:");
-        System.out.println("Day ( D ): "); // TODO: As integer, string, date, how is the day represent???
+        //System.out.println("Please enter the following parameters:");
+        //System.out.printf("A day between 0 to %d ( D ): %n", engine.getAlgorithmSettings().getDays());
 
-        // NOT CLOSE TO BE DONE
+
+        // NOT CLOSE TO BE DONE 19.07
+
+        // TOMORROW WORK ON IT  20.07 :3
 
         System.out.println("The best result:");
+        System.out.println(engine.getBestResult());
         // TODO: Show best results.
     }
 
     private void showAlgorithmHistory() {
         if (!isFileLoadedWrapper()) {
             return;
-        } else if (!engine.isCompletedRun() || !engine.isRunning()) {
+        } else if (engine.getState() == Engine.State.IDLE) {
             System.out.println("There are no results. Please run the algorithm first."); // TODO: Copy code #1
             return;
         }

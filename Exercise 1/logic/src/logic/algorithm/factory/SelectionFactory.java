@@ -1,8 +1,6 @@
-package logic.Algorithm.factory;
+package logic.algorithm.factory;
 
-import logic.Algorithm.genericEvolutionAlgorithm.Selection;
-import logic.Algorithm.mutations.Flipping;
-import logic.Algorithm.selections.Truncation;
+import logic.algorithm.selections.Truncation;
 
 public class SelectionFactory {
 

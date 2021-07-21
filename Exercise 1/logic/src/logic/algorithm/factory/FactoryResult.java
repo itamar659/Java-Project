@@ -1,4 +1,4 @@
-package logic.Algorithm.factory;
+package logic.algorithm.factory;
 
 public class FactoryResult {
 

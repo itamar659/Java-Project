@@ -1,5 +1,7 @@
 package api.consoleApp.menu;
 
+import logic.actions.ParameterizedAction;
+
 public class Menu extends BaseMenuItem {
 
     private ParameterizedAction<BaseMenuItem> method;

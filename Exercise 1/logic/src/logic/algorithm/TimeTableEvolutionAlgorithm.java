@@ -1,7 +1,6 @@
-package logic.Algorithm;
+package logic.algorithm;
 
-import logic.Algorithm.genericEvolutionAlgorithm.EvolutionAlgorithm;
-import logic.Algorithm.genericEvolutionAlgorithm.Problem;
+import logic.algorithm.genericEvolutionAlgorithm.EvolutionAlgorithm;
 
 public class TimeTableEvolutionAlgorithm extends EvolutionAlgorithm {
 

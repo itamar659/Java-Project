@@ -1,10 +1,10 @@
-package logic.Algorithm.crossovers;
+package logic.algorithm.crossovers;
 
 import logic.timeTable.Lesson;
-import logic.Algorithm.TimeTableSolution;
-import logic.Algorithm.genericEvolutionAlgorithm.Crossover;
-import logic.Algorithm.genericEvolutionAlgorithm.Population;
-import logic.Algorithm.genericEvolutionAlgorithm.Solution;
+import logic.algorithm.TimeTableSolution;
+import logic.algorithm.genericEvolutionAlgorithm.Crossover;
+import logic.algorithm.genericEvolutionAlgorithm.Population;
+import logic.algorithm.genericEvolutionAlgorithm.Solution;
 import logic.validation.Validateable;
 import logic.validation.ValidationResult;
 

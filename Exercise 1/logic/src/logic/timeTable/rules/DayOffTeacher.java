@@ -1,8 +1,8 @@
 package logic.timeTable.rules;
 
-import logic.Algorithm.TimeTableSolution;
+import logic.algorithm.TimeTableSolution;
 import logic.timeTable.rules.base.Rule;
-import logic.Algorithm.genericEvolutionAlgorithm.Solution;
+import logic.algorithm.genericEvolutionAlgorithm.Solution;
 import logic.timeTable.Lesson;
 import logic.timeTable.Teacher;
 import logic.validation.ValidationResult;
