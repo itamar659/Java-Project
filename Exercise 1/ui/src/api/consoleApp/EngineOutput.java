@@ -1,7 +1,7 @@
 package api.consoleApp;
 
 import logic.*;
-import logic.algorithm.genericEvolutionAlgorithm.Mutation;
+import logic.evoAlgorithm.base.Mutation;
 import logic.timeTable.rules.base.Rule;
 import logic.timeTable.rules.base.Rules;
 import logic.timeTable.Class;
@@ -22,13 +22,13 @@ public class EngineOutput {
         List<Course> courses = evoEngineSettings.getCourses();
         StringBuilder strBuilder = new StringBuilder();
 
-        courses.sort(Comparator.comparing(Course::getCourseID));
+        courses.sort(Comparator.comparing(Course::getId));
         strBuilder.append(String.format("Number of courses: %d%s", courses.size(), newLine));
 
         // Write a list of the courses
         int index = 1;
         for (Course course : courses) {
-            strBuilder.append(String.format("%s%d. %s - %s%s", indents, index, course.getName(), course.getCourseID(), newLine));
+            strBuilder.append(String.format("%s%d. %s - %s%s", indents, index, course.getName(), course.getId(), newLine));
             index += 1;
         }
 
@@ -39,13 +39,13 @@ public class EngineOutput {
         List<Teacher> teachers = evoEngineSettings.getTeachers();
         StringBuilder strBuilder = new StringBuilder();
 
-        teachers.sort(Comparator.comparing(Teacher::getTeacherID));
+        teachers.sort(Comparator.comparing(Teacher::getId));
         strBuilder.append(String.format("Number of teachers: %d%s", teachers.size(), newLine));
 
         // Write the required information about every teacher
         for (Teacher teacher : teachers) {
             strBuilder.append(String.format("%sTeacher ID: %s (%s)%s",
-                    indents, teacher.getTeacherID(), teacher.getName(), newLine));
+                    indents, teacher.getId(), teacher.getName(), newLine));
             strBuilder.append(String.format("%sTeaches the courses (total %d):%s",
                     indents, teacher.getTeachesCoursesIDs().size(), newLine));
 
@@ -70,13 +70,13 @@ public class EngineOutput {
         List<Class> classes = evoEngineSettings.getClasses();
         StringBuilder strBuilder = new StringBuilder();
 
-        classes.sort(Comparator.comparing(Class::getClassID));
+        classes.sort(Comparator.comparing(Class::getId));
         strBuilder.append(String.format("Number of classes: %d%s", classes.size(), newLine));
 
         // Write all the information about every class
         for (Class sclass : classes) {
             strBuilder.append(String.format("%sClass ID: %s (%s)%s",
-                    indents, sclass.getClassID(), sclass.getName(), newLine));
+                    indents, sclass.getId(), sclass.getName(), newLine));
             strBuilder.append(String.format("%sCourses in schedule (total %d):%s",
                     indents, sclass.getCourseID2Hours().size(), newLine));
 
@@ -89,7 +89,7 @@ public class EngineOutput {
                             indents, indents, courseID2Hours.getKey(), newLine));
                 } else {
                     strBuilder.append(String.format("%s%sLearning %s hours %s - %s%s",
-                            indents, indents, courseID2Hours.getValue(), course.getName(), course.getCourseID(), newLine));
+                            indents, indents, courseID2Hours.getValue(), course.getName(), course.getId(), newLine));
                 }
             }
         }
@@ -104,7 +104,7 @@ public class EngineOutput {
         strBuilder.append(String.format("Number of rules: %d%s", rules.getListOfRules().size(), newLine));
         int index = 1;
         for (Rule rule : rules.getListOfRules()) {
-            strBuilder.append(String.format("%s%d. %s - %s%s", indents, index, rule.getRuleName(), rule.getType(), newLine));
+            strBuilder.append(String.format("%s%d. %s - %s%s", indents, index, rule.getId(), rule.getType(), newLine));
             index++;
         }
 

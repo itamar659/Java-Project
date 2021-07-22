@@ -1,18 +1,16 @@
-package logic.algorithm.crossovers;
+package logic.evoAlgorithm.timeTableEvolution.crossovers;
 
 import logic.timeTable.Lesson;
-import logic.algorithm.TimeTableSolution;
-import logic.algorithm.genericEvolutionAlgorithm.Crossover;
-import logic.algorithm.genericEvolutionAlgorithm.Population;
-import logic.algorithm.genericEvolutionAlgorithm.Solution;
-import logic.validation.Validateable;
-import logic.validation.ValidationResult;
+import logic.timeTable.TimeTable;
+import logic.evoAlgorithm.base.Crossover;
+import logic.evoAlgorithm.base.Population;
+import logic.evoAlgorithm.base.Solution;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class DayTimeOriented implements Crossover, Validateable {
+public class DayTimeOriented implements Crossover {
 
     private static final Random rand = new Random();
 
@@ -60,8 +58,8 @@ public class DayTimeOriented implements Crossover, Validateable {
         // TODO: MAY NOT WORK. CHECK WITH PRINTS
 
         // sort the lessons
-        List<Lesson> fatherLessons = ((TimeTableSolution) father).getLessons();
-        List<Lesson> motherLessons = ((TimeTableSolution) mother).getLessons();
+        List<Lesson> fatherLessons = ((TimeTable) father).getLessons();
+        List<Lesson> motherLessons = ((TimeTable) mother).getLessons();
         fatherLessons.sort(DayTimeOriented::compareLessons);
         motherLessons.sort(DayTimeOriented::compareLessons);
 
@@ -106,10 +104,10 @@ public class DayTimeOriented implements Crossover, Validateable {
 
 
         // Now we can put the one each other and do the split.
-        TimeTableSolution child1 = new TimeTableSolution(((TimeTableSolution) father).getProblem());
-        TimeTableSolution child2 = new TimeTableSolution(((TimeTableSolution) father).getProblem());
-        child1.setRules(((TimeTableSolution) father).getRules());
-        child2.setRules(((TimeTableSolution) father).getRules());
+        TimeTable child1 = new TimeTable(((TimeTable) father).getProblem());
+        TimeTable child2 = new TimeTable(((TimeTable) father).getProblem());
+        child1.setRules(((TimeTable) father).getRules());
+        child2.setRules(((TimeTable) father).getRules());
 
         int swapAfter = parent1.size() / this.cuttingPoints;
         if (swapAfter == 0) {
@@ -118,7 +116,7 @@ public class DayTimeOriented implements Crossover, Validateable {
 
         for (int i = 0; i < parent1.size(); i++) {
             if (i % swapAfter == 0) {
-                TimeTableSolution temp = child1;
+                TimeTable temp = child1;
                 child1 = child2;
                 child2 = temp;
             }
@@ -146,15 +144,6 @@ public class DayTimeOriented implements Crossover, Validateable {
                 '}';
     }
 
-    @Override
-    public ValidationResult checkValidation() {
-        if (cuttingPoints < 0) {
-            return new ValidationResult(false, "'CuttingPoints' has to be positive value");
-        }
-
-        return new ValidationResult(true);
-    }
-
     private static int compareLessons(Lesson o1, Lesson o2) {
         if (o1.getDay() < o2.getDay()) {
             return -1;
@@ -170,13 +159,13 @@ public class DayTimeOriented implements Crossover, Validateable {
             return  1;
         }
 
-        if (o1.getaClass().getClassID().compareTo(o2.getaClass().getClassID()) < 0) {
+        if (o1.getaClass().getId().compareTo(o2.getaClass().getId()) < 0) {
             return  -1;
         }
-        if (o1.getaClass().getClassID().compareTo(o2.getaClass().getClassID()) > 0) {
+        if (o1.getaClass().getId().compareTo(o2.getaClass().getId()) > 0) {
             return 1;
         }
 
-        return o1.getTeacher().getTeacherID().compareTo(o2.getTeacher().getTeacherID());
+        return o1.getTeacher().getId().compareTo(o2.getTeacher().getId());
     }
 }

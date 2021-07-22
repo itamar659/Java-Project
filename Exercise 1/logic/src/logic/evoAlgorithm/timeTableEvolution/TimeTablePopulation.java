@@ -1,12 +1,13 @@
-package logic.algorithm;
+package logic.evoAlgorithm.timeTableEvolution;
 
-import logic.algorithm.genericEvolutionAlgorithm.Population;
-import logic.algorithm.genericEvolutionAlgorithm.Problem;
+import logic.evoAlgorithm.base.Population;
+import logic.evoAlgorithm.base.Problem;
+import logic.timeTable.TimeTable;
 
 public class TimeTablePopulation extends Population {
 
     public TimeTablePopulation(int size, Problem createNewPopulationWithProblem) {
-        this.solutions = new TimeTableSolution[size];
+        this.solutions = new TimeTable[size];
 
         if (createNewPopulationWithProblem != null) {
             for (int i = 0; i < size; i++) {

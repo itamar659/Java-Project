@@ -1,27 +1,30 @@
 package logic.timeTable;
 
-import logic.algorithm.TimeTableSolution;
+import logic.evoAlgorithm.timeTableEvolution.TimeTableProblem;
+import logic.timeTable.rules.base.Rule;
 import logic.timeTable.rules.base.Rules;
+import logic.evoAlgorithm.base.Solution;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class TimeTable {
-
-    // TODO: Will be a wrapper to TimeTableSolution class. To represent a single solution. (Not the problem parameters)
-
-    // Need to have it for the wrapper, and for printing the results (print for each rule the solution score)
-    // TODO: NEED TO REMOVE THIS. TimeTable Package SHOULDN'T KNOW ABOUT Algorithm Package!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //  But the Algorithm knows about TimeTable.
-    private TimeTableSolution thisTimeTable;
+public class TimeTable implements Solution {
 
     // All the lessons (<D,H,C,T,S>) this time table have
     private final List<Lesson> lessons;
     // The set of rules for this time table
     private Rules rules;
 
+    private final TimeTableProblem problem;
+
     public List<Lesson> getLessons() {
         return lessons;
+    }
+
+    public TimeTableProblem getProblem() {
+        return problem;
     }
 
     public Rules getRules() {
@@ -32,7 +35,8 @@ public class TimeTable {
         this.rules = rules;
     }
 
-    public TimeTable() {
+    public TimeTable(TimeTableProblem problem) {
+        this.problem = problem;
         this.lessons = new ArrayList<>();
     }
 
@@ -41,10 +45,85 @@ public class TimeTable {
     }
 
     @Override
+    public float getFitness() {
+        if (!checkRequirements()) {
+            return 0;
+        }
+
+        if (this.rules == null || this.rules.getListOfRules() == null) {
+            return 1;
+        }
+
+        float softFitness = 0;
+        float hardFitness = 0;
+        int softRules = 0;
+        int hardRules = 0;
+        float hardRatio = rules.getHardRuleWeight() / 100f;
+        float softRatio = 1 - hardRatio;
+
+        for (Rule rule : this.rules.getListOfRules()) {
+            if (rule.getType() == Rules.RULE_TYPE.HARD) {
+                hardFitness += rule.calcFitness(this);
+                hardRules++;
+            } else {
+                softFitness += rule.calcFitness(this);
+                softRules++;
+            }
+        }
+
+        float fitnessSum = (softFitness * softRatio) + (hardFitness * hardRatio);
+
+        return fitnessSum / ((softRules * softRatio) + (hardRules * hardRatio));
+    }
+
+    @Override
     public String toString() {
         return "TimeTableSolution{" +
                 "lessons=" + lessons +
                 ", rules=" + rules +
                 '}';
+    }
+
+    private boolean checkRequirements() {
+        Map<Class, Map<String, Integer>> class2course2hours = new HashMap<>();
+
+        for (Lesson lesson : lessons) {
+
+            // Check if this class study this course at all
+            if (!lesson.getaClass().getCourseID2Hours().containsKey(lesson.getCourse().getId())) {
+                return false;
+            }
+
+            if (!class2course2hours.containsKey(lesson.getaClass())) {
+                Map<String, Integer> course2hours = new HashMap<>();
+                class2course2hours.put(lesson.getaClass(), course2hours);
+            }
+
+            Map<String, Integer> course2hours = class2course2hours.get(lesson.getaClass());
+            if (!course2hours.containsKey(lesson.getCourse().getId())) {
+                course2hours.put(lesson.getCourse().getId(), 0);
+            }
+
+            course2hours.put(lesson.getCourse().getId(), course2hours.get(lesson.getCourse().getId()) + 1);
+        }
+
+        for (Class aclass : problem.getClasses()) {
+            if (!class2course2hours.containsKey(aclass)) {
+                return false;
+            }
+
+            Map<String, Integer> courseID2hours = class2course2hours.get(aclass);
+            for (Map.Entry<String, Integer> currentKey : aclass.getCourseID2Hours().entrySet()) {
+                if (!courseID2hours.containsKey(aclass.getId())) {
+                    return false;
+                }
+
+                if (courseID2hours.get(aclass.getId()).compareTo(currentKey.getValue()) == 0) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

@@ -1,12 +1,11 @@
 package logic.timeTable.rules;
 
-import logic.algorithm.TimeTableSolution;
-import logic.algorithm.genericEvolutionAlgorithm.Parameterizable;
+import logic.timeTable.TimeTable;
+import logic.Parameterizable;
 import logic.timeTable.rules.base.Rule;
-import logic.algorithm.genericEvolutionAlgorithm.Solution;
+import logic.evoAlgorithm.base.Solution;
 import logic.timeTable.Course;
 import logic.timeTable.Lesson;
-import logic.validation.ValidationResult;
 
 import java.util.*;
 
@@ -23,16 +22,16 @@ public class Sequentiality extends Rule implements Parameterizable {
     }
 
     public Sequentiality() {
-        this.setRuleName("Sequentiality");
+        this.setId("Sequentiality");
     }
 
     @Override
     public float calcFitness(Solution solution) {
         final int DAYS = 7;
         final int HOURS = 24;
-        List<Lesson> lessons = ((TimeTableSolution) solution).getLessons();
+        List<Lesson> lessons = ((TimeTable) solution).getLessons();
 
-        Map<Course, boolean[][]> course2schedule = new TreeMap<>(Comparator.comparing(Course::getCourseID));
+        Map<Course, boolean[][]> course2schedule = new TreeMap<>(Comparator.comparing(Course::getId));
         int penalty = 0;
 
         // create the schedule for a specific course
@@ -65,15 +64,6 @@ public class Sequentiality extends Rule implements Parameterizable {
         }
 
         return 1f / (1 + penalty);
-    }
-
-    @Override
-    public ValidationResult checkValidation() {
-        if (totalHours < 1) {
-            return new ValidationResult(false, "total hours has to be a positive value");
-        }
-
-        return new ValidationResult(true);
     }
 
     @Override

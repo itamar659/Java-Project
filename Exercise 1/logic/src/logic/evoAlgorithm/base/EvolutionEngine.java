@@ -1,11 +1,11 @@
-package logic.algorithm.genericEvolutionAlgorithm;
+package logic.evoAlgorithm.base;
 
 import logic.actions.Action;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class EvolutionAlgorithm {
+public abstract class EvolutionEngine {
 
     protected int populationSize;
     protected Population population;
@@ -17,8 +17,8 @@ public abstract class EvolutionAlgorithm {
     private int currentGeneration;
 
     private int listenEveryGeneration;
-    private final Set<Action> endOfGenerationListeners;
-    private final Set<Action> finishAlgorithmListeners;
+    private final Set<Action> generationEndListeners;
+    private final Set<Action> finishRunListeners; // TODO: Change names
 
     public Population getPopulation() {
         return population;
@@ -72,10 +72,6 @@ public abstract class EvolutionAlgorithm {
         return maxGenerations;
     }
 
-    public int getListenEveryGeneration() {
-        return listenEveryGeneration;
-    }
-
     public void setListenEveryGeneration(int listenEveryGeneration) {
         this.listenEveryGeneration = listenEveryGeneration;
     }
@@ -84,18 +80,18 @@ public abstract class EvolutionAlgorithm {
         this.mutations.add(mutation);
     }
 
-    public  void addEndOfGenerationListener(Action action) {
-        endOfGenerationListeners.add(action);
+    public  void generationEndListener(Action action) {
+        generationEndListeners.add(action);
     }
 
-    public  void addFinishAlgorithmListener(Action action) {
-        finishAlgorithmListeners.add(action);
+    public  void finishRunListener(Action action) {
+        finishRunListeners.add(action);
     }
 
-    public EvolutionAlgorithm() {
+    public EvolutionEngine() {
         mutations = new HashSet<>();
-        endOfGenerationListeners = new HashSet<>();
-        finishAlgorithmListeners = new HashSet<>();
+        generationEndListeners = new HashSet<>();
+        finishRunListeners = new HashSet<>();
         listenEveryGeneration = 100;
     }
 
@@ -122,7 +118,7 @@ public abstract class EvolutionAlgorithm {
 
             // Step 4 - mutate
             for (Mutation mutation : this.mutations) {
-                mutation.mutatePopulation(population, 0.1f, problem);
+                mutation.mutatePopulation(population, problem);
             }
         }
 
@@ -130,13 +126,13 @@ public abstract class EvolutionAlgorithm {
     }
 
     protected void onEndOfGeneration() {
-        for (Action action : endOfGenerationListeners) {
+        for (Action action : generationEndListeners) {
             action.execute();
         }
     }
 
     protected void onFinish() {
-        for (Action action : finishAlgorithmListeners) {
+        for (Action action : finishRunListeners) {
             action.execute();
         }
     }

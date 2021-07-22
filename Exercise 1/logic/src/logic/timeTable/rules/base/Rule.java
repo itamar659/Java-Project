@@ -1,19 +1,22 @@
 package logic.timeTable.rules.base;
 
-import logic.algorithm.genericEvolutionAlgorithm.Solution;
-import logic.validation.Validateable;
+import logic.evoAlgorithm.base.Solution;
+import logic.timeTable.HasId;
 
-public abstract class Rule implements Validateable {
+import java.util.Objects;
+
+public abstract class Rule implements HasId {
 
     private Rules.RULE_TYPE type;
-    private String ruleName;
+    private String id;
 
-    public String getRuleName() {
-        return ruleName;
+    @Override
+    public String getId() {
+        return id;
     }
 
-    protected void setRuleName(String ruleName) {
-        this.ruleName = ruleName;
+    protected void setId(String id) {
+        this.id = id;
     }
 
     public Rules.RULE_TYPE getType() {
@@ -30,7 +33,20 @@ public abstract class Rule implements Validateable {
     public String toString() {
         return "Rule{" +
                 "type=" + type +
-                ", ruleID='" + ruleName + '\'' +
+                ", ruleID='" + id + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Rule rule = (Rule) o;
+        return Objects.equals(id, rule.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

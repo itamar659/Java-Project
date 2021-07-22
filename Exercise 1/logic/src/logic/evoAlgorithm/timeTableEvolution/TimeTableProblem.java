@@ -1,12 +1,10 @@
-package logic.algorithm;
+package logic.evoAlgorithm.timeTableEvolution;
 
-import logic.algorithm.genericEvolutionAlgorithm.Problem;
-import logic.timeTable.rules.base.Rules;
-import logic.algorithm.genericEvolutionAlgorithm.Solution;
+import logic.evoAlgorithm.base.Problem;
+import logic.timeTable.*;
 import logic.timeTable.Class;
-import logic.timeTable.Course;
-import logic.timeTable.Lesson;
-import logic.timeTable.Teacher;
+import logic.timeTable.rules.base.Rules;
+import logic.evoAlgorithm.base.Solution;
 
 import java.util.List;
 import java.util.Random;
@@ -84,7 +82,7 @@ public class TimeTableProblem implements Problem {
         // TODO: If the teacher doesn't teach that course, change a teacher / course
         // TODO: Also if the class doesn't study this course, change the class / course
 
-        TimeTableSolution solution = new TimeTableSolution(this);
+        TimeTable solution = new TimeTable(this);
         solution.setRules(this.rules);
 
         final int maxLessons = classes.size() * days * hours;

@@ -2,17 +2,18 @@ package logic.timeTable;
 
 import java.util.Objects;
 
-public class Course implements Cloneable {
+public class Course implements HasId, Cloneable {
 
-    private String courseID;
+    private String id;
     private String name;
 
-    public String getCourseID() {
-        return courseID;
+    @Override
+    public String getId() {
+        return id;
     }
 
-    public void setCourseID(String courseID) {
-        this.courseID = courseID;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -28,18 +29,18 @@ public class Course implements Cloneable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return Objects.equals(courseID, course.courseID);
+        return Objects.equals(id, course.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(courseID);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "Course{" +
-                "courseID='" + courseID + '\'' +
+                "courseID='" + id + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }

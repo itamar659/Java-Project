@@ -1,10 +1,10 @@
-package logic.algorithm.selections;
+package logic.evoAlgorithm.base.selections;
 
-import logic.algorithm.genericEvolutionAlgorithm.Population;
-import logic.algorithm.genericEvolutionAlgorithm.Selection;
-import logic.validation.ValidationResult;
+import logic.Parameterizable;
+import logic.evoAlgorithm.base.Population;
+import logic.evoAlgorithm.base.Selection;
 
-public class Truncation implements Selection {
+public class Truncation implements Selection, Parameterizable {
 
     private int topPercent;
 
@@ -50,14 +50,5 @@ public class Truncation implements Selection {
         } else {
             throw new IllegalArgumentException("Not found parameter name in" + this.getClass().getSimpleName());
         }
-    }
-
-    @Override
-    public ValidationResult checkValidation() {
-        if (!(1 <= topPercent && topPercent <= 100)) {
-            return new ValidationResult(false, "'TopPercent' should be a value between 1 to 100");
-        }
-
-        return new ValidationResult(true);
     }
 }

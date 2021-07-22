@@ -4,18 +4,19 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
-public class Class implements Cloneable {
+public class Class implements HasId, Cloneable {
 
-    private String classID;
+    private String id;
     private String name;
     private final Map<String, Integer> courseID2Hours;
 
-    public String getClassID() {
-        return classID;
+    @Override
+    public String getId() {
+        return id;
     }
 
-    public void setClassID(String classID) {
-        this.classID = classID;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -43,18 +44,18 @@ public class Class implements Cloneable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Class that = (Class) o;
-        return Objects.equals(classID, that.classID);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(classID);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "Class{" +
-                "classID='" + classID + '\'' +
+                "classID='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", courseID2Hours=" + courseID2Hours +
                 '}';

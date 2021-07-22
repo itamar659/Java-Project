@@ -4,18 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Teacher implements Cloneable {
+public class Teacher implements HasId, Cloneable {
 
-    private String TeacherID;
+    private String id;
     private String name;
     private final List<String> teachesCourses;
 
-    public String getTeacherID() {
-        return TeacherID;
+    @Override
+    public String getId() {
+        return id;
     }
 
-    public void setTeacherID(String teacherID) {
-        TeacherID = teacherID;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -43,18 +44,18 @@ public class Teacher implements Cloneable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Teacher teacher = (Teacher) o;
-        return Objects.equals(TeacherID, teacher.TeacherID);
+        return Objects.equals(id, teacher.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(TeacherID);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "Teacher{" +
-                "TeacherID='" + TeacherID + '\'' +
+                "TeacherID='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", teachesCourses=" + teachesCourses +
                 '}';

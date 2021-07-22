@@ -1,19 +1,16 @@
-package logic.algorithm.mutations;
+package logic.evoAlgorithm.timeTableEvolution.mutations;
 
+import logic.Parameterizable;
+import logic.evoAlgorithm.base.*;
 import logic.timeTable.Lesson;
-import logic.algorithm.TimeTableProblem;
-import logic.algorithm.TimeTableSolution;
-import logic.algorithm.genericEvolutionAlgorithm.Mutation;
-import logic.algorithm.genericEvolutionAlgorithm.Population;
-import logic.algorithm.genericEvolutionAlgorithm.Problem;
-import logic.algorithm.genericEvolutionAlgorithm.Solution;
-import logic.validation.ValidationResult;
+import logic.evoAlgorithm.timeTableEvolution.TimeTableProblem;
+import logic.timeTable.TimeTable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Flipping implements Mutation {
+public class Flipping extends Mutation implements Parameterizable {
 
     private enum Component {
         S, T, C, H, D;
@@ -63,16 +60,16 @@ public class Flipping implements Mutation {
     }
 
     @Override
-    public void mutatePopulation(Population population, float mutateChance, Problem problem) {
+    public void mutatePopulation(Population population, Problem problem) {
         for (Solution solution : population.getSolutions()) {
-            if (rand.nextFloat() <= mutateChance) {
+            if (rand.nextFloat() <= probability) {
                 mutate(solution, problem);
             }
         }
     }
 
     private void mutate(Solution solution, Problem problem) {
-        List<Lesson> lessons = ((TimeTableSolution) solution).getLessons();
+        List<Lesson> lessons = ((TimeTable) solution).getLessons();
         TimeTableProblem theProblem = (TimeTableProblem) problem;
 
         // Get the lessons to mutate
@@ -121,14 +118,5 @@ public class Flipping implements Mutation {
                 "maxTuples=" + maxTupples +
                 ", component=" + component +
                 '}';
-    }
-
-    @Override
-    public ValidationResult checkValidation() {
-        if (maxTupples < 0) {
-            return new ValidationResult(false, "'MaxTuples' has to be positive value");
-        }
-
-        return new ValidationResult(true);
     }
 }

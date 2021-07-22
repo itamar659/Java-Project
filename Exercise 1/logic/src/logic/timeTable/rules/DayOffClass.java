@@ -1,26 +1,25 @@
 package logic.timeTable.rules;
 
-import logic.algorithm.TimeTableSolution;
+import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rule;
-import logic.algorithm.genericEvolutionAlgorithm.Solution;
+import logic.evoAlgorithm.base.Solution;
 import logic.timeTable.Lesson;
 import logic.timeTable.Class;
-import logic.validation.ValidationResult;
 
 import java.util.*;
 
 public class DayOffClass extends Rule {
 
     public DayOffClass() {
-        this.setRuleName("DayOffClass");
+        this.setId("DayOffClass");
     }
 
     @Override
     public float calcFitness(Solution solution) {
-        List<Lesson> lessons = ((TimeTableSolution) solution).getLessons();
+        List<Lesson> lessons = ((TimeTable) solution).getLessons();
         final int DAYS_IN_WEEK = 7;
 
-        Map<Class, boolean[]> class2daysOfStudy = new TreeMap<>(Comparator.comparing(Class::getClassID));
+        Map<Class, boolean[]> class2daysOfStudy = new TreeMap<>(Comparator.comparing(Class::getId));
         int penalty = 0;
 
         // calculate for every class in which days they study.
@@ -50,10 +49,5 @@ public class DayOffClass extends Rule {
         }
 
         return 1f / (1 + penalty);
-    }
-
-    @Override
-    public ValidationResult checkValidation() {
-        return new ValidationResult(true);
     }
 }

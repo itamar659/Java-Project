@@ -1,35 +1,29 @@
 package logic.timeTable.rules;
 
-import logic.algorithm.TimeTableSolution;
+import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rule;
-import logic.algorithm.genericEvolutionAlgorithm.Solution;
+import logic.evoAlgorithm.base.Solution;
 import logic.timeTable.Lesson;
-import logic.validation.ValidationResult;
 
 import java.util.List;
 
 public class Knowledgeable extends Rule {
 
     public Knowledgeable() {
-        this.setRuleName("Knowledgeable");
+        this.setId("Knowledgeable");
     }
 
     @Override
     public float calcFitness(Solution solution) {
-        List<Lesson> lessons = ((TimeTableSolution) solution).getLessons();
+        List<Lesson> lessons = ((TimeTable) solution).getLessons();
 
         int penalty = 0;
         for (Lesson lesson : lessons) {
-            if (lesson.getTeacher().getTeachesCoursesIDs().contains(lesson.getCourse().getCourseID())) {
+            if (lesson.getTeacher().getTeachesCoursesIDs().contains(lesson.getCourse().getId())) {
                 penalty++;
             }
         }
 
         return 1f / (1 + penalty);
-    }
-
-    @Override
-    public ValidationResult checkValidation() {
-        return new ValidationResult(true);
     }
 }

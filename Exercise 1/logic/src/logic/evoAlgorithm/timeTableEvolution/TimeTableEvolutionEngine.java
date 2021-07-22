@@ -1,8 +1,8 @@
-package logic.algorithm;
+package logic.evoAlgorithm.timeTableEvolution;
 
-import logic.algorithm.genericEvolutionAlgorithm.EvolutionAlgorithm;
+import logic.evoAlgorithm.base.EvolutionEngine;
 
-public class TimeTableEvolutionAlgorithm extends EvolutionAlgorithm {
+public class TimeTableEvolutionEngine extends EvolutionEngine {
 
     @Override
     public TimeTableProblem getProblem() {

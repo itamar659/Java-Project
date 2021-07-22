@@ -4,7 +4,13 @@ import api.consoleApp.menu.MainMenu;
 import api.consoleApp.menu.Menu;
 import api.consoleApp.menu.MenuItem;
 import logic.*;
+import logic.actions.Action;
+import logic.schema.XMLExtractException;
 
+import javax.xml.bind.JAXBException;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class Application {
@@ -18,10 +24,14 @@ public class Application {
         EXIT("Exit");
 
         private final String title;
+        private Action activation;
 
         public String getTitle() {
-            return title;
+            return this.title;
         }
+
+        public void updateActivation(Action activation) { this.activation = activation; }
+        public Action getActivation() { return this.activation;}
 
         MenuOptions(String title) {
             this.title = title;
@@ -36,21 +46,20 @@ public class Application {
         initializeMenu();
         scanner = new Scanner(System.in);
         engine = new Engine();
-        engine.addEndOfGenerationListener(this::displayAlgorithmProgressUpdateToUser);
-        engine.addFinishAlgorithmListener(this::displayAlgorithmFinishedToUser);
+        engine.generationEndListener(this::displayAlgorithmProgressOnUpdate);
+        engine.finishRunListener(this::displayAlgorithmResultsOnFinished);
         engine.setUpdateEveryGeneration(25);
     }
 
-    private void displayAlgorithmFinishedToUser() {
+    private void displayAlgorithmResultsOnFinished() {
         System.out.println("Algorithm finished!");
     }
 
-    private void displayAlgorithmProgressUpdateToUser() {
-        // TODO: also show best fitness
+    private void displayAlgorithmProgressOnUpdate() {
         float progressPercentage = ((float) engine.getCurrentGeneration()) / engine.getMaxGenerations() * 100f;
         System.out.printf("Progress (%.2f%%): %d / %d generations%n",
                 progressPercentage, engine.getCurrentGeneration(), engine.getMaxGenerations());
-        System.out.printf("Current best fitness: %f%n", 5f);
+        System.out.printf("Current best fitness: %f%n", engine.getBestResult().getFitness());
         System.out.println("----------");
     }
 
@@ -59,6 +68,13 @@ public class Application {
     }
 
     private void initializeMenu() {
+        MenuOptions.LOAD_FILE_TO_SYSTEM.updateActivation(this::openXMLFile);
+        MenuOptions.SHOW_SETTINGS.updateActivation(this::showSettingsNProperties);
+        MenuOptions.RUN_ALGORITHM.updateActivation(this::runAlgorithm);
+        MenuOptions.SHOW_BEST_RESULT.updateActivation(this::showBestResult);
+        MenuOptions.SHOW_ALGORITHM_HISTORY.updateActivation(this::showAlgorithmHistory);
+        MenuOptions.EXIT.updateActivation(mainMenu::exitMainMenu);
+
         mainMenu = new MainMenu();
         mainMenu.setCurrentMenu(createFunctionalMenuFromEnum());
     }
@@ -68,29 +84,9 @@ public class Application {
 
         for (MenuOptions option : MenuOptions.values()) {
             MenuItem currentMenuItem = new MenuItem(option.getTitle());
+            currentMenuItem.setMethod(option.getActivation());
 
             theMenu.addMenuItem(currentMenuItem);
-
-            switch (option) {
-                case LOAD_FILE_TO_SYSTEM:
-                    currentMenuItem.setMethod(this::openXMLFile);
-                    break;
-                case SHOW_SETTINGS:
-                    currentMenuItem.setMethod(this::showSettingsNProperties);
-                    break;
-                case RUN_ALGORITHM:
-                    currentMenuItem.setMethod(this::runAlgorithm);
-                    break;
-                case SHOW_BEST_RESULT:
-                    currentMenuItem.setMethod(this::showBestResult);
-                    break;
-                case SHOW_ALGORITHM_HISTORY:
-                    currentMenuItem.setMethod(this::showAlgorithmHistory);
-                    break;
-                case EXIT:
-                    currentMenuItem.setMethod(mainMenu::exitMainMenu);
-                    break;
-            }
         }
 
         return theMenu;
@@ -106,9 +102,20 @@ public class Application {
         // Get the file XML from the user
         System.out.println("Please enter the full path of the XML file contains the properties and settings for the application: ");
         String filePath = scanner.nextLine();
-        String result = engine.loadXMLFile(filePath);
-        if (result != null) {
-            System.out.println(result);
+
+        if (!isFileXMLExists(filePath)) {
+            return;
+        }
+
+        // Try parse the xml file to an evo engine
+        try {
+            File xmlFile = new File(filePath);
+            engine.validateXMLFile(xmlFile);
+        } catch (JAXBException e) {
+            System.out.println("Schema error. Please try again after the next update.");
+            return;
+        } catch (XMLExtractException e) {
+            System.out.println(e.getMessage());
             return;
         }
 
@@ -117,11 +124,10 @@ public class Application {
             if (!confirmUserWantToEraseTheResults()) {
                 return;
             }
-
-            // TODO: Erase everything.
         }
 
-        // Load the new settings to the algorithm and time table.
+        engine.loadEvoEngine();
+
         System.out.println("The file loaded correctly (hopefully)! New settings and properties have been created.");
     }
 
@@ -130,26 +136,22 @@ public class Application {
             return;
         }
 
-        if (engine.getAlgorithmSettings() == null) {
+        if (engine.getEvoEngineSettings() == null) {
             // Shouldn't come to here. In case it would, something messed up with my programming skills
             System.out.println("Error! The engine for evolution algorithm not setup correctly. Forgot to initialize the engine settings.");
             return;
         }
 
         // Display courses information
-        System.out.println(EngineOutput.getCoursesDetails(engine.getAlgorithmSettings()));
-
+        System.out.println(EngineOutput.getCoursesDetails(engine.getEvoEngineSettings()));
         // Display teachers information
-        System.out.println(EngineOutput.getTeachersDetails(engine.getAlgorithmSettings()));
-
+        System.out.println(EngineOutput.getTeachersDetails(engine.getEvoEngineSettings()));
         // Display classes information
-        System.out.println(EngineOutput.getClassesDetails(engine.getAlgorithmSettings()));
-
+        System.out.println(EngineOutput.getClassesDetails(engine.getEvoEngineSettings()));
         // Display rules
-        System.out.println(EngineOutput.getRulesDetails(engine.getAlgorithmSettings()));
-
+        System.out.println(EngineOutput.getRulesDetails(engine.getEvoEngineSettings()));
         // Algorithm settings
-        System.out.println(EngineOutput.getEvoAlgorithmDetails(engine.getAlgorithmSettings()));
+        System.out.println(EngineOutput.getEvoAlgorithmDetails(engine.getEvoEngineSettings()));
     }
 
     private void runAlgorithm() {
@@ -158,49 +160,17 @@ public class Application {
 
         } else if (engine.getState() == Engine.State.RUNNING) {
             System.out.println("The algorithm already running.");
-            // TODO: Show progress
+            displayAlgorithmProgressOnUpdate();
             return;
 
         } else if (engine.getState() == Engine.State.COMPLETED) {
             if (!confirmUserWantToEraseTheResults()) {
                 return;
             }
-
-            // TODO: Erase last result.
         }
 
-
-        // Input number of generations OR back to main menu
-        int generations = -1;
-
-        do {
-            System.out.println("Please insert the maximum number of generations:");
-            String input = scanner.nextLine();
-            try {
-                generations = Integer.parseInt(input);
-                if (generations < 100) {
-                    System.out.println("The number of generations has to be 100 or greater.");
-                }
-            } catch (NumberFormatException ignored) {
-                System.out.println("Please insert a natural number.");
-            }
-        } while (generations < 100);
-
-        // Input the update value
-        int updateEvery = -1;
-
-        do {
-            System.out.println("Enter every how many generations do you want to be updated:");
-            String input = scanner.nextLine();
-            try {
-                updateEvery = Integer.parseInt(input);
-                if (updateEvery < 1) {
-                    System.out.println("The number has to be above 1.");
-                }
-            } catch (NumberFormatException ignored) {
-                System.out.println("Please insert a natural number.");
-            }
-        } while (updateEvery < 1);
+        int generations = getNumberOfGenerationsInput();
+        int updateEvery = getUpdateEvery();
 
         // Start the algorithm
         System.out.printf("Starting the algorithm%n%n");
@@ -224,6 +194,8 @@ public class Application {
 
         // TOMORROW WORK ON IT  20.07 :3
 
+        // FINISHED XML FIRST, GUESS IT'S TODAY THEN 22.07
+
         System.out.println("The best result:");
         System.out.println(engine.getBestResult());
         // TODO: Show best results.
@@ -241,6 +213,10 @@ public class Application {
         // TODO: Display history.
     }
 
+
+
+
+
     private boolean isFileLoadedWrapper() {
         if (!engine.isFileLoaded()) {
             System.out.println("Please open first an XML file with the correct format of the application.");
@@ -253,7 +229,57 @@ public class Application {
 
 
 
+    private int getUpdateEvery() {
+        int updateEvery = -1;
 
+        do {
+            System.out.println("Enter every how many generations do you want to be updated:");
+            String input = scanner.nextLine();
+            try {
+                updateEvery = Integer.parseInt(input);
+                if (updateEvery < 1) {
+                    System.out.println("The number has to be above 1.");
+                }
+            } catch (NumberFormatException ignored) {
+                System.out.println("Please insert a natural number.");
+            }
+        } while (updateEvery < 1);
+
+        return updateEvery;
+    }
+
+    private int getNumberOfGenerationsInput() {
+        int generations = -1;
+
+        do {
+            System.out.println("Please insert the maximum number of generations:");
+            String input = scanner.nextLine();
+            try {
+                generations = Integer.parseInt(input);
+                if (generations < 100) {
+                    System.out.println("The number of generations has to be 100 or greater.");
+                }
+            } catch (NumberFormatException ignored) {
+                System.out.println("Please insert a natural number.");
+            }
+        } while (generations < 100);
+
+        return generations;
+    }
+
+    private boolean isFileXMLExists(String filePath) {
+        if (!filePath.endsWith(".xml")) {
+            System.out.println("The fine is not an xml file.");
+            return false;
+        }
+
+        if (!Files.exists(Paths.get(filePath))) {
+            System.out.println("File not exists in the current path.");
+            return false;
+        }
+
+        return true;
+    }
 
     // Maybe move to utils? Can be static too.
     private boolean confirmUserWantToEraseTheResults() {
