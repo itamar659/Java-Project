@@ -9,8 +9,9 @@ import java.util.List;
 
 public class Singularity extends Rule {
 
-    public Singularity() {
-        this.setId("Singularity");
+    @Override
+    public String getId() {
+        return "Singularity";
     }
 
     @Override
@@ -22,10 +23,8 @@ public class Singularity extends Rule {
             for (int j = i + 1; j < lessons.size(); j++) {
                 if (lessons.get(i).getDay() == lessons.get(j).getDay()) { // same day
                     if (lessons.get(i).getHour() == lessons.get(j).getHour()) { // same hour
-                        if (lessons.get(i).getTeacher().equals(lessons.get(j).getTeacher())) { // same teacher
-                            if (!lessons.get(i).getaClass().equals(lessons.get(j).getaClass())) { // different class
-                                penalty++;
-                            }
+                        if (lessons.get(i).getaClass().equals(lessons.get(j).getaClass())) { // same class
+                            penalty++;
                         }
                     }
                 }

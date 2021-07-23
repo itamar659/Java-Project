@@ -9,8 +9,9 @@ import java.util.List;
 
 public class TeacherIsHuman extends Rule {
 
-    public TeacherIsHuman() {
-        this.setId("TeacherIsHuman");
+    @Override
+    public String getId() {
+        return "TeacherIsHuman";
     }
 
     @Override
@@ -22,10 +23,8 @@ public class TeacherIsHuman extends Rule {
             for (int j = i + 1; j < lessons.size(); j++) {
                 if (lessons.get(i).getDay() == lessons.get(j).getDay()) { // same day
                     if (lessons.get(i).getHour() == lessons.get(j).getHour()) { // same hour
-                        if (lessons.get(i).getaClass().equals(lessons.get(j).getaClass())) { // same class
-                            if (!lessons.get(i).getTeacher().equals(lessons.get(j).getTeacher())) { // different teacher
-                                penalty++;
-                            }
+                        if (lessons.get(i).getTeacher().equals(lessons.get(j).getTeacher())) { // same teacher
+                            penalty++;
                         }
                     }
                 }
@@ -35,22 +34,3 @@ public class TeacherIsHuman extends Rule {
         return 1f / (1 + penalty);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

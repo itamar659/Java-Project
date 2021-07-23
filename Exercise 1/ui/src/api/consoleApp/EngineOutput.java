@@ -2,20 +2,20 @@ package api.consoleApp;
 
 import logic.*;
 import logic.evoAlgorithm.base.Mutation;
+import logic.timeTable.*;
+import logic.timeTable.Class;
 import logic.timeTable.rules.base.Rule;
 import logic.timeTable.rules.base.Rules;
-import logic.timeTable.Class;
-import logic.timeTable.Course;
-import logic.timeTable.Teacher;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class EngineOutput {
 
     private static final String newLine = System.lineSeparator();
     private static final String indents = "   ";
 
-    public EngineOutput(Engine engine) {
+    private EngineOutput() {
     }
 
     public static String getCoursesDetails(evoEngineSettingsWrapper evoEngineSettings) {
@@ -118,7 +118,7 @@ public class EngineOutput {
         strBuilder.append(String.format("Selection operator: %s%s", algorithmSettings.getSelection().toString(), newLine));
         strBuilder.append(String.format("Crossover operator: %s%s", algorithmSettings.getCrossover().toString(), newLine));
 
-        strBuilder.append(String.format("Num of Mutation operators: %d%s", algorithmSettings.getMutations().size(), newLine));
+        strBuilder.append(String.format("Mutations operators: %d%s", algorithmSettings.getMutations().size(), newLine));
         int index = 1;
         for (Mutation mutation : algorithmSettings.getMutations()) {
             strBuilder.append(String.format("%s%d. %s%s", indents, index, mutation.toString(), newLine));
@@ -126,5 +126,142 @@ public class EngineOutput {
         }
 
         return strBuilder.toString();
+    }
+
+    public static String bestResultAsRAW(TimeTable bestResult) {
+        StringBuilder strBuilder = new StringBuilder();
+
+        // Write the headers
+        strBuilder.append(String.format("%-10s|%-10s|%-10s|%-10s|%-10s%n", "Day", "Hour", "Class", "Teacher", "Course"));
+
+        // Write the table
+        bestResult.getLessons().sort(Lesson::compareByDHCTS); // Sort by D-H-CLASS-T-COURSE
+        for (Lesson lesson : bestResult.getLessons()) {
+            strBuilder.append(String.format("%-10s|%-10s|%-10s|%-10s|%-10s%n",
+                    lesson.getDay(), lesson.getHour(), lesson.getaClass().getId(), lesson.getTeacher().getId(), lesson.getCourse().getId()));
+        }
+        //TODO: Write down the meaning of the indexes.
+        // Change the table size
+
+        return strBuilder.toString();
+    }
+
+    private static List<Lesson>[][] createSchedule(int days, int hours, List<Lesson> lessons) {
+        List<Lesson>[][] schedule = new ArrayList[hours][days];
+        for (Lesson lesson : lessons) {
+            if (schedule[lesson.getHour()][lesson.getDay()] == null) {
+                schedule[lesson.getHour()][lesson.getDay()] = new ArrayList<>();
+            }
+            schedule[lesson.getHour()][lesson.getDay()].add(lesson);
+        }
+
+        return schedule;
+    }
+
+    private static String createScheduleString(int days, int hours, List<Lesson> lessons, Function<Lesson, String> lessonInformationId) {
+        StringBuilder strBuilder = new StringBuilder(11 * (days + 1) * hours);
+
+        // Create a schedule to print
+        lessons.sort(Lesson::compareByDHCTS);
+        List<Lesson>[][] schedule = createSchedule(days, hours, lessons);
+
+        for (int hour = 0; hour < hours; hour++) {
+            strBuilder.append(String.format("|%-10d|", hour));
+            strBuilder.append(createHourlySchedule(days, schedule[hour], lessonInformationId));
+            strBuilder.append(String.format("%n%s%n", createLine(11 * (days + 1) + 1)));
+        }
+
+        return strBuilder.toString();
+    }
+
+    private static String createHourlySchedule(int days, List<Lesson>[] dailyScheduleForHour, Function<Lesson, String> lessonInformationId) {
+        StringBuilder strBuilder = new StringBuilder(11 * days);
+
+        int maxAtSameTime = 1;
+        for (int i = 0; i < maxAtSameTime; i++) {
+            for (int day = 0; day < days; day++) {
+                if (dailyScheduleForHour[day] != null) {
+                    if (dailyScheduleForHour[day].size() > maxAtSameTime) {
+                        maxAtSameTime =dailyScheduleForHour[day].size();
+                    }
+
+                    if (dailyScheduleForHour[day].size() > i) {
+                        strBuilder.append(String.format("%-10s|",
+                                String.format("(%s, %s)",
+                                        lessonInformationId.apply(dailyScheduleForHour[day].get(i)),
+                                        dailyScheduleForHour[day].get(i).getCourse().getId())));
+                    } else {
+                        strBuilder.append(String.format("%-10s|", ""));
+                    }
+                } else {
+                    strBuilder.append(String.format("%-10s|", ""));
+                }
+            }
+            if (i != maxAtSameTime - 1) {
+                strBuilder.append(String.format("%n|%-10s|", ""));
+            }
+        }
+
+        return strBuilder.toString();
+    }
+
+    public static String bestResultTEACHER(TimeTable bestResult) {
+        StringBuilder strBuilder = new StringBuilder();
+
+        for (Map.Entry<Teacher, List<Lesson>> teacherTimeTable : bestResult.getTeachersTimeTable().entrySet()) {
+            // Which teacher
+            strBuilder.append(String.format("Time table for teacher %s: (%s)%n",
+                    teacherTimeTable.getKey().getId(), teacherTimeTable.getKey().getName()));
+
+            // Write the headers (+ days)
+            strBuilder.append(String.format("|%-10s|", "Hour\\Day"));
+            for (int i = 0; i < bestResult.getProblem().getDays(); i++) {
+                strBuilder.append(String.format("%-10d|", i));
+            }
+            strBuilder.append(String.format("%n%s%n", createLine(11*(bestResult.getProblem().getDays()+1)+1)));
+
+            // Write the schedule
+            strBuilder.append(createScheduleString(
+                    bestResult.getProblem().getDays(), bestResult.getProblem().getHours(), teacherTimeTable.getValue(),
+                    lesson -> lesson.getTeacher().getId()));
+
+            strBuilder.append(System.lineSeparator());
+        }
+
+        return strBuilder.toString();
+    }
+
+    public static String bestResultCLASS(TimeTable bestResult) {
+        StringBuilder strBuilder = new StringBuilder();
+
+        for (Map.Entry<Class, List<Lesson>> classesTimeTable : bestResult.getClassesTimeTable().entrySet()) {
+            // Which teacher
+            strBuilder.append(String.format("Time table for class %s: (%s)%n",
+                    classesTimeTable.getKey().getId(), classesTimeTable.getKey().getName()));
+
+            // Write the headers (+ days)
+            strBuilder.append(String.format("|%-10s|", "Hour\\Day"));
+            for (int i = 0; i < bestResult.getProblem().getDays(); i++) {
+                strBuilder.append(String.format("%-10d|", i));
+            }
+            strBuilder.append(String.format("%n%s%n", createLine(11*(bestResult.getProblem().getDays()+1)+1)));
+
+            // Write the schedule
+            strBuilder.append(createScheduleString(
+                    bestResult.getProblem().getDays(), bestResult.getProblem().getHours(), classesTimeTable.getValue(),
+                    lesson -> lesson.getaClass().getId()));
+
+            strBuilder.append(System.lineSeparator());
+        }
+
+        return strBuilder.toString();
+    }
+
+    private static String createLine(int length) {
+        StringBuilder strB = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            strB.append("-");
+        }
+        return strB.toString();
     }
 }

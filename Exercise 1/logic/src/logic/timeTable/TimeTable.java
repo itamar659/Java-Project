@@ -5,19 +5,13 @@ import logic.timeTable.rules.base.Rule;
 import logic.timeTable.rules.base.Rules;
 import logic.evoAlgorithm.base.Solution;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TimeTable implements Solution {
 
-    // All the lessons (<D,H,C,T,S>) this time table have
-    private final List<Lesson> lessons;
-    // The set of rules for this time table
-    private Rules rules;
-
     private final TimeTableProblem problem;
+    private final List<Lesson> lessons;
+    private Rules rules;
 
     public List<Lesson> getLessons() {
         return lessons;
@@ -35,21 +29,17 @@ public class TimeTable implements Solution {
         this.rules = rules;
     }
 
+    public void addLesson(Lesson lesson) {
+        lessons.add(lesson);
+    }
+
     public TimeTable(TimeTableProblem problem) {
         this.problem = problem;
         this.lessons = new ArrayList<>();
     }
 
-    public void addLesson(Lesson lesson) {
-        lessons.add(lesson);
-    }
-
     @Override
     public float getFitness() {
-        if (!checkRequirements()) {
-            return 0;
-        }
-
         if (this.rules == null || this.rules.getListOfRules() == null) {
             return 1;
         }
@@ -76,54 +66,50 @@ public class TimeTable implements Solution {
         return fitnessSum / ((softRules * softRatio) + (hardRules * hardRatio));
     }
 
+    public float getAvgFitness(Rules.RULE_TYPE type) {
+        float total = 0;
+        int counted = 0;
+        for (Rule rule : this.rules.getListOfRules()) {
+            if (rule.getType() == type) {
+                counted++;
+                total += rule.calcFitness(this);
+            }
+        }
+
+        return counted > 0 ?total / counted : 1;
+    }
+
+    public Map<Teacher, List<Lesson>> getTeachersTimeTable() {
+        Map<Teacher, List<Lesson>> teacher2lessonsList = new TreeMap<>(Comparator.comparing(Teacher::getId));
+        for (Lesson lesson : lessons) {
+            if (!teacher2lessonsList.containsKey(lesson.getTeacher())) {
+                teacher2lessonsList.put(lesson.getTeacher(), new ArrayList<>());
+            }
+
+            teacher2lessonsList.get(lesson.getTeacher()).add(lesson);
+        }
+
+        return teacher2lessonsList;
+    }
+
+    public Map<Class, List<Lesson>> getClassesTimeTable() {
+        Map<Class, List<Lesson>> teacher2lessonsList = new TreeMap<>(Comparator.comparing(Class::getId));
+        for (Lesson lesson : lessons) {
+            if (!teacher2lessonsList.containsKey(lesson.getaClass())) {
+                teacher2lessonsList.put(lesson.getaClass(), new ArrayList<>());
+            }
+
+            teacher2lessonsList.get(lesson.getaClass()).add(lesson);
+        }
+
+        return teacher2lessonsList;
+    }
+
     @Override
     public String toString() {
         return "TimeTableSolution{" +
                 "lessons=" + lessons +
                 ", rules=" + rules +
                 '}';
-    }
-
-    private boolean checkRequirements() {
-        Map<Class, Map<String, Integer>> class2course2hours = new HashMap<>();
-
-        for (Lesson lesson : lessons) {
-
-            // Check if this class study this course at all
-            if (!lesson.getaClass().getCourseID2Hours().containsKey(lesson.getCourse().getId())) {
-                return false;
-            }
-
-            if (!class2course2hours.containsKey(lesson.getaClass())) {
-                Map<String, Integer> course2hours = new HashMap<>();
-                class2course2hours.put(lesson.getaClass(), course2hours);
-            }
-
-            Map<String, Integer> course2hours = class2course2hours.get(lesson.getaClass());
-            if (!course2hours.containsKey(lesson.getCourse().getId())) {
-                course2hours.put(lesson.getCourse().getId(), 0);
-            }
-
-            course2hours.put(lesson.getCourse().getId(), course2hours.get(lesson.getCourse().getId()) + 1);
-        }
-
-        for (Class aclass : problem.getClasses()) {
-            if (!class2course2hours.containsKey(aclass)) {
-                return false;
-            }
-
-            Map<String, Integer> courseID2hours = class2course2hours.get(aclass);
-            for (Map.Entry<String, Integer> currentKey : aclass.getCourseID2Hours().entrySet()) {
-                if (!courseID2hours.containsKey(aclass.getId())) {
-                    return false;
-                }
-
-                if (courseID2hours.get(aclass.getId()).compareTo(currentKey.getValue()) == 0) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 }

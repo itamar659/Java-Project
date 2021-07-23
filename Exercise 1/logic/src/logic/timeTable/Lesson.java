@@ -83,4 +83,29 @@ public class Lesson implements Cloneable {
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
+
+    public int compareByDHCTS(Lesson lesson) {
+        if (this.getDay() < lesson.getDay()) {
+            return -1;
+        }
+        if (this.getDay() > lesson.getDay()) {
+            return 1;
+        }
+
+        if (this.getHour() < lesson.getHour()) {
+            return -1;
+        }
+        if (this.getHour() > lesson.getHour()) {
+            return 1;
+        }
+
+        if (this.getaClass().getId().compareTo(lesson.getaClass().getId()) < 0) {
+            return -1;
+        }
+        if (this.getaClass().getId().compareTo(lesson.getaClass().getId()) > 0) {
+            return 1;
+        }
+
+        return this.getTeacher().getId().compareTo(lesson.getTeacher().getId());
+    }
 }

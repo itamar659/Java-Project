@@ -19,6 +19,9 @@ public class RuleFactory {
         } else if (Knowledgeable.class.getSimpleName().equals(ruleName)) {
             return new Knowledgeable();
 
+        } else if (Satisfactory.class.getSimpleName().equals(ruleName)){
+            return new Satisfactory();
+
         } else if (Sequentiality.class.getSimpleName().equals(ruleName)) {
             new Sequentiality();
 

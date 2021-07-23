@@ -6,8 +6,9 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class WorkingHoursPreference extends Rule {
 
-    public WorkingHoursPreference() {
-        this.setId("WorkingHoursPreference");
+    @Override
+    public String getId() {
+        return "WorkingHoursPreference";
     }
 
     @Override

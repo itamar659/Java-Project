@@ -11,6 +11,11 @@ import java.util.*;
 
 public class Sequentiality extends Rule implements Parameterizable {
 
+    @Override
+    public String getId() {
+        return "Sequentiality";
+    }
+
     private int totalHours;
 
     public int getTotalHours() {
@@ -19,10 +24,6 @@ public class Sequentiality extends Rule implements Parameterizable {
 
     public void setTotalHours(int totalHours) {
         this.totalHours = totalHours;
-    }
-
-    public Sequentiality() {
-        this.setId("Sequentiality");
     }
 
     @Override

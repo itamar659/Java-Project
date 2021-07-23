@@ -88,6 +88,7 @@
 				<xs:enumeration value="TeacherIsHuman"/>
 				<xs:enumeration value="Singularity"/>
 				<xs:enumeration value="Knowledgeable"/>
+				<xs:enumeration value="Satisfactory"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -159,11 +160,7 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="ETT-Configuration">
-		<xs:simpleType>
-			<xs:list itemType="xs:string"/>
-		</xs:simpleType>
-	</xs:element>
+	<xs:element name="ETT-Configuration" type="xs:string"/>
 	<xs:element name="ETT-Crossover">
 		<xs:complexType>
 			<xs:attribute name="configuration" type="xs:string"/>

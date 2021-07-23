@@ -93,7 +93,10 @@ public class TimeTableProblem implements Problem {
             Lesson lesson = new Lesson();
             lesson.setaClass(randomizeClass());
             lesson.setCourse(randomizeCourse());
-            lesson.setTeacher(randomizeTeacher());
+            do {
+                lesson.setTeacher(randomizeTeacher());
+            } while (!isTeacherTeaches(lesson.getTeacher(), lesson.getCourse()));
+
             lesson.setDay(randomizeDay());
             lesson.setHour(randomizeHour());
 
@@ -102,6 +105,10 @@ public class TimeTableProblem implements Problem {
         }
 
         return solution;
+    }
+
+    private boolean isTeacherTeaches(Teacher teacher, Course course) {
+        return teacher.getTeachesCoursesIDs().contains(course.getId());
     }
 
     public Class randomizeClass() {

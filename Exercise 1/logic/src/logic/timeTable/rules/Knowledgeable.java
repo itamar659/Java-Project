@@ -9,8 +9,9 @@ import java.util.List;
 
 public class Knowledgeable extends Rule {
 
-    public Knowledgeable() {
-        this.setId("Knowledgeable");
+    @Override
+    public String getId() {
+        return "Knowledgeable";
     }
 
     @Override
@@ -19,7 +20,7 @@ public class Knowledgeable extends Rule {
 
         int penalty = 0;
         for (Lesson lesson : lessons) {
-            if (lesson.getTeacher().getTeachesCoursesIDs().contains(lesson.getCourse().getId())) {
+            if (!lesson.getTeacher().getTeachesCoursesIDs().contains(lesson.getCourse().getId())) {
                 penalty++;
             }
         }

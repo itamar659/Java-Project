@@ -10,8 +10,9 @@ import java.util.*;
 
 public class DayOffClass extends Rule {
 
-    public DayOffClass() {
-        this.setId("DayOffClass");
+    @Override
+    public String getId() {
+        return "DayOffClass";
     }
 
     @Override

@@ -1,9 +1,9 @@
 package logic.evoAlgorithm.base;
 
 import logic.actions.Action;
+import logic.evoAlgorithm.timeTableEvolution.TimeTablePopulation;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public abstract class EvolutionEngine {
 
@@ -16,9 +16,11 @@ public abstract class EvolutionEngine {
     private int maxGenerations;
     private int currentGeneration;
 
-    private int listenEveryGeneration;
+    private final Map<Integer, Float> historyGeneration2Fitness;
+
+    private int updateGenerationInterval;
     private final Set<Action> generationEndListeners;
-    private final Set<Action> finishRunListeners; // TODO: Change names
+    private final Set<Action> finishRunListeners;
 
     public Population getPopulation() {
         return population;
@@ -72,36 +74,43 @@ public abstract class EvolutionEngine {
         return maxGenerations;
     }
 
-    public void setListenEveryGeneration(int listenEveryGeneration) {
-        this.listenEveryGeneration = listenEveryGeneration;
+    public Map<Integer, Float> getHistoryGeneration2Fitness() {
+        return historyGeneration2Fitness;
+    }
+
+    public void setUpdateGenerationInterval(int updateGenerationInterval) {
+        this.updateGenerationInterval = updateGenerationInterval;
     }
 
     public void addMutation(Mutation mutation) {
         this.mutations.add(mutation);
     }
 
-    public  void generationEndListener(Action action) {
+    public void generationEndListener(Action action) {
         generationEndListeners.add(action);
     }
 
-    public  void finishRunListener(Action action) {
+    public void finishRunListener(Action action) {
         finishRunListeners.add(action);
     }
 
     public EvolutionEngine() {
         mutations = new HashSet<>();
+        historyGeneration2Fitness = new TreeMap<>();
         generationEndListeners = new HashSet<>();
         finishRunListeners = new HashSet<>();
-        listenEveryGeneration = 100;
+        updateGenerationInterval = 100;
     }
 
     public void runAlgorithm(int generations) {
         maxGenerations = generations;
+        historyGeneration2Fitness.clear();
 
-        for (currentGeneration = 1; currentGeneration <= generations; currentGeneration++) {
+        for (currentGeneration = 0; currentGeneration <= generations; currentGeneration++) {
 
             // Call listeners
-            if (currentGeneration % listenEveryGeneration == 0) {
+            if (currentGeneration % updateGenerationInterval == 0) {
+                historyGeneration2Fitness.put(currentGeneration, population.getBestSolutionFitness().getFitness());
                 onEndOfGeneration();
             }
 
@@ -111,18 +120,32 @@ public abstract class EvolutionEngine {
             }
 
             // Step 2 - selection
-            population = selection.select(population);
+            Population selected = selection.select(population);
 
             // Step 3 - crossover
-            population = crossover.repopulateWithCrossover(population, populationSize);
+            Population children = crossover.crossover(selected, populationSize - selected.getSize());
 
             // Step 4 - mutate
             for (Mutation mutation : this.mutations) {
-                mutation.mutatePopulation(population, problem);
+                mutation.mutatePopulation(children, problem);
             }
+
+            newGeneration(population, selected, children);
         }
 
+        historyGeneration2Fitness.put(currentGeneration - 1, population.getBestSolutionFitness().getFitness());
         onFinish();
+    }
+
+    private void newGeneration(Population population, Population parents, Population children) {
+        int solIdx = 0;
+        for (solIdx = 0; solIdx < parents.getSize(); solIdx++) {
+            population.setSolutionByIndex(solIdx, parents.getSolutionByIndex(solIdx));
+        }
+
+        for (int i = 0; solIdx < populationSize; i++, solIdx++) {
+            population.setSolutionByIndex(solIdx, children.getSolutionByIndex(i));
+        }
     }
 
     protected void onEndOfGeneration() {

@@ -8,16 +8,6 @@ import java.util.Objects;
 public abstract class Rule implements HasId {
 
     private Rules.RULE_TYPE type;
-    private String id;
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    protected void setId(String id) {
-        this.id = id;
-    }
 
     public Rules.RULE_TYPE getType() {
         return type;
@@ -33,7 +23,7 @@ public abstract class Rule implements HasId {
     public String toString() {
         return "Rule{" +
                 "type=" + type +
-                ", ruleID='" + id + '\'' +
+                ", ruleID='" + getId() + '\'' +
                 '}';
     }
 
@@ -42,11 +32,11 @@ public abstract class Rule implements HasId {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Rule rule = (Rule) o;
-        return Objects.equals(id, rule.id);
+        return Objects.equals(getId(), rule.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(getId());
     }
 }

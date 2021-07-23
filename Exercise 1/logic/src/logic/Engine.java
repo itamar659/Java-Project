@@ -9,6 +9,7 @@ import logic.schema.XMLExtractException;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.util.Map;
 
 // Wrapper with more functionality to EvolutionEngine
 public class Engine {
@@ -52,17 +53,20 @@ public class Engine {
         return evoEngine.getCurrentGeneration();
     }
 
-    public void setUpdateEveryGeneration(int everyGens) {
-        evoEngine.setListenEveryGeneration(everyGens);
+    public void setUpdateGenerationInterval(int everyGens) {
+        evoEngine.setUpdateGenerationInterval(everyGens);
     }
 
     public TimeTable getBestResult() {
-        return (TimeTable) evoEngine.getPopulation().getSolutionByIndex(0);
+        return (TimeTable) evoEngine.getPopulation().getBestSolutionFitness();
+    }
+
+    public Map<Integer, Float> getHistoryGeneration2Fitness() {
+        return evoEngine.getHistoryGeneration2Fitness();
     }
 
     public Engine() {
         this.state = State.IDLE;
-
         this.evoEngine = new TimeTableEvolutionEngine();
         this.evoEngineSettings = new evoEngineSettingsWrapper((TimeTableEvolutionEngine) this.evoEngine);
         this.TTEvoEngineCreator = new TTEvoEngineCreator();
@@ -72,7 +76,7 @@ public class Engine {
         TTEvoEngineCreator.createFromXMLFile(xmlFile);
     }
 
-    public void loadEvoEngine() {
+    public void updateEvoEngine() {
         EvolutionEngine evolutionEngine = this.TTEvoEngineCreator.getLastCreatedTTEEngine();
         // Update the engine
         this.evoEngine.setPopulationSize(evolutionEngine.getPopulationSize());

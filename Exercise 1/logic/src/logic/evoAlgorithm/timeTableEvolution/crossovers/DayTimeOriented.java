@@ -27,13 +27,13 @@ public class DayTimeOriented implements Crossover {
 
     // Very generic method (but may not answer every crossover)
     @Override
-    public Population repopulateWithCrossover(Population population, int reachSize) {
-        Population newPopulation = population.copySmallerPopulation(reachSize);
+    public Population crossover(Population population, int size) {
+        Population newPopulation = population.copySmallerPopulation(size);
 
         Solution father, mother;
 
         // change i in the inner for-loop
-        for (int i = population.getSize(); i < reachSize;) {
+        for (int i = population.getSize(); i < size;) {
             father = population.getSolutionByIndex(rand.nextInt(population.getSize()));
             mother = population.getSolutionByIndex(rand.nextInt(population.getSize()));
 
@@ -45,7 +45,7 @@ public class DayTimeOriented implements Crossover {
                 throw new NullPointerException("children (crossover return value) cannot be null after crossover activated.");
             }
 
-            for (int j = 0; j < children.size() && i < reachSize; j++, i++) {
+            for (int j = 0; j < children.size() && i < size; j++, i++) {
                 newPopulation.setSolutionByIndex(i, children.get(j));
             }
         }
@@ -55,13 +55,13 @@ public class DayTimeOriented implements Crossover {
 
     // Very specific method for this situation
     private List<Solution> crossover(Solution father, Solution mother) throws CloneNotSupportedException {
-        // TODO: MAY NOT WORK. CHECK WITH PRINTS
+        // TODO: MAY NOT WORK. CHECK
 
         // sort the lessons
         List<Lesson> fatherLessons = ((TimeTable) father).getLessons();
         List<Lesson> motherLessons = ((TimeTable) mother).getLessons();
-        fatherLessons.sort(DayTimeOriented::compareLessons);
-        motherLessons.sort(DayTimeOriented::compareLessons);
+        fatherLessons.sort(Lesson::compareByDHCTS);
+        motherLessons.sort(Lesson::compareByDHCTS);
 
         // Create Lists with null objects.
         List<Lesson> parent1 = new ArrayList<>();
@@ -71,9 +71,9 @@ public class DayTimeOriented implements Crossover {
         while (fatherIdx < fatherLessons.size() && motherIdx < motherLessons.size()) {
             Lesson fLesson = fatherLessons.get(fatherIdx);
             Lesson mLesson = motherLessons.get(motherIdx);
-            int cmpResult = DayTimeOriented.compareLessons(fLesson, mLesson);
+            int cmpResult = fLesson.compareByDHCTS(mLesson);
 
-            if (cmpResult < 0) { // TODO: Check if changed the compare function
+            if (cmpResult < 0) {
                 parent1.add((Lesson) fLesson.clone());
                 parent2.add(null);
                 fatherIdx++;
@@ -142,30 +142,5 @@ public class DayTimeOriented implements Crossover {
         return "DayTimeOriented{" +
                 "cutting-points=" + cuttingPoints +
                 '}';
-    }
-
-    private static int compareLessons(Lesson o1, Lesson o2) {
-        if (o1.getDay() < o2.getDay()) {
-            return -1;
-        }
-        if (o1.getDay() > o2.getDay()) {
-            return 1;
-        }
-
-        if (o1.getHour() < o2.getHour()) {
-            return  -1;
-        }
-        if (o1.getHour() > o2.getHour()) {
-            return  1;
-        }
-
-        if (o1.getaClass().getId().compareTo(o2.getaClass().getId()) < 0) {
-            return  -1;
-        }
-        if (o1.getaClass().getId().compareTo(o2.getaClass().getId()) > 0) {
-            return 1;
-        }
-
-        return o1.getTeacher().getId().compareTo(o2.getTeacher().getId());
     }
 }

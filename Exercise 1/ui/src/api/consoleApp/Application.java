@@ -6,6 +6,8 @@ import api.consoleApp.menu.MenuItem;
 import logic.*;
 import logic.actions.Action;
 import logic.schema.XMLExtractException;
+import logic.timeTable.rules.base.Rule;
+import logic.timeTable.rules.base.Rules;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -48,19 +50,21 @@ public class Application {
         engine = new Engine();
         engine.generationEndListener(this::displayAlgorithmProgressOnUpdate);
         engine.finishRunListener(this::displayAlgorithmResultsOnFinished);
-        engine.setUpdateEveryGeneration(25);
+        engine.setUpdateGenerationInterval(25);
     }
 
     private void displayAlgorithmResultsOnFinished() {
         System.out.println("Algorithm finished!");
+        System.out.printf("Best fitness found: %.4f%n", engine.getBestResult().getFitness());
     }
 
     private void displayAlgorithmProgressOnUpdate() {
         float progressPercentage = ((float) engine.getCurrentGeneration()) / engine.getMaxGenerations() * 100f;
         System.out.printf("Progress (%.2f%%): %d / %d generations%n",
                 progressPercentage, engine.getCurrentGeneration(), engine.getMaxGenerations());
-        System.out.printf("Current best fitness: %f%n", engine.getBestResult().getFitness());
+        System.out.printf("Current best fitness: %.4f%n", engine.getBestResult().getFitness());
         System.out.println("----------");
+
     }
 
     public void run() {
@@ -68,6 +72,8 @@ public class Application {
     }
 
     private void initializeMenu() {
+        mainMenu = new MainMenu();
+
         MenuOptions.LOAD_FILE_TO_SYSTEM.updateActivation(this::openXMLFile);
         MenuOptions.SHOW_SETTINGS.updateActivation(this::showSettingsNProperties);
         MenuOptions.RUN_ALGORITHM.updateActivation(this::runAlgorithm);
@@ -75,7 +81,6 @@ public class Application {
         MenuOptions.SHOW_ALGORITHM_HISTORY.updateActivation(this::showAlgorithmHistory);
         MenuOptions.EXIT.updateActivation(mainMenu::exitMainMenu);
 
-        mainMenu = new MainMenu();
         mainMenu.setCurrentMenu(createFunctionalMenuFromEnum());
     }
 
@@ -126,7 +131,7 @@ public class Application {
             }
         }
 
-        engine.loadEvoEngine();
+        engine.updateEvoEngine();
 
         System.out.println("The file loaded correctly (hopefully)! New settings and properties have been created.");
     }
@@ -151,6 +156,7 @@ public class Application {
         // Display rules
         System.out.println(EngineOutput.getRulesDetails(engine.getEvoEngineSettings()));
         // Algorithm settings
+        System.out.println("Evolution algorithm properties:");
         System.out.println(EngineOutput.getEvoAlgorithmDetails(engine.getEvoEngineSettings()));
     }
 
@@ -169,12 +175,12 @@ public class Application {
             }
         }
 
-        int generations = getNumberOfGenerationsInput();
-        int updateEvery = getUpdateEvery();
+        int generations = askNumberOfGenerationsFromUser();
+        int updateEvery = askGenerationIntervalFromUser();
 
         // Start the algorithm
         System.out.printf("Starting the algorithm%n%n");
-        engine.setUpdateEveryGeneration(updateEvery);
+        engine.setUpdateGenerationInterval(updateEvery);
         engine.startAlgorithm(generations);
     }
 
@@ -186,36 +192,62 @@ public class Application {
             return;
         }
 
-        //System.out.println("Please enter the following parameters:");
-        //System.out.printf("A day between 0 to %d ( D ): %n", engine.getAlgorithmSettings().getDays());
+        System.out.println("Analyzing the best result - the best time table!");
+        System.out.println("Please insert a way to represent the data (RAW, TEACHER, CLASS):");
+        System.out.println("RAW - shows all the lessons written in the time table.");
+        System.out.println("TEACHER - shows for each teacher his time tables ");
+        System.out.println("CLASS - shows for each class his time table");
 
+        String input = scanner.nextLine();
+        switch (input.toUpperCase()) {
+            case "RAW":
+                System.out.println(EngineOutput.bestResultAsRAW(engine.getBestResult()));
+                break;
+            case "TEACHER":
+                System.out.println(EngineOutput.bestResultTEACHER(engine.getBestResult()));
+                break;
+            case "CLASS":
+                System.out.println(EngineOutput.bestResultCLASS(engine.getBestResult()));
+                break;
+            default:
+                System.out.printf("'%s' not found as an option. Shows default information:%n", input);
+                break;
+        }
 
-        // NOT CLOSE TO BE DONE 19.07
+        System.out.printf("Best solution fitness: %.4f%n", engine.getBestResult().getFitness());
 
-        // TOMORROW WORK ON IT  20.07 :3
+        for (Rule rule : engine.getBestResult().getRules().getListOfRules()) {
+            System.out.printf("Rule '%s' (%s) Score: %.4f%n",
+                    rule.getId(), rule.getType(), rule.calcFitness(engine.getBestResult()));
+        }
 
-        // FINISHED XML FIRST, GUESS IT'S TODAY THEN 22.07
-
-        System.out.println("The best result:");
-        System.out.println(engine.getBestResult());
-        // TODO: Show best results.
+        System.out.printf("HARD rules avg fitness: %.1f%n", engine.getBestResult().getAvgFitness(Rules.RULE_TYPE.HARD));
+        System.out.printf("SOFT rules avg fitness: %.1f%n", engine.getBestResult().getAvgFitness(Rules.RULE_TYPE.SOFT));
     }
 
     private void showAlgorithmHistory() {
         if (!isFileLoadedWrapper()) {
             return;
         } else if (engine.getState() == Engine.State.IDLE) {
-            System.out.println("There are no results. Please run the algorithm first."); // TODO: Copy code #1
+            System.out.println("There are no results. Please run the algorithm first.");
             return;
         }
 
-        System.out.println("History:");
-        // TODO: Display history.
+        Map<Integer, Float> generations2Fitness = engine.getHistoryGeneration2Fitness();
+        System.out.printf("Recorded %d stages of generations.%n", generations2Fitness.size());
+
+        Float prevFitness = null;
+        for (Map.Entry<Integer, Float> currentTTGeneration : generations2Fitness.entrySet()) {
+            if (prevFitness == null) {
+                System.out.printf("First generation fitness: %.4f%n", currentTTGeneration.getValue());
+            } else {
+                System.out.printf("Generation %d fitness: %.4f (%+.4f)%n",
+                        currentTTGeneration.getKey(), currentTTGeneration.getValue(), (currentTTGeneration.getValue() - prevFitness));
+            }
+
+            prevFitness = currentTTGeneration.getValue();
+        }
     }
-
-
-
-
 
     private boolean isFileLoadedWrapper() {
         if (!engine.isFileLoaded()) {
@@ -226,29 +258,26 @@ public class Application {
         return true;
     }
 
-
-
-
-    private int getUpdateEvery() {
-        int updateEvery = -1;
+    private int askGenerationIntervalFromUser() {
+        int generationInterval = -1;
 
         do {
-            System.out.println("Enter every how many generations do you want to be updated:");
+            System.out.println("Enter the generations interval to keep updated:");
             String input = scanner.nextLine();
             try {
-                updateEvery = Integer.parseInt(input);
-                if (updateEvery < 1) {
+                generationInterval = Integer.parseInt(input);
+                if (generationInterval < 1) {
                     System.out.println("The number has to be above 1.");
                 }
             } catch (NumberFormatException ignored) {
                 System.out.println("Please insert a natural number.");
             }
-        } while (updateEvery < 1);
+        } while (generationInterval < 1);
 
-        return updateEvery;
+        return generationInterval;
     }
 
-    private int getNumberOfGenerationsInput() {
+    private int askNumberOfGenerationsFromUser() {
         int generations = -1;
 
         do {

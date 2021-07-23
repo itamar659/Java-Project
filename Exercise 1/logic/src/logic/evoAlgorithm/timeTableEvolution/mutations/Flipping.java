@@ -62,7 +62,7 @@ public class Flipping extends Mutation implements Parameterizable {
     @Override
     public void mutatePopulation(Population population, Problem problem) {
         for (Solution solution : population.getSolutions()) {
-            if (rand.nextFloat() <= probability) {
+            if (rand.nextDouble() <= probability) {
                 mutate(solution, problem);
             }
         }
@@ -79,16 +79,6 @@ public class Flipping extends Mutation implements Parameterizable {
         for (int i = 0; i < numOfMutates; i++) {
             lessonsChosen.add(lessons.get(rand.nextInt(lessons.size())));
         }
-
-        // Without multiply lessons
-//        for (int i = 0; i < numOfMutates; i++) {
-//            int lChosen = rand.nextInt(lessons.size());
-//            if (!lessonsChosen.contains(lessons.get(lChosen))) {
-//                lessonsChosen.add(lessons.get(lChosen));
-//            } else {
-//                i--;
-//            }
-//        }
 
         // mutate the chosen lessons
         for (Lesson lesson : lessonsChosen) {
@@ -115,7 +105,8 @@ public class Flipping extends Mutation implements Parameterizable {
     @Override
     public String toString() {
         return "Flipping{" +
-                "maxTuples=" + maxTupples +
+                "probability=" + probability +
+                ", maxTupples=" + maxTupples +
                 ", component=" + component +
                 '}';
     }
