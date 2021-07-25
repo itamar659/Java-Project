@@ -43,6 +43,8 @@ public abstract class Population {
 
     public abstract Population copySmallerPopulation(int size);
 
+    public abstract Population initializeSubPopulation(int size);
+
     public int getSize() {
         return solutions.length;
     }

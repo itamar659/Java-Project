@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class TimeTableProblem implements Problem {
 
-    private static Random rand = new Random();
+    private static final Random rand = new Random();
 
     // All the classes in this time table
     private List<Class> classes;
@@ -79,9 +79,6 @@ public class TimeTableProblem implements Problem {
 
     @Override
     public Solution createSolution() {
-        // TODO: If the teacher doesn't teach that course, change a teacher / course
-        // TODO: Also if the class doesn't study this course, change the class / course
-
         TimeTable solution = new TimeTable(this);
         solution.setRules(this.rules);
 
@@ -90,15 +87,7 @@ public class TimeTableProblem implements Problem {
 
         for (int i = 0; i < lessons; i++) {
             // Randomize lesson
-            Lesson lesson = new Lesson();
-            lesson.setaClass(randomizeClass());
-            lesson.setCourse(randomizeCourse());
-            do {
-                lesson.setTeacher(randomizeTeacher());
-            } while (!isTeacherTeaches(lesson.getTeacher(), lesson.getCourse()));
-
-            lesson.setDay(randomizeDay());
-            lesson.setHour(randomizeHour());
+            Lesson lesson = randomizeLesson();
 
             // Add to the time table
             solution.addLesson(lesson);
@@ -109,6 +98,20 @@ public class TimeTableProblem implements Problem {
 
     private boolean isTeacherTeaches(Teacher teacher, Course course) {
         return teacher.getTeachesCoursesIDs().contains(course.getId());
+    }
+
+    public Lesson randomizeLesson() {
+        Lesson lesson = new Lesson();
+        lesson.setaClass(randomizeClass());
+        lesson.setCourse(randomizeCourse());
+        do {
+            lesson.setTeacher(randomizeTeacher());
+        } while (!isTeacherTeaches(lesson.getTeacher(), lesson.getCourse()));
+
+        lesson.setDay(randomizeDay());
+        lesson.setHour(randomizeHour());
+
+        return lesson;
     }
 
     public Class randomizeClass() {

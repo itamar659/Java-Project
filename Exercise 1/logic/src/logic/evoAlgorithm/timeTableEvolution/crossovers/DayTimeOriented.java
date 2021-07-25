@@ -28,12 +28,12 @@ public class DayTimeOriented implements Crossover {
     // Very generic method (but may not answer every crossover)
     @Override
     public Population crossover(Population population, int size) {
-        Population newPopulation = population.copySmallerPopulation(size);
+        Population newPopulation = population.initializeSubPopulation(size);
 
         Solution father, mother;
 
         // change i in the inner for-loop
-        for (int i = population.getSize(); i < size;) {
+        for (int i = 0; i < size;) {
             father = population.getSolutionByIndex(rand.nextInt(population.getSize()));
             mother = population.getSolutionByIndex(rand.nextInt(population.getSize()));
 
@@ -53,55 +53,20 @@ public class DayTimeOriented implements Crossover {
         return newPopulation;
     }
 
+    private static class Parents {
+
+        public final List<Lesson> father;
+        public final List<Lesson> mother;
+
+        public Parents(List<Lesson> father, List<Lesson> mother) {
+            this.father = father;
+            this.mother = mother;
+        }
+    }
+
     // Very specific method for this situation
     private List<Solution> crossover(Solution father, Solution mother) throws CloneNotSupportedException {
-        // TODO: MAY NOT WORK. CHECK
-
-        // sort the lessons
-        List<Lesson> fatherLessons = ((TimeTable) father).getLessons();
-        List<Lesson> motherLessons = ((TimeTable) mother).getLessons();
-        fatherLessons.sort(Lesson::compareByDHCTS);
-        motherLessons.sort(Lesson::compareByDHCTS);
-
-        // Create Lists with null objects.
-        List<Lesson> parent1 = new ArrayList<>();
-        List<Lesson> parent2 = new ArrayList<>();
-        int fatherIdx = 0;
-        int motherIdx = 0;
-        while (fatherIdx < fatherLessons.size() && motherIdx < motherLessons.size()) {
-            Lesson fLesson = fatherLessons.get(fatherIdx);
-            Lesson mLesson = motherLessons.get(motherIdx);
-            int cmpResult = fLesson.compareByDHCTS(mLesson);
-
-            if (cmpResult < 0) {
-                parent1.add((Lesson) fLesson.clone());
-                parent2.add(null);
-                fatherIdx++;
-            } else if (cmpResult > 1) {
-                parent1.add(null);
-                parent2.add((Lesson) mLesson.clone());
-                motherIdx++;
-            } else {
-                parent1.add((Lesson) fLesson.clone());
-                parent2.add((Lesson) mLesson.clone());
-                motherIdx++;
-                fatherIdx++;
-            }
-        }
-
-        for (;fatherIdx < fatherLessons.size(); fatherIdx++) {
-            Lesson fLesson = fatherLessons.get(fatherIdx);
-            parent1.add((Lesson) fLesson.clone());
-            parent2.add(null);
-        }
-
-        for (;motherIdx < motherLessons.size(); motherIdx++) {
-            Lesson mLesson = motherLessons.get(motherIdx);
-            parent1.add(null);
-            parent2.add((Lesson) mLesson.clone());
-        }
-        // End creating the lists with null object.........
-
+        Parents parents = parentsLessonsOrdered(((TimeTable) father).getLessons(), ((TimeTable) mother).getLessons());
 
         // Now we can put the one each other and do the split.
         TimeTable child1 = new TimeTable(((TimeTable) father).getProblem());
@@ -109,32 +74,80 @@ public class DayTimeOriented implements Crossover {
         child1.setRules(((TimeTable) father).getRules());
         child2.setRules(((TimeTable) father).getRules());
 
-        int swapAfter = parent1.size() / this.cuttingPoints;
+        int swapAfter = parents.father.size() / this.cuttingPoints;
         if (swapAfter == 0) {
             swapAfter = 1;
         }
 
-        for (int i = 0; i < parent1.size(); i++) {
+        for (int i = 0; i < parents.father.size(); i++) {
             if (i % swapAfter == 0) {
                 TimeTable temp = child1;
                 child1 = child2;
                 child2 = temp;
             }
 
-            if (parent1.get(i) != null) {
-                child1.addLesson((Lesson) parent1.get(i).clone());
+            if (parents.father.get(i) != null) {
+                child1.addLesson((Lesson) parents.father.get(i).clone());
             }
 
-            if (parent2.get(i) != null) {
-                child2.addLesson((Lesson) parent2.get(i).clone());
+            if (parents.mother.get(i) != null) {
+                child2.addLesson((Lesson) parents.mother.get(i).clone());
             }
         }
 
         List<Solution> children = new ArrayList<>();
-        if (child1.getLessons().size() > 0) children.add(child1);
-        if (child2.getLessons().size() > 0) children.add(child2);
+        children.add(child1);
+        children.add(child2);
 
         return children;
+    }
+
+    private Parents parentsLessonsOrdered(List<Lesson> fatherLessons, List<Lesson> motherLessons)
+            throws CloneNotSupportedException {
+        // sort the lessons
+        fatherLessons.sort(Lesson::compareByDHCTS);
+        motherLessons.sort(Lesson::compareByDHCTS);
+
+        // Create Lists with null objects.
+        List<Lesson> parent1 = new ArrayList<>(fatherLessons.size() + motherLessons.size());
+        List<Lesson> parent2 = new ArrayList<>(fatherLessons.size() + motherLessons.size());
+        int fatherIdx = 0;
+        int motherIdx = 0;
+        int cmpResult = 0;
+        while (fatherIdx < fatherLessons.size() && motherIdx < motherLessons.size()) {
+            Lesson currentFatherLesson = fatherLessons.get(fatherIdx);
+            Lesson currentMotherLesson = motherLessons.get(motherIdx);
+            cmpResult = currentFatherLesson.compareByDHCTS(currentMotherLesson);
+
+            if (cmpResult < 0) {
+                parent1.add((Lesson) currentFatherLesson.clone());
+                parent2.add(null);
+                fatherIdx++;
+            } else if (cmpResult > 0) {
+                parent1.add(null);
+                parent2.add((Lesson) currentMotherLesson.clone());
+                motherIdx++;
+            } else {
+                parent1.add((Lesson) currentFatherLesson.clone());
+                parent2.add((Lesson) currentMotherLesson.clone());
+                motherIdx++;
+                fatherIdx++;
+            }
+        }
+
+        for (;fatherIdx < fatherLessons.size(); fatherIdx++) {
+            Lesson currentFatherLesson = fatherLessons.get(fatherIdx);
+            parent1.add((Lesson) currentFatherLesson.clone());
+            parent2.add(null);
+        }
+
+        for (;motherIdx < motherLessons.size(); motherIdx++) {
+            Lesson currentMotherLesson = motherLessons.get(motherIdx);
+            parent1.add(null);
+            parent2.add((Lesson) currentMotherLesson.clone());
+        }
+
+        return new Parents(parent1, parent2);
     }
 
     @Override

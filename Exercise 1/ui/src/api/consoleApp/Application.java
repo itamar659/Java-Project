@@ -15,6 +15,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+
+// TODO: Create the solution (and everything else(?)) generic - that get <TimeTable> as the type for our program.
+// TODO: Move some of the input stuff to another class
+
 public class Application {
 
     public enum MenuOptions {
@@ -53,22 +57,21 @@ public class Application {
         engine.setUpdateGenerationInterval(25);
     }
 
+    public void run() {
+        mainMenu.show();
+    }
+
     private void displayAlgorithmResultsOnFinished() {
         System.out.println("Algorithm finished!");
-        System.out.printf("Best fitness found: %.4f%n", engine.getBestResult().getFitness());
+        System.out.printf("Best fitness found: %f%n", engine.getBestResult().getFitness());
     }
 
     private void displayAlgorithmProgressOnUpdate() {
         float progressPercentage = ((float) engine.getCurrentGeneration()) / engine.getMaxGenerations() * 100f;
         System.out.printf("Progress (%.2f%%): %d / %d generations%n",
                 progressPercentage, engine.getCurrentGeneration(), engine.getMaxGenerations());
-        System.out.printf("Current best fitness: %.4f%n", engine.getBestResult().getFitness());
-        System.out.println("----------");
-
-    }
-
-    public void run() {
-        mainMenu.show();
+        System.out.printf("Current best fitness: %f%n", engine.getBestResult().getFitness());
+        System.out.println("------------------------------");
     }
 
     private void initializeMenu() {
@@ -148,16 +151,16 @@ public class Application {
         }
 
         // Display courses information
-        System.out.println(EngineOutput.getCoursesDetails(engine.getEvoEngineSettings()));
+        System.out.println(EvoInfoOutput.getCoursesDetails(engine.getEvoEngineSettings()));
         // Display teachers information
-        System.out.println(EngineOutput.getTeachersDetails(engine.getEvoEngineSettings()));
+        System.out.println(EvoInfoOutput.getTeachersDetails(engine.getEvoEngineSettings()));
         // Display classes information
-        System.out.println(EngineOutput.getClassesDetails(engine.getEvoEngineSettings()));
+        System.out.println(EvoInfoOutput.getClassesDetails(engine.getEvoEngineSettings()));
         // Display rules
-        System.out.println(EngineOutput.getRulesDetails(engine.getEvoEngineSettings()));
+        System.out.println(EvoInfoOutput.getRulesDetails(engine.getEvoEngineSettings()));
         // Algorithm settings
         System.out.println("Evolution algorithm properties:");
-        System.out.println(EngineOutput.getEvoAlgorithmDetails(engine.getEvoEngineSettings()));
+        System.out.println(EvoInfoOutput.getEvoAlgorithmDetails(engine.getEvoEngineSettings()));
     }
 
     private void runAlgorithm() {
@@ -188,7 +191,7 @@ public class Application {
         if (!isFileLoadedWrapper()) {
             return;
         } else if (engine.getState() == Engine.State.IDLE) {
-            System.out.println("There are no results. Please run the algorithm first."); // TODO: Copy code #1
+            System.out.println("There are no results. Please run the algorithm first.");
             return;
         }
 
@@ -201,23 +204,23 @@ public class Application {
         String input = scanner.nextLine();
         switch (input.toUpperCase()) {
             case "RAW":
-                System.out.println(EngineOutput.bestResultAsRAW(engine.getBestResult()));
+                System.out.println(TimeTableInfoOutput.bestResultAsRAW(engine.getBestResult()));
                 break;
             case "TEACHER":
-                System.out.println(EngineOutput.bestResultTEACHER(engine.getBestResult()));
+                System.out.println(TimeTableInfoOutput.bestResultTEACHER(engine.getBestResult()));
                 break;
             case "CLASS":
-                System.out.println(EngineOutput.bestResultCLASS(engine.getBestResult()));
+                System.out.println(TimeTableInfoOutput.bestResultCLASS(engine.getBestResult()));
                 break;
             default:
                 System.out.printf("'%s' not found as an option. Shows default information:%n", input);
                 break;
         }
 
-        System.out.printf("Best solution fitness: %.4f%n", engine.getBestResult().getFitness());
+        System.out.printf("Best solution fitness: %f%n", engine.getBestResult().getFitness());
 
         for (Rule rule : engine.getBestResult().getRules().getListOfRules()) {
-            System.out.printf("Rule '%s' (%s) Score: %.4f%n",
+            System.out.printf("Rule '%s' (%s) Score: %f%n",
                     rule.getId(), rule.getType(), rule.calcFitness(engine.getBestResult()));
         }
 
@@ -239,9 +242,9 @@ public class Application {
         Float prevFitness = null;
         for (Map.Entry<Integer, Float> currentTTGeneration : generations2Fitness.entrySet()) {
             if (prevFitness == null) {
-                System.out.printf("First generation fitness: %.4f%n", currentTTGeneration.getValue());
+                System.out.printf("First generation fitness: %f%n", currentTTGeneration.getValue());
             } else {
-                System.out.printf("Generation %d fitness: %.4f (%+.4f)%n",
+                System.out.printf("Generation %d fitness: %f (%+.4f)%n",
                         currentTTGeneration.getKey(), currentTTGeneration.getValue(), (currentTTGeneration.getValue() - prevFitness));
             }
 

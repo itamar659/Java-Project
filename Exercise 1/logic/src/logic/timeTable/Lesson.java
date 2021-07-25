@@ -108,4 +108,29 @@ public class Lesson implements Cloneable {
 
         return this.getTeacher().getId().compareTo(lesson.getTeacher().getId());
     }
+
+    public int compareByCSDHT(Lesson lesson) {
+        if (this.getaClass().getId().compareTo(lesson.getaClass().getId()) < 0) {
+            return -1;
+        }
+        if (this.getaClass().getId().compareTo(lesson.getaClass().getId()) > 0) {
+            return 1;
+        }
+
+        if (this.getCourse().getId().compareTo(lesson.getCourse().getId()) < 0) {
+            return -1;
+        }
+        if (this.getCourse().getId().compareTo(lesson.getCourse().getId()) > 0) {
+            return 1;
+        }
+
+        if (this.getDay() < lesson.getDay()) {
+            return -1;
+        }
+        if (this.getDay() > lesson.getDay()) {
+            return 1;
+        }
+
+        return this.getHour() - lesson.getHour();
+    }
 }

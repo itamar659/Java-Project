@@ -1,10 +1,10 @@
 package logic.evoAlgorithm.base;
 
 import logic.actions.Action;
-import logic.evoAlgorithm.timeTableEvolution.TimeTablePopulation;
 
 import java.util.*;
 
+// TODO: All the fields can move to data object.
 public abstract class EvolutionEngine {
 
     protected int populationSize;
@@ -82,10 +82,6 @@ public abstract class EvolutionEngine {
         this.updateGenerationInterval = updateGenerationInterval;
     }
 
-    public void addMutation(Mutation mutation) {
-        this.mutations.add(mutation);
-    }
-
     public void generationEndListener(Action action) {
         generationEndListeners.add(action);
     }
@@ -123,29 +119,16 @@ public abstract class EvolutionEngine {
             Population selected = selection.select(population);
 
             // Step 3 - crossover
-            Population children = crossover.crossover(selected, populationSize - selected.getSize());
+            population = crossover.crossover(selected, populationSize);
 
             // Step 4 - mutate
             for (Mutation mutation : this.mutations) {
-                mutation.mutatePopulation(children, problem);
+                mutation.mutatePopulation(population, problem);
             }
-
-            newGeneration(population, selected, children);
         }
 
         historyGeneration2Fitness.put(currentGeneration - 1, population.getBestSolutionFitness().getFitness());
         onFinish();
-    }
-
-    private void newGeneration(Population population, Population parents, Population children) {
-        int solIdx = 0;
-        for (solIdx = 0; solIdx < parents.getSize(); solIdx++) {
-            population.setSolutionByIndex(solIdx, parents.getSolutionByIndex(solIdx));
-        }
-
-        for (int i = 0; solIdx < populationSize; i++, solIdx++) {
-            population.setSolutionByIndex(solIdx, children.getSolutionByIndex(i));
-        }
     }
 
     protected void onEndOfGeneration() {

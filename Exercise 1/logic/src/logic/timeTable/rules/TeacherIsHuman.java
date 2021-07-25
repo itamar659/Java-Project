@@ -19,18 +19,25 @@ public class TeacherIsHuman extends Rule {
         List<Lesson> lessons = ((TimeTable) solution).getLessons();
 
         int penalty = 0;
-        for (int i = 0; i < lessons.size() - 1; i++) {
-            for (int j = i + 1; j < lessons.size(); j++) {
+        int max = lessons.size();
+
+        lessons.sort(Lesson::compareByDHCTS);
+        for (int i = 0; i < max - 1; i++) {
+            for (int j = i + 1; j < max; j++) {
                 if (lessons.get(i).getDay() == lessons.get(j).getDay()) { // same day
                     if (lessons.get(i).getHour() == lessons.get(j).getHour()) { // same hour
                         if (lessons.get(i).getTeacher().equals(lessons.get(j).getTeacher())) { // same teacher
                             penalty++;
                         }
+                    } else if (lessons.get(i).getHour() < lessons.get(j).getHour()) {
+                        break;
                     }
+                } else if (lessons.get(i).getDay() < lessons.get(j).getDay()) {
+                    break;
                 }
             }
         }
 
-        return 1f / (1 + penalty);
+        return (float)Math.pow((max - penalty) / ((float) max), 2);
     }
 }

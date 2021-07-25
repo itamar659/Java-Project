@@ -91,6 +91,8 @@ public class Engine {
 
     public void startAlgorithm(int generations) {
         this.state = State.RUNNING;
+        // Different thread
+        // In order to do it, maybe the evolutionEngine should have the state field.
         this.evoEngine.runAlgorithm(generations);
         this.state = State.COMPLETED;
     }

@@ -1,7 +1,8 @@
 package logic.timeTable.rules;
 
+import logic.evoAlgorithm.timeTableEvolution.TimeTableProblem;
 import logic.timeTable.TimeTable;
-import logic.Parameterizable;
+import logic.evoAlgorithm.base.Parameterizable;
 import logic.timeTable.rules.base.Rule;
 import logic.evoAlgorithm.base.Solution;
 import logic.timeTable.Course;
@@ -28,25 +29,11 @@ public class Sequentiality extends Rule implements Parameterizable {
 
     @Override
     public float calcFitness(Solution solution) {
-        final int DAYS = 7;
-        final int HOURS = 24;
         List<Lesson> lessons = ((TimeTable) solution).getLessons();
+        TimeTableProblem problem = ((TimeTable) solution).getProblem();
 
-        Map<Course, boolean[][]> course2schedule = new TreeMap<>(Comparator.comparing(Course::getId));
+        Map<Course, boolean[][]> course2schedule = course2teachTimeTable(problem.getDays(), problem.getHours(), lessons);
         int penalty = 0;
-
-        // create the schedule for a specific course
-        for (Lesson lesson : lessons) {
-            if (!course2schedule.containsKey(lesson.getCourse())) {
-                boolean[][] courseSchedule = new boolean[DAYS][HOURS];
-                for (boolean[] daySchedule : courseSchedule) {
-                    Arrays.fill(daySchedule, false);
-                }
-                course2schedule.put(lesson.getCourse(), courseSchedule);
-            }
-
-            course2schedule.get(lesson.getCourse())[lesson.getDay()][lesson.getHour()] = true;
-        }
 
         // Check if every teacher has at least one free day
         for (boolean[][] courseSchedule : course2schedule.values()) {
@@ -65,6 +52,23 @@ public class Sequentiality extends Rule implements Parameterizable {
         }
 
         return 1f / (1 + penalty);
+    }
+
+    private Map<Course, boolean[][]> course2teachTimeTable(int days, int hours, List<Lesson> lessons) {
+        Map<Course, boolean[][]> course2schedule = new TreeMap<>(Comparator.comparing(Course::getId));
+
+        for (Lesson lesson : lessons) {
+            if (!course2schedule.containsKey(lesson.getCourse())) {
+                boolean[][] courseSchedule = new boolean[days][hours];
+                for (boolean[] daySchedule : courseSchedule) {
+                    Arrays.fill(daySchedule, false);
+                }
+                course2schedule.put(lesson.getCourse(), courseSchedule);
+            }
+            course2schedule.get(lesson.getCourse())[lesson.getDay()][lesson.getHour()] = true;
+        }
+
+        return course2schedule;
     }
 
     @Override

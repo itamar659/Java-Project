@@ -31,4 +31,9 @@ public class TimeTablePopulation extends Population {
 
         return newPopulation;
     }
+
+    @Override
+    public Population initializeSubPopulation(int size) {
+        return new TimeTablePopulation(size, null);
+    }
 }

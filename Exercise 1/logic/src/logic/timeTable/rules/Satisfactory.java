@@ -3,7 +3,6 @@ package logic.timeTable.rules;
 import logic.evoAlgorithm.base.Solution;
 import logic.evoAlgorithm.timeTableEvolution.TimeTableProblem;
 import logic.timeTable.Class;
-import logic.timeTable.Course;
 import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rule;
@@ -26,7 +25,7 @@ public class Satisfactory extends Rule {
         Map<Class, Map<String, Integer>> class2course2hours = new HashMap<>();
 
         int penalty = 0;
-        int max = 0;
+        int max = problem.getClasses().stream().mapToInt(Class::getTotalHours).sum();
         for (Lesson lesson : lessons) {
             if (!class2course2hours.containsKey(lesson.getaClass())) {
                 class2course2hours.put(lesson.getaClass(), new HashMap<>());
@@ -53,8 +52,10 @@ public class Satisfactory extends Rule {
             for (Map.Entry<String, Integer> requiredCourse2hours : aclass.getCourseID2Hours().entrySet()) {
                 if (!courseID2hours.containsKey(requiredCourse2hours.getKey())) {
                     penalty += requiredCourse2hours.getValue();
+                } else if (requiredCourse2hours.getValue() > courseID2hours.get(requiredCourse2hours.getKey())) {
+                    penalty += requiredCourse2hours.getValue() - courseID2hours.get(requiredCourse2hours.getKey());
                 } else {
-                    penalty += Math.abs(courseID2hours.get(requiredCourse2hours.getKey()) - requiredCourse2hours.getValue());
+                    penalty += (courseID2hours.get(requiredCourse2hours.getKey()) - requiredCourse2hours.getValue());
                 }
             }
 
@@ -65,7 +66,10 @@ public class Satisfactory extends Rule {
             }
         }
 
-        return 1f / (1 + penalty);
+        if (penalty > max) {
+            return 0;
+        }
 
+        return (float) Math.pow((max - penalty) / ((double) max), 2);
     }
 }

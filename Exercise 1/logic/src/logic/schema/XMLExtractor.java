@@ -1,6 +1,6 @@
 package logic.schema;
 
-import logic.Parameterizable;
+import logic.evoAlgorithm.base.Parameterizable;
 import logic.evoAlgorithm.base.Crossover;
 import logic.evoAlgorithm.base.Mutation;
 import logic.evoAlgorithm.base.Selection;

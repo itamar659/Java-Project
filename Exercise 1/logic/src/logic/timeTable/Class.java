@@ -9,6 +9,7 @@ public class Class implements HasId, Cloneable {
     private String id;
     private String name;
     private final Map<String, Integer> courseID2Hours;
+    private int totalHours;
 
     @Override
     public String getId() {
@@ -31,7 +32,12 @@ public class Class implements HasId, Cloneable {
         return courseID2Hours;
     }
 
+    public int getTotalHours() {
+        return totalHours;
+    }
+
     public void addCourseToLearn(String courseID, int hours) {
+        totalHours += hours;
         this.courseID2Hours.put(courseID, hours);
     }
 

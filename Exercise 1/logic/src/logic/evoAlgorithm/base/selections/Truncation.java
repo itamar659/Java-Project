@@ -1,6 +1,6 @@
 package logic.evoAlgorithm.base.selections;
 
-import logic.Parameterizable;
+import logic.evoAlgorithm.base.Parameterizable;
 import logic.evoAlgorithm.base.Population;
 import logic.evoAlgorithm.base.Selection;
 

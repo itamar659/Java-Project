@@ -19,12 +19,13 @@ public class Knowledgeable extends Rule {
         List<Lesson> lessons = ((TimeTable) solution).getLessons();
 
         int penalty = 0;
+        int max = lessons.size();
         for (Lesson lesson : lessons) {
             if (!lesson.getTeacher().getTeachesCoursesIDs().contains(lesson.getCourse().getId())) {
                 penalty++;
             }
         }
 
-        return 1f / (1 + penalty);
+        return (max - penalty) / ((float)max);
     }
 }

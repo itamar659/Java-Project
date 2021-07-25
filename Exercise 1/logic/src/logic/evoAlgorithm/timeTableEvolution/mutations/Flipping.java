@@ -1,6 +1,6 @@
 package logic.evoAlgorithm.timeTableEvolution.mutations;
 
-import logic.Parameterizable;
+import logic.evoAlgorithm.base.Parameterizable;
 import logic.evoAlgorithm.base.*;
 import logic.timeTable.Lesson;
 import logic.evoAlgorithm.timeTableEvolution.TimeTableProblem;
@@ -17,7 +17,6 @@ public class Flipping extends Mutation implements Parameterizable {
     }
 
     private static final Random rand = new Random();
-
     private int maxTupples;
     private Component component;
 
@@ -75,6 +74,10 @@ public class Flipping extends Mutation implements Parameterizable {
         // Get the lessons to mutate
         int numOfMutates = rand.nextInt(this.maxTupples) + 1;
         List<Lesson> lessonsChosen = new ArrayList<>(numOfMutates);
+
+        if (lessons.size() <= 0) {
+            return;
+        }
 
         for (int i = 0; i < numOfMutates; i++) {
             lessonsChosen.add(lessons.get(rand.nextInt(lessons.size())));
