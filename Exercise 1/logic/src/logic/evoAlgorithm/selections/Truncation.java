@@ -1,4 +1,4 @@
-package logic.evoAlgorithm.base.selections;
+package logic.evoAlgorithm.selections;
 
 import logic.evoAlgorithm.base.Parameterizable;
 import logic.evoAlgorithm.base.Population;

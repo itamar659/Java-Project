@@ -70,6 +70,6 @@ public class Satisfactory extends Rule {
             return 0;
         }
 
-        return (float) Math.pow((max - penalty) / ((double) max), 2);
+        return (float) Math.pow((max - penalty) / ((double) max), 4);
     }
 }

@@ -1,10 +1,11 @@
 package logic.timeTable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Teacher implements HasId, Cloneable {
+public class Teacher implements HasId, Cloneable, Serializable {
 
     private String id;
     private String name;

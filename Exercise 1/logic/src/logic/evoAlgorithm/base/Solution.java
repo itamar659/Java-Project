@@ -1,6 +1,8 @@
 package logic.evoAlgorithm.base;
 
-public interface Solution {
+import java.io.Serializable;
+
+public interface Solution extends Serializable {
 
     float getFitness();
 }

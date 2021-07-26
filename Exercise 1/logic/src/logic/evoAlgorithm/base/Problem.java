@@ -1,6 +1,8 @@
 package logic.evoAlgorithm.base;
 
-public interface Problem {
+import java.io.Serializable;
+
+public interface Problem extends Serializable {
 
     Solution createSolution();
 

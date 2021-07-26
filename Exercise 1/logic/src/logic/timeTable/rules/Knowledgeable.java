@@ -26,6 +26,6 @@ public class Knowledgeable extends Rule {
             }
         }
 
-        return (max - penalty) / ((float)max);
+        return (float) Math.pow((max - penalty) / ((double) max), 3);
     }
 }

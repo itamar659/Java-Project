@@ -5,9 +5,10 @@ import logic.timeTable.rules.base.Rule;
 import logic.timeTable.rules.base.Rules;
 import logic.evoAlgorithm.base.Solution;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class TimeTable implements Solution {
+public class TimeTable implements Solution, Serializable {
 
     private final TimeTableProblem problem;
     private final List<Lesson> lessons;

@@ -1,9 +1,10 @@
 package logic.timeTable;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 // The data object that represents a specific time in the time table
-public class Lesson implements Cloneable {
+public class Lesson implements Cloneable, Serializable {
 
     private Class aClass;
     private Teacher teacher;

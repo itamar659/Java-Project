@@ -38,6 +38,6 @@ public class TeacherIsHuman extends Rule {
             }
         }
 
-        return (float)Math.pow((max - penalty) / ((float) max), 2);
+        return (float)Math.pow((max - penalty) / ((float) max), 3);
     }
 }

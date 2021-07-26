@@ -1,8 +1,9 @@
 package logic.timeTable;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Course implements HasId, Cloneable {
+public class Course implements HasId, Cloneable, Serializable {
 
     private String id;
     private String name;

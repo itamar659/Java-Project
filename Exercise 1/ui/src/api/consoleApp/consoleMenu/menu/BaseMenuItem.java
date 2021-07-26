@@ -1,5 +1,6 @@
 package api.consoleApp.consoleMenu.menu;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,6 +1,5 @@
 package logic;
 
-import logic.actions.Action;
 import logic.evoAlgorithm.timeTableEvolution.TimeTableEvolutionEngine;
 import logic.timeTable.TimeTable;
 import logic.evoAlgorithm.base.*;
@@ -9,10 +8,12 @@ import logic.schema.XMLExtractException;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.io.Serializable;
 import java.util.Map;
+import java.util.function.Supplier;
 
 // Wrapper with more functionality to EvolutionEngine
-public class Engine {
+public class Engine implements Serializable {
 
     public enum StopCondition {
         MAX_GENERATIONS, REQUESTED_FITNESS;
@@ -45,11 +46,11 @@ public class Engine {
         return state;
     }
 
-    public void generationEndListener(Action action) {
+    public void generationEndListener(Runnable action) {
         evoEngine.generationEndListener(action);
     }
 
-    public void finishRunListener(Action action) {
+    public void finishRunListener(Runnable action) {
         evoEngine.finishRunListener(action);
     }
 
@@ -91,10 +92,10 @@ public class Engine {
         if (this.state != State.RUNNING) {
             switch (stopCondition) {
                 case MAX_GENERATIONS:
-                    evoEngine.setStopCondition(() -> evoEngine.getCurrentGeneration() >= this.stopConditionMaxGenerations);
+                    evoEngine.setStopCondition((Supplier<Boolean> & Serializable)() -> evoEngine.getCurrentGeneration() >= this.stopConditionMaxGenerations);
                     break;
                 case REQUESTED_FITNESS:
-                    evoEngine.setStopCondition(() -> getBestResult().getFitness() >= stopConditionMaxFitness);
+                    evoEngine.setStopCondition((Supplier<Boolean> & Serializable)() -> getBestResult().getFitness() >= stopConditionMaxFitness);
                     break;
             }
         }
@@ -106,6 +107,7 @@ public class Engine {
 
     public Engine() {
         this.state = State.IDLE;
+        this.stopCondition = StopCondition.MAX_GENERATIONS;
         this.evoEngine = new TimeTableEvolutionEngine();
         this.evoEngineSettings = new evoEngineSettingsWrapper((TimeTableEvolutionEngine) this.evoEngine);
         this.TTEvoEngineCreator = new TTEvoEngineCreator();
@@ -130,8 +132,6 @@ public class Engine {
 
     public void startAlgorithm() {
         this.state = State.RUNNING;
-        // Different thread
-        // In order to do it, maybe the evolutionEngine should have the state field.
         this.evoEngine.runAlgorithm();
         this.state = State.COMPLETED;
     }

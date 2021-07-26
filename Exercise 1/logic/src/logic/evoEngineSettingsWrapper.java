@@ -9,10 +9,11 @@ import logic.timeTable.Class;
 import logic.timeTable.Course;
 import logic.timeTable.Teacher;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-public class evoEngineSettingsWrapper {
+public class evoEngineSettingsWrapper implements Serializable {
 
     private final TimeTableEvolutionEngine TTEAlgorithm;
 

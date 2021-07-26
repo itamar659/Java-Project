@@ -8,27 +8,30 @@ import logic.timeTable.rules.base.Rule;
 import logic.timeTable.rules.base.Rules;
 
 import javax.xml.bind.JAXBException;
-import java.io.File;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
 
-// TODO: Create the solution (and everything else(?)) generic - that get <TimeTable> as the type for our program.
+// TODO: Create the solution (and everything else(?)) generic - that get <TimeTable> as the type for our application.
 // TODO: Move some of the input stuff to another class
+
+// TODO: Remove everything after loading a new file. (Can check by the size of the save file...)
 
 public class Application {
 
-    private MainMenu mainMenu;
     private final Scanner scanner;
-    private final Engine engine;
+    private MainMenu mainMenu;
+    private Engine engine;
 
     public Application() {
         initializeMenu();
+
         scanner = new Scanner(System.in);
         engine = new Engine();
-        engine.generationEndListener(this::displayAlgorithmProgressOnUpdate);
-        engine.finishRunListener(this::displayAlgorithmResultsOnFinished);
+        engine.generationEndListener((Runnable & Serializable) this::displayAlgorithmProgressOnUpdate);
+        engine.finishRunListener((Runnable & Serializable) this::displayAlgorithmResultsOnFinished);
         engine.setUpdateGenerationInterval(25);
     }
 
@@ -44,6 +47,8 @@ public class Application {
         ApplicationMenus.MenuOptions.RUN_ALGORITHM.updateActivation(this::runAlgorithm);
         ApplicationMenus.MenuOptions.SHOW_BEST_RESULT.updateActivation(this::showBestResult);
         ApplicationMenus.MenuOptions.SHOW_ALGORITHM_HISTORY.updateActivation(this::showAlgorithmHistory);
+        ApplicationMenus.MenuOptions.SAVE_TO_FILE.updateActivation(this::saveToFile);
+        ApplicationMenus.MenuOptions.LOAD_FROM_FILE.updateActivation(this::loadFromFile);
         ApplicationMenus.MenuOptions.EXIT.updateActivation(mainMenu::exitMainMenu);
 
         mainMenu.setCurrentMenu(ApplicationMenus.createFunctionalMenuFromEnum());
@@ -59,7 +64,7 @@ public class Application {
             float progressPercentage = ((float) engine.getCurrentGeneration()) / engine.getMaxGenerationsCondition() * 100f;
             System.out.printf("Progress (%.2f%%): %d / %d generations%n",
                     progressPercentage, engine.getCurrentGeneration(), engine.getMaxGenerationsCondition());
-            System.out.printf("Current best fitness: %f%n", engine.getBestResult().getFitness());
+            System.out.printf("Best current fitness: %f%n", engine.getBestResult().getFitness());
 
         } else if (engine.getStopCondition() == Engine.StopCondition.REQUESTED_FITNESS) {
             float progressPercentage = (engine.getBestResult().getFitness()) / engine.getMaxFitnessCondition() * 100f;
@@ -71,7 +76,6 @@ public class Application {
         }
         System.out.println("------------------------------");
     }
-
     private void openXMLFile() {
         if (engine.getState() == Engine.State.RUNNING) {
             System.out.println("The algorithm now running. Please wait for it to complete.");
@@ -279,6 +283,50 @@ public class Application {
 
             prevFitness = currentTTGeneration.getValue();
         }
+    }
+
+    private void saveToFile() {
+        System.out.println("Enter a file name or full path of the save file:");
+        String path = scanner.nextLine();
+        if (Files.exists(Paths.get(path))) {
+            System.out.println("This file already exists. Are you sure you overwrite it? (y/n)");
+            if (!getUserYesNoAnswer()) {
+                System.out.println("Back to main menu");
+                return;
+            }
+        }
+
+        try {
+            AppIO.SerializeToFile(path, this.engine);
+        } catch (IOException e) {
+            System.out.println("Cannot access the file.");
+            return;
+        }
+
+        System.out.println("File saved completed!");
+    }
+
+    private void loadFromFile() {
+        System.out.println("Enter a file name or full path to load the file:");
+        String path = scanner.nextLine();
+        if (!Files.exists(Paths.get(path))) {
+            System.out.println("This doesn't exists.");
+            return;
+        }
+
+        try {
+            engine = AppIO.DeserializeFromFile(path);
+            engine.generationEndListener((Runnable & Serializable) this::displayAlgorithmProgressOnUpdate);
+            engine.finishRunListener((Runnable & Serializable) this::displayAlgorithmResultsOnFinished);
+        } catch (IOException e) {
+            System.out.println("The file corrupted or not built for this application.");
+            return;
+        } catch (ClassNotFoundException e) {
+            System.out.println("The file is not match for this application");
+            return;
+        }
+
+        System.out.println("File loaded completed!");
     }
 
     private boolean isFileLoadedCheck() {

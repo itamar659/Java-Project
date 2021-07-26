@@ -13,10 +13,11 @@ import logic.timeTable.rules.base.Rules;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-public class TTEvoEngineCreator {
+public class TTEvoEngineCreator implements Serializable {
 
     private EvolutionEngine lastCreatedTTEEngine;
 

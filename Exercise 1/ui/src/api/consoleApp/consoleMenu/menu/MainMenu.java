@@ -1,5 +1,6 @@
 package api.consoleApp.consoleMenu.menu;
 
+import java.io.Serializable;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 

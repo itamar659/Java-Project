@@ -84,4 +84,12 @@ public class Sizer extends Mutation implements Parameterizable {
             lessons.remove(rand.nextInt(lessons.size()));
         }
     }
+
+    @Override
+    public String toString() {
+        return "Sizer{" +
+                "probability=" + probability +
+                ", totalTupples=" + totalTupples +
+                '}';
+    }
 }

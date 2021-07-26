@@ -1,11 +1,10 @@
 package logic.timeTable.rules.base;
 
-import logic.timeTable.rules.base.Rule;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Rules {
+public class Rules implements Serializable {
 
     public enum RULE_TYPE {
         SOFT, HARD;

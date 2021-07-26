@@ -1,6 +1,8 @@
 package logic.evoAlgorithm.base;
 
-public abstract class Mutation {
+import java.io.Serializable;
+
+public abstract class Mutation implements Serializable {
 
     protected double probability;
 

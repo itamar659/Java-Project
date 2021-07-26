@@ -1,13 +1,11 @@
 package api.consoleApp.consoleMenu.menu;
 
-import logic.actions.Action;
-
 public class MenuItem extends BaseMenuItem {
 
-    private Action method;
+    private Runnable method;
     private static final MethodType THE_ACTION_TYPE = MethodType.ACTIVE_METHOD;
 
-    public void setMethod(Action method) {
+    public void setMethod(Runnable method) {
         this.method = method;
     }
 
@@ -22,7 +20,7 @@ public class MenuItem extends BaseMenuItem {
             return THE_ACTION_TYPE;
         }
 
-        method.execute();
+        method.run();
         return THE_ACTION_TYPE;
     }
 }

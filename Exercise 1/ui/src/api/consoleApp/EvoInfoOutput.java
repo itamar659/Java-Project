@@ -14,7 +14,10 @@ import java.util.Map;
 
 public class EvoInfoOutput {
 
-    private static final String indents = "   ";
+    private EvoInfoOutput() { // No need an instance
+    }
+
+    private static final String indents = "  ";
 
     public static String getCoursesDetails(evoEngineSettingsWrapper evoEngineSettings) {
         List<Course> courses = evoEngineSettings.getCourses();
@@ -44,19 +47,19 @@ public class EvoInfoOutput {
         for (Teacher teacher : teachers) {
             strBuilder.append(String.format("%sTeacher ID: %s (%s)%n",
                     indents, teacher.getId(), teacher.getName()));
-            strBuilder.append(String.format("%sTeaches the courses (total %d):%n",
-                    indents, teacher.getTeachesCoursesIDs().size()));
+            strBuilder.append(String.format("%s%sTeaches the courses (total %d):%n",
+                    indents, indents, teacher.getTeachesCoursesIDs().size()));
 
             // Write all the courses this teacher teaches
             for (String courseID : teacher.getTeachesCoursesIDs()) {
                 Course course = evoEngineSettings.findCourse(courseID);
 
                 if (course == null) {
-                    strBuilder.append(String.format("%s%sCourse ID %s NOT FOUND in courses database%n",
-                            indents, indents, courseID));
+                    strBuilder.append(String.format("%s%s%sCourse ID %s NOT FOUND in courses database%n",
+                            indents, indents, indents, courseID));
                 } else {
-                    strBuilder.append(String.format("%s%s%s - %s%n",
-                            indents, indents, course.getName(), courseID));
+                    strBuilder.append(String.format("%s%s%s%s - %s%n",
+                            indents, indents, indents, course.getName(), courseID));
                 }
             }
         }
@@ -75,19 +78,19 @@ public class EvoInfoOutput {
         for (Class sclass : classes) {
             strBuilder.append(String.format("%sClass ID: %s (%s)%n",
                     indents, sclass.getId(), sclass.getName()));
-            strBuilder.append(String.format("%sCourses in schedule (total %d):%n",
-                    indents, sclass.getCourseID2Hours().size()));
+            strBuilder.append(String.format("%s%sCourses in schedule (total %d):%n",
+                    indents, indents, sclass.getCourseID2Hours().size()));
 
             // Write the courses for the current class
             for (Map.Entry<String, Integer> courseID2Hours : sclass.getCourseID2Hours().entrySet()) {
                 Course course = evoEngineSettings.findCourse(courseID2Hours.getKey());
 
                 if (course == null) {
-                    strBuilder.append(String.format("%s%sCourse ID %s NOT FOUND in courses database%n",
-                            indents, indents, courseID2Hours.getKey()));
+                    strBuilder.append(String.format("%s%s%sCourse ID %s NOT FOUND in courses database%n",
+                            indents, indents, indents, courseID2Hours.getKey()));
                 } else {
-                    strBuilder.append(String.format("%s%sLearning %s hours %s - %s%n",
-                            indents, indents, courseID2Hours.getValue(), course.getName(), course.getId()));
+                    strBuilder.append(String.format("%s%s%s(%s) %s - %s hours%n",
+                            indents, indents, indents, course.getId(), course.getName(), courseID2Hours.getValue()));
                 }
             }
         }

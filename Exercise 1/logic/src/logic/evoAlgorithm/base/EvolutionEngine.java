@@ -1,12 +1,11 @@
 package logic.evoAlgorithm.base;
 
-import logic.actions.Action;
-
+import java.io.Serializable;
 import java.util.*;
 import java.util.function.Supplier;
 
 // TODO: All the fields can move to data object.
-public abstract class EvolutionEngine {
+public abstract class EvolutionEngine implements Serializable {
 
     protected int populationSize;
     protected Population population;
@@ -21,8 +20,8 @@ public abstract class EvolutionEngine {
     private final Map<Integer, Float> historyGeneration2Fitness;
 
     private int updateGenerationInterval;
-    private final Set<Action> generationEndListeners;
-    private final Set<Action> finishRunListeners;
+    private transient Set<Runnable> generationEndListeners;
+    private transient Set<Runnable> finishRunListeners;
 
     public Population getPopulation() {
         return population;
@@ -84,20 +83,26 @@ public abstract class EvolutionEngine {
         this.stopCondition = stopCondition;
     }
 
-    public void generationEndListener(Action action) {
+    public void generationEndListener(Runnable action) {
+        if (generationEndListeners == null) {
+            this.generationEndListeners = new HashSet<>();
+        }
+
         generationEndListeners.add(action);
     }
 
-    public void finishRunListener(Action action) {
+    public void finishRunListener(Runnable action) {
+        if (finishRunListeners == null) {
+            this.finishRunListeners = new HashSet<>();
+        }
+
         finishRunListeners.add(action);
     }
 
     public EvolutionEngine() {
-        mutations = new HashSet<>();
-        historyGeneration2Fitness = new TreeMap<>();
-        generationEndListeners = new HashSet<>();
-        finishRunListeners = new HashSet<>();
-        updateGenerationInterval = 100;
+        this.mutations = new HashSet<>();
+        this.historyGeneration2Fitness = new TreeMap<>();
+        this.updateGenerationInterval = 100;
     }
 
     public void runAlgorithm() {
@@ -133,14 +138,14 @@ public abstract class EvolutionEngine {
     }
 
     protected void onEndOfGeneration() {
-        for (Action action : generationEndListeners) {
-            action.execute();
+        for (Runnable action : generationEndListeners) {
+            action.run();
         }
     }
 
     protected void onFinish() {
-        for (Action action : finishRunListeners) {
-            action.execute();
+        for (Runnable action : finishRunListeners) {
+            action.run();
         }
     }
 }

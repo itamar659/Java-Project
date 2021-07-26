@@ -1,13 +1,13 @@
 package api.consoleApp.consoleMenu.menu;
 
-import logic.actions.ParameterizedAction;
+import java.util.function.Consumer;
 
 public class Menu extends BaseMenuItem {
 
-    private ParameterizedAction<BaseMenuItem> method;
+    private Consumer<BaseMenuItem> method;
     private static final MethodType THE_ACTION_TYPE = MethodType.SUB_MENU;
 
-    public void setMethod(ParameterizedAction<BaseMenuItem> method) {
+    public void setMethod(Consumer<BaseMenuItem> method) {
         this.method = method;
     }
 
@@ -22,7 +22,7 @@ public class Menu extends BaseMenuItem {
             return THE_ACTION_TYPE;
         }
 
-        method.execute(this);
+        method.accept(this);
         return THE_ACTION_TYPE;
     }
 }

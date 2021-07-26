@@ -2,7 +2,6 @@ package api.consoleApp.consoleMenu;
 
 import api.consoleApp.consoleMenu.menu.Menu;
 import api.consoleApp.consoleMenu.menu.MenuItem;
-import logic.actions.Action;
 
 public class ApplicationMenus {
 
@@ -12,17 +11,19 @@ public class ApplicationMenus {
         RUN_ALGORITHM("Start the algorithm"),
         SHOW_BEST_RESULT("Display the best result"),
         SHOW_ALGORITHM_HISTORY("Display the progress of the algorithm"),
+        SAVE_TO_FILE("Save to file"),
+        LOAD_FROM_FILE("Load from file"),
         EXIT("Exit");
 
         private final String title;
-        private Action activation;
+        private Runnable activation;
 
         public String getTitle() {
             return this.title;
         }
 
-        public void updateActivation(Action activation) { this.activation = activation; }
-        public Action getActivation() { return this.activation;}
+        public void updateActivation(Runnable activation) { this.activation = activation; }
+        public Runnable getActivation() { return this.activation;}
 
         MenuOptions(String title) {
             this.title = title;

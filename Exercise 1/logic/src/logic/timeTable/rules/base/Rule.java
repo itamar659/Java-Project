@@ -3,9 +3,10 @@ package logic.timeTable.rules.base;
 import logic.evoAlgorithm.base.Solution;
 import logic.timeTable.HasId;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class Rule implements HasId {
+public abstract class Rule implements HasId, Serializable {
 
     private Rules.RULE_TYPE type;
 

@@ -1,8 +1,9 @@
 package logic.evoAlgorithm.base;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public abstract class Population {
+public abstract class Population implements Serializable {
 
     protected Solution[] solutions;
 
@@ -30,6 +31,7 @@ public abstract class Population {
         return bestFitness;
     }
 
+    // TODO: Fix an unknown bug.
     public void sort() {
         Arrays.sort(solutions, (o1, o2) -> {
             if (o1.getFitness() < o2.getFitness()) {

@@ -10,6 +10,9 @@ import java.util.function.Function;
 
 public class TimeTableInfoOutput {
 
+    private TimeTableInfoOutput() { // No need an instance
+    }
+
     public static String bestResultAsRAW(TimeTable bestResult) {
         final String headerFormat = "%-8s|%-8s|%-8s|%-8s|%-8s%n";
         StringBuilder strBuilder = new StringBuilder();
