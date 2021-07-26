@@ -3,6 +3,7 @@ package logic.evoAlgorithm.base;
 import logic.actions.Action;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 // TODO: All the fields can move to data object.
 public abstract class EvolutionEngine {
@@ -13,8 +14,9 @@ public abstract class EvolutionEngine {
     protected Crossover crossover;
     protected Set<Mutation> mutations;
     protected Problem problem;
-    private int maxGenerations;
     private int currentGeneration;
+
+    private Supplier<Boolean> stopCondition;
 
     private final Map<Integer, Float> historyGeneration2Fitness;
 
@@ -70,16 +72,16 @@ public abstract class EvolutionEngine {
         return currentGeneration;
     }
 
-    public int getMaxGenerations() {
-        return maxGenerations;
-    }
-
     public Map<Integer, Float> getHistoryGeneration2Fitness() {
         return historyGeneration2Fitness;
     }
 
     public void setUpdateGenerationInterval(int updateGenerationInterval) {
         this.updateGenerationInterval = updateGenerationInterval;
+    }
+
+    public void setStopCondition(Supplier<Boolean> stopCondition) {
+        this.stopCondition = stopCondition;
     }
 
     public void generationEndListener(Action action) {
@@ -98,11 +100,10 @@ public abstract class EvolutionEngine {
         updateGenerationInterval = 100;
     }
 
-    public void runAlgorithm(int generations) {
-        maxGenerations = generations;
+    public void runAlgorithm() {
         historyGeneration2Fitness.clear();
 
-        for (currentGeneration = 0; currentGeneration <= generations; currentGeneration++) {
+        for (currentGeneration = 0; !stopCondition.get(); currentGeneration++) {
 
             // Call listeners
             if (currentGeneration % updateGenerationInterval == 0) {

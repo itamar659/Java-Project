@@ -14,12 +14,20 @@ import java.util.Map;
 // Wrapper with more functionality to EvolutionEngine
 public class Engine {
 
+    public enum StopCondition {
+        MAX_GENERATIONS, REQUESTED_FITNESS;
+    }
+
     public enum State {
         IDLE, RUNNING, COMPLETED;
     }
 
     private boolean isFileLoaded;
     private State state;
+    private StopCondition stopCondition;
+
+    private int stopConditionMaxGenerations;
+    private float stopConditionMaxFitness;
 
     private final EvolutionEngine evoEngine;
     private final TTEvoEngineCreator TTEvoEngineCreator;
@@ -45,8 +53,20 @@ public class Engine {
         evoEngine.finishRunListener(action);
     }
 
-    public  int getMaxGenerations() {
-        return evoEngine.getMaxGenerations();
+    public  int getMaxGenerationsCondition() {
+        return this.stopConditionMaxGenerations;
+    }
+
+    public void setMaxGenerationsCondition(int stopConditionMaxGenerations) {
+        this.stopConditionMaxGenerations = stopConditionMaxGenerations;
+    }
+
+    public float getMaxFitnessCondition() {
+        return stopConditionMaxFitness;
+    }
+
+    public void setMaxFitnessCondition(float stopConditionMaxFitness) {
+        this.stopConditionMaxFitness = stopConditionMaxFitness;
     }
 
     public  int getCurrentGeneration() {
@@ -63,6 +83,25 @@ public class Engine {
 
     public Map<Integer, Float> getHistoryGeneration2Fitness() {
         return evoEngine.getHistoryGeneration2Fitness();
+    }
+
+    public void setStopCondition(StopCondition stopCondition) {
+        this.stopCondition = stopCondition;
+
+        if (this.state != State.RUNNING) {
+            switch (stopCondition) {
+                case MAX_GENERATIONS:
+                    evoEngine.setStopCondition(() -> evoEngine.getCurrentGeneration() >= this.stopConditionMaxGenerations);
+                    break;
+                case REQUESTED_FITNESS:
+                    evoEngine.setStopCondition(() -> getBestResult().getFitness() >= stopConditionMaxFitness);
+                    break;
+            }
+        }
+    }
+
+    public StopCondition getStopCondition() {
+        return stopCondition;
     }
 
     public Engine() {
@@ -89,11 +128,11 @@ public class Engine {
         this.state = State.IDLE;
     }
 
-    public void startAlgorithm(int generations) {
+    public void startAlgorithm() {
         this.state = State.RUNNING;
         // Different thread
         // In order to do it, maybe the evolutionEngine should have the state field.
-        this.evoEngine.runAlgorithm(generations);
+        this.evoEngine.runAlgorithm();
         this.state = State.COMPLETED;
     }
 }

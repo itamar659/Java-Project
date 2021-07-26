@@ -1,4 +1,4 @@
-package api.consoleApp.menu;
+package api.consoleApp.consoleMenu.menu;
 
 import java.util.ArrayList;
 import java.util.List;

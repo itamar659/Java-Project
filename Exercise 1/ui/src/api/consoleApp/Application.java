@@ -1,10 +1,8 @@
 package api.consoleApp;
 
-import api.consoleApp.menu.MainMenu;
-import api.consoleApp.menu.Menu;
-import api.consoleApp.menu.MenuItem;
+import api.consoleApp.consoleMenu.ApplicationMenus;
+import api.consoleApp.consoleMenu.menu.MainMenu;
 import logic.*;
-import logic.actions.Action;
 import logic.schema.XMLExtractException;
 import logic.timeTable.rules.base.Rule;
 import logic.timeTable.rules.base.Rules;
@@ -20,29 +18,6 @@ import java.util.*;
 // TODO: Move some of the input stuff to another class
 
 public class Application {
-
-    public enum MenuOptions {
-        LOAD_FILE_TO_SYSTEM("Load a new XML file"),
-        SHOW_SETTINGS("Display the settings and algorithm properties"),
-        RUN_ALGORITHM("Start the algorithm"),
-        SHOW_BEST_RESULT("Display the best result"),
-        SHOW_ALGORITHM_HISTORY("Display the progress of the algorithm"),
-        EXIT("Exit");
-
-        private final String title;
-        private Action activation;
-
-        public String getTitle() {
-            return this.title;
-        }
-
-        public void updateActivation(Action activation) { this.activation = activation; }
-        public Action getActivation() { return this.activation;}
-
-        MenuOptions(String title) {
-            this.title = title;
-        }
-    }
 
     private MainMenu mainMenu;
     private final Scanner scanner;
@@ -61,43 +36,40 @@ public class Application {
         mainMenu.show();
     }
 
+    private void initializeMenu() {
+        mainMenu = new MainMenu();
+
+        ApplicationMenus.MenuOptions.LOAD_FILE_TO_SYSTEM.updateActivation(this::openXMLFile);
+        ApplicationMenus.MenuOptions.SHOW_SETTINGS.updateActivation(this::showSettingsNProperties);
+        ApplicationMenus.MenuOptions.RUN_ALGORITHM.updateActivation(this::runAlgorithm);
+        ApplicationMenus.MenuOptions.SHOW_BEST_RESULT.updateActivation(this::showBestResult);
+        ApplicationMenus.MenuOptions.SHOW_ALGORITHM_HISTORY.updateActivation(this::showAlgorithmHistory);
+        ApplicationMenus.MenuOptions.EXIT.updateActivation(mainMenu::exitMainMenu);
+
+        mainMenu.setCurrentMenu(ApplicationMenus.createFunctionalMenuFromEnum());
+    }
+
     private void displayAlgorithmResultsOnFinished() {
         System.out.println("Algorithm finished!");
         System.out.printf("Best fitness found: %f%n", engine.getBestResult().getFitness());
     }
 
     private void displayAlgorithmProgressOnUpdate() {
-        float progressPercentage = ((float) engine.getCurrentGeneration()) / engine.getMaxGenerations() * 100f;
-        System.out.printf("Progress (%.2f%%): %d / %d generations%n",
-                progressPercentage, engine.getCurrentGeneration(), engine.getMaxGenerations());
-        System.out.printf("Current best fitness: %f%n", engine.getBestResult().getFitness());
-        System.out.println("------------------------------");
-    }
+        if (engine.getStopCondition() == Engine.StopCondition.MAX_GENERATIONS) {
+            float progressPercentage = ((float) engine.getCurrentGeneration()) / engine.getMaxGenerationsCondition() * 100f;
+            System.out.printf("Progress (%.2f%%): %d / %d generations%n",
+                    progressPercentage, engine.getCurrentGeneration(), engine.getMaxGenerationsCondition());
+            System.out.printf("Current best fitness: %f%n", engine.getBestResult().getFitness());
 
-    private void initializeMenu() {
-        mainMenu = new MainMenu();
+        } else if (engine.getStopCondition() == Engine.StopCondition.REQUESTED_FITNESS) {
+            float progressPercentage = (engine.getBestResult().getFitness()) / engine.getMaxFitnessCondition() * 100f;
+            if (progressPercentage > 100) progressPercentage = 100;
+            System.out.printf("Generation: %d%n", engine.getCurrentGeneration());
+            System.out.printf("Progress (%.2f%%): %f / %f best fitness%n",
+                    progressPercentage, engine.getBestResult().getFitness(), engine.getMaxFitnessCondition());
 
-        MenuOptions.LOAD_FILE_TO_SYSTEM.updateActivation(this::openXMLFile);
-        MenuOptions.SHOW_SETTINGS.updateActivation(this::showSettingsNProperties);
-        MenuOptions.RUN_ALGORITHM.updateActivation(this::runAlgorithm);
-        MenuOptions.SHOW_BEST_RESULT.updateActivation(this::showBestResult);
-        MenuOptions.SHOW_ALGORITHM_HISTORY.updateActivation(this::showAlgorithmHistory);
-        MenuOptions.EXIT.updateActivation(mainMenu::exitMainMenu);
-
-        mainMenu.setCurrentMenu(createFunctionalMenuFromEnum());
-    }
-
-    private Menu createFunctionalMenuFromEnum() {
-        Menu theMenu = new Menu("Main Menu");
-
-        for (MenuOptions option : MenuOptions.values()) {
-            MenuItem currentMenuItem = new MenuItem(option.getTitle());
-            currentMenuItem.setMethod(option.getActivation());
-
-            theMenu.addMenuItem(currentMenuItem);
         }
-
-        return theMenu;
+        System.out.println("------------------------------");
     }
 
     private void openXMLFile() {
@@ -110,7 +82,6 @@ public class Application {
         // Get the file XML from the user
         System.out.println("Please enter the full path of the XML file contains the properties and settings for the application: ");
         String filePath = scanner.nextLine();
-
         if (!isFileXMLExists(filePath)) {
             return;
         }
@@ -135,18 +106,23 @@ public class Application {
         }
 
         engine.updateEvoEngine();
-
         System.out.println("The file loaded correctly (hopefully)! New settings and properties have been created.");
     }
 
-    private void showSettingsNProperties() {
-        if (!isFileLoadedWrapper()) {
-            return;
+    private boolean isFileXMLExists(String filePath) {
+        if (!filePath.endsWith(".xml")) {
+            System.out.println("The fine is not an xml file.");
+            return false;
+        } else if (!Files.exists(Paths.get(filePath))) {
+            System.out.println("File not exists in the current path.");
+            return false;
         }
 
-        if (engine.getEvoEngineSettings() == null) {
-            // Shouldn't come to here. In case it would, something messed up with my programming skills
-            System.out.println("Error! The engine for evolution algorithm not setup correctly. Forgot to initialize the engine settings.");
+        return true;
+    }
+
+    private void showSettingsNProperties() {
+        if (!isFileLoadedCheck()) {
             return;
         }
 
@@ -164,31 +140,80 @@ public class Application {
     }
 
     private void runAlgorithm() {
-        if (!isFileLoadedWrapper()) {
+        if (!isFileLoadedCheck()) {
             return;
-
         } else if (engine.getState() == Engine.State.RUNNING) {
             System.out.println("The algorithm already running.");
             displayAlgorithmProgressOnUpdate();
             return;
-
         } else if (engine.getState() == Engine.State.COMPLETED) {
             if (!confirmUserWantToEraseTheResults()) {
                 return;
             }
         }
 
-        int generations = askNumberOfGenerationsFromUser();
-        int updateEvery = askGenerationIntervalFromUser();
+        // TODO: Create a new menu and display it
+        System.out.println("Choose a stop condition for the algorithm:");
+        System.out.println("1. Stop Condition: Maximum number of generations.");
+        System.out.println("2. Stop Condition: Required fitness.");
+        System.out.print("Enter an option: ");
+        String input;
+        do {
+            input = scanner.nextLine();
+            if (input.equals("1")) {
+                stopCondMaxGenerations();
+                break;
+            } else if (input.equals("2")) {
+                stopCondMaxFitness();
+                break;
+            }
+
+            System.out.println("Please try again.");
+        } while (true);
+    }
+
+    private void stopCondMaxGenerations() {
+        int generations = askIntegerFromUser("Please insert the maximum number of generations:", 100);
+        int updateEvery = askIntegerFromUser("Enter the generations interval to keep updated:", 1);
 
         // Start the algorithm
         System.out.printf("Starting the algorithm%n%n");
         engine.setUpdateGenerationInterval(updateEvery);
-        engine.startAlgorithm(generations);
+        engine.setMaxGenerationsCondition(generations);
+        engine.setStopCondition(Engine.StopCondition.MAX_GENERATIONS);
+        engine.startAlgorithm();
+    }
+
+    private void stopCondMaxFitness() {
+        System.out.println("Please insert the fitness to stop at (a value between 0 to 1):");
+        float maxFitness;
+        String input;
+        do {
+            input = scanner.nextLine();
+            try {
+                maxFitness = Float.parseFloat(input);
+                if (maxFitness < 0 || maxFitness > 1.000001f) {
+                    System.out.println("Choose a value between 0 to 1.");
+                } else {
+                    break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("The input has to be a number.");
+            }
+        } while(true);
+
+        int updateEvery = askIntegerFromUser("Enter the generations interval to keep updated:", 1);
+
+        // Start the algorithm
+        System.out.printf("Starting the algorithm%n%n");
+        engine.setUpdateGenerationInterval(updateEvery);
+        engine.setMaxFitnessCondition(maxFitness);
+        engine.setStopCondition(Engine.StopCondition.REQUESTED_FITNESS);
+        engine.startAlgorithm();
     }
 
     private void showBestResult() {
-        if (!isFileLoadedWrapper()) {
+        if (!isFileLoadedCheck()) {
             return;
         } else if (engine.getState() == Engine.State.IDLE) {
             System.out.println("There are no results. Please run the algorithm first.");
@@ -202,6 +227,20 @@ public class Application {
         System.out.println("CLASS - shows for each class his time table");
 
         String input = scanner.nextLine();
+        displayRequiredInformation(input);
+
+        System.out.printf("Best solution fitness: %f%n", engine.getBestResult().getFitness());
+
+        for (Rule rule : engine.getBestResult().getRules().getListOfRules()) {
+            System.out.printf("Rule '%s' (%s) Score: %f%n",
+                    rule.getId(), rule.getType(), rule.calcFitness(engine.getBestResult()));
+        }
+
+        System.out.printf("HARD rules avg fitness: %.1f%n", engine.getBestResult().getAvgFitness(Rules.RULE_TYPE.HARD));
+        System.out.printf("SOFT rules avg fitness: %.1f%n", engine.getBestResult().getAvgFitness(Rules.RULE_TYPE.SOFT));
+    }
+
+    private void displayRequiredInformation(String input) {
         switch (input.toUpperCase()) {
             case "RAW":
                 System.out.println(TimeTableInfoOutput.bestResultAsRAW(engine.getBestResult()));
@@ -216,20 +255,10 @@ public class Application {
                 System.out.printf("'%s' not found as an option. Shows default information:%n", input);
                 break;
         }
-
-        System.out.printf("Best solution fitness: %f%n", engine.getBestResult().getFitness());
-
-        for (Rule rule : engine.getBestResult().getRules().getListOfRules()) {
-            System.out.printf("Rule '%s' (%s) Score: %f%n",
-                    rule.getId(), rule.getType(), rule.calcFitness(engine.getBestResult()));
-        }
-
-        System.out.printf("HARD rules avg fitness: %.1f%n", engine.getBestResult().getAvgFitness(Rules.RULE_TYPE.HARD));
-        System.out.printf("SOFT rules avg fitness: %.1f%n", engine.getBestResult().getAvgFitness(Rules.RULE_TYPE.SOFT));
     }
 
     private void showAlgorithmHistory() {
-        if (!isFileLoadedWrapper()) {
+        if (!isFileLoadedCheck()) {
             return;
         } else if (engine.getState() == Engine.State.IDLE) {
             System.out.println("There are no results. Please run the algorithm first.");
@@ -252,7 +281,7 @@ public class Application {
         }
     }
 
-    private boolean isFileLoadedWrapper() {
+    private boolean isFileLoadedCheck() {
         if (!engine.isFileLoaded()) {
             System.out.println("Please open first an XML file with the correct format of the application.");
             return false;
@@ -261,63 +290,29 @@ public class Application {
         return true;
     }
 
-    private int askGenerationIntervalFromUser() {
-        int generationInterval = -1;
+    private int askIntegerFromUser(String message, int minValue) {
+        int value = minValue - 1;
 
         do {
-            System.out.println("Enter the generations interval to keep updated:");
+            System.out.println(message); // "Please insert the maximum number of generations:"
             String input = scanner.nextLine();
             try {
-                generationInterval = Integer.parseInt(input);
-                if (generationInterval < 1) {
-                    System.out.println("The number has to be above 1.");
+                value = Integer.parseInt(input);
+                if (value < minValue) {
+                    System.out.printf("The number has to be above or equal to %s.%n", minValue);
                 }
             } catch (NumberFormatException ignored) {
                 System.out.println("Please insert a natural number.");
             }
-        } while (generationInterval < 1);
+        } while (value < minValue);
 
-        return generationInterval;
+        return value;
     }
 
-    private int askNumberOfGenerationsFromUser() {
-        int generations = -1;
-
-        do {
-            System.out.println("Please insert the maximum number of generations:");
-            String input = scanner.nextLine();
-            try {
-                generations = Integer.parseInt(input);
-                if (generations < 100) {
-                    System.out.println("The number of generations has to be 100 or greater.");
-                }
-            } catch (NumberFormatException ignored) {
-                System.out.println("Please insert a natural number.");
-            }
-        } while (generations < 100);
-
-        return generations;
-    }
-
-    private boolean isFileXMLExists(String filePath) {
-        if (!filePath.endsWith(".xml")) {
-            System.out.println("The fine is not an xml file.");
-            return false;
-        }
-
-        if (!Files.exists(Paths.get(filePath))) {
-            System.out.println("File not exists in the current path.");
-            return false;
-        }
-
-        return true;
-    }
-
-    // Maybe move to utils? Can be static too.
     private boolean confirmUserWantToEraseTheResults() {
         System.out.println("Your previous results will be erased permanently.");
         System.out.println("Are you sure you want to erase everything? (type y/n)");
-        boolean userAccept = getUserAnswer("y", "n");
+        boolean userAccept = getUserYesNoAnswer();
         if (!userAccept) {
             System.out.println("Operation canceled successfully.");
             return false;
@@ -326,22 +321,19 @@ public class Application {
         return true;
     }
 
-    // Maybe move to utils? Can be static too.
-    private boolean getUserAnswer(String accept, String decline) {
-        accept = accept.toLowerCase();
-        decline = decline.toLowerCase();
+    private boolean getUserYesNoAnswer() {
         String input;
 
         do {
             input = scanner.nextLine().toLowerCase();
-            if (input.equals(accept)) {
+            if (input.equals("y")) {
                 return true;
             }
-            else if (input.equals(decline)) {
+            else if (input.equals("n")) {
                 return false;
             }
 
-            System.out.println("Please type '" + accept + "' to accept, or '" + decline + "' to decline.");
+            System.out.println("Please type (y/n). 'y' to accept. 'n' to decline.");
         } while(true);
     }
 }
