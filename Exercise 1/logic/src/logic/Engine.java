@@ -79,6 +79,7 @@ public class Engine implements Serializable {
     }
 
     public TimeTable getBestResult() {
+        // TODO: Multi-thread problem. May delete while looking for the best fitness.
         return (TimeTable) evoEngine.getPopulation().getBestSolutionFitness();
     }
 
@@ -120,6 +121,7 @@ public class Engine implements Serializable {
     public void updateEvoEngine() {
         EvolutionEngine evolutionEngine = this.TTEvoEngineCreator.getLastCreatedTTEEngine();
         // Update the engine
+        this.evoEngine.clearHistory();
         this.evoEngine.setPopulationSize(evolutionEngine.getPopulationSize());
         this.evoEngine.setSelection(evolutionEngine.getSelection());
         this.evoEngine.setCrossover(evolutionEngine.getCrossover());

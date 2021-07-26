@@ -17,8 +17,6 @@ import java.util.*;
 // TODO: Create the solution (and everything else(?)) generic - that get <TimeTable> as the type for our application.
 // TODO: Move some of the input stuff to another class
 
-// TODO: Remove everything after loading a new file. (Can check by the size of the save file...)
-
 public class Application {
 
     private final Scanner scanner;

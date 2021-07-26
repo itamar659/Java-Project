@@ -5,6 +5,8 @@ import java.util.*;
 import java.util.function.Supplier;
 
 // TODO: All the fields can move to data object.
+
+// TODO: Can have a best solution field, and save a single solution after the algorithm finish. (and del population that takes 700kb)
 public abstract class EvolutionEngine implements Serializable {
 
     protected int populationSize;
@@ -17,7 +19,7 @@ public abstract class EvolutionEngine implements Serializable {
 
     private Supplier<Boolean> stopCondition;
 
-    private final Map<Integer, Float> historyGeneration2Fitness;
+    private Map<Integer, Float> historyGeneration2Fitness;
 
     private int updateGenerationInterval;
     private transient Set<Runnable> generationEndListeners;
@@ -103,6 +105,11 @@ public abstract class EvolutionEngine implements Serializable {
         this.mutations = new HashSet<>();
         this.historyGeneration2Fitness = new TreeMap<>();
         this.updateGenerationInterval = 100;
+    }
+
+    public void clearHistory() {
+        this.historyGeneration2Fitness = new HashMap<>();
+        this.population = null;
     }
 
     public void runAlgorithm() {
