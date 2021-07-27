@@ -312,6 +312,13 @@ public class Application {
             return;
         }
 
+        // If already have results, ask before replace
+        if (engine.getState() == Engine.State.COMPLETED) {
+            if (!confirmUserWantToEraseTheResults()) {
+                return;
+            }
+        }
+
         try {
             engine = AppIO.DeserializeFromFile(path);
             engine.generationEndListener((Runnable & Serializable) this::displayAlgorithmProgressOnUpdate);
@@ -320,7 +327,7 @@ public class Application {
             System.out.println("The file corrupted or not built for this application.");
             return;
         } catch (ClassNotFoundException e) {
-            System.out.println("The file is not match for this application");
+            System.out.println("The file is not match for this application.");
             return;
         }
 

@@ -1,6 +1,6 @@
 package logic.evoAlgorithm.timeTableEvolution.mutations;
 
-import logic.evoAlgorithm.base.Parameterizable;
+import logic.evoAlgorithm.Parameterizable;
 import logic.evoAlgorithm.base.*;
 import logic.timeTable.Lesson;
 import logic.evoAlgorithm.timeTableEvolution.TimeTableProblem;

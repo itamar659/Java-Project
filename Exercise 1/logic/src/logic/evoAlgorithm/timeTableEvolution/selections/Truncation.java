@@ -1,6 +1,6 @@
-package logic.evoAlgorithm.selections;
+package logic.evoAlgorithm.timeTableEvolution.selections;
 
-import logic.evoAlgorithm.base.Parameterizable;
+import logic.evoAlgorithm.Parameterizable;
 import logic.evoAlgorithm.base.Population;
 import logic.evoAlgorithm.base.Selection;
 

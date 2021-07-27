@@ -2,7 +2,7 @@ package logic.timeTable.rules;
 
 import logic.evoAlgorithm.timeTableEvolution.TimeTableProblem;
 import logic.timeTable.TimeTable;
-import logic.evoAlgorithm.base.Parameterizable;
+import logic.evoAlgorithm.Parameterizable;
 import logic.timeTable.rules.base.Rule;
 import logic.evoAlgorithm.base.Solution;
 import logic.timeTable.Course;
