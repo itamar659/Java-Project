@@ -1,8 +1,8 @@
-package logic.evoAlgorithm.timeTableEvolution.factory;
+package logic.evoAlgorithm.factory;
 
-import logic.evoAlgorithm.base.Mutation;
-import logic.evoAlgorithm.timeTableEvolution.mutations.Flipping;
-import logic.evoAlgorithm.timeTableEvolution.mutations.Sizer;
+import engine.base.Mutation;
+import logic.evoAlgorithm.mutations.Flipping;
+import logic.evoAlgorithm.mutations.Sizer;
 import logic.timeTable.TimeTable;
 
 public class MutationFactory {

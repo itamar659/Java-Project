@@ -1,4 +1,4 @@
-package logic.evoAlgorithm.base;
+package engine.base;
 
 import java.io.Serializable;
 import java.util.Arrays;

@@ -1,9 +1,9 @@
-package logic.evoAlgorithm.timeTableEvolution.mutations;
+package logic.evoAlgorithm.mutations;
 
+import logic.evoAlgorithm.TimeTableProblem;
 import logic.schema.Parameterizable;
-import logic.evoAlgorithm.base.*;
+import engine.base.*;
 import logic.timeTable.Lesson;
-import logic.evoAlgorithm.timeTableEvolution.TimeTableProblem;
 import logic.timeTable.TimeTable;
 
 import java.util.ArrayList;

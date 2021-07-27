@@ -1,8 +1,8 @@
 package logic;
 
-import logic.evoAlgorithm.timeTableEvolution.TimeTableEvolutionEngine;
+import logic.evoAlgorithm.TimeTableEvolutionEngine;
 import logic.timeTable.TimeTable;
-import logic.evoAlgorithm.base.*;
+import engine.base.*;
 import logic.schema.TTEvoEngineCreator;
 import logic.schema.XMLExtractException;
 

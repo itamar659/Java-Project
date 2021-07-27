@@ -1,7 +1,7 @@
-package logic.evoAlgorithm.timeTableEvolution.factory;
+package logic.evoAlgorithm.factory;
 
-import logic.evoAlgorithm.timeTableEvolution.crossovers.DayTimeOriented;
-import logic.evoAlgorithm.base.Crossover;
+import logic.evoAlgorithm.crossovers.DayTimeOriented;
+import engine.base.Crossover;
 import logic.timeTable.TimeTable;
 
 public class CrossoverFactory {

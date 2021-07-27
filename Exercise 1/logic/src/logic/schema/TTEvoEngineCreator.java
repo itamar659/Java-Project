@@ -1,11 +1,11 @@
 package logic.schema;
 
-import logic.evoAlgorithm.base.Crossover;
-import logic.evoAlgorithm.base.EvolutionEngine;
-import logic.evoAlgorithm.base.Mutation;
-import logic.evoAlgorithm.base.Selection;
-import logic.evoAlgorithm.timeTableEvolution.TimeTableEvolutionEngine;
-import logic.evoAlgorithm.timeTableEvolution.TimeTableProblem;
+import engine.base.Crossover;
+import engine.base.EvolutionEngine;
+import engine.base.Mutation;
+import engine.base.Selection;
+import logic.evoAlgorithm.TimeTableEvolutionEngine;
+import logic.evoAlgorithm.TimeTableProblem;
 import logic.timeTable.Class;
 import logic.timeTable.Course;
 import logic.timeTable.Teacher;

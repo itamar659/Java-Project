@@ -1,6 +1,6 @@
 package api.consoleApp;
 
-import logic.evoAlgorithm.base.Mutation;
+import engine.base.Mutation;
 import logic.evoEngineSettingsWrapper;
 import logic.timeTable.Class;
 import logic.timeTable.Course;

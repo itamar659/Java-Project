@@ -1,7 +1,7 @@
-package logic.evoAlgorithm.timeTableEvolution;
+package logic.evoAlgorithm;
 
-import logic.evoAlgorithm.base.Population;
-import logic.evoAlgorithm.base.Problem;
+import engine.base.Population;
+import engine.base.Problem;
 import logic.timeTable.TimeTable;
 
 public class TimeTablePopulation extends Population<TimeTable> {

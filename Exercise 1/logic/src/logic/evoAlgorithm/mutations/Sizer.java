@@ -1,11 +1,11 @@
-package logic.evoAlgorithm.timeTableEvolution.mutations;
+package logic.evoAlgorithm.mutations;
 
+import logic.evoAlgorithm.TimeTableProblem;
 import logic.schema.Parameterizable;
-import logic.evoAlgorithm.base.Mutation;
-import logic.evoAlgorithm.base.Population;
-import logic.evoAlgorithm.base.Problem;
-import logic.evoAlgorithm.base.Solution;
-import logic.evoAlgorithm.timeTableEvolution.TimeTableProblem;
+import engine.base.Mutation;
+import engine.base.Population;
+import engine.base.Problem;
+import engine.base.Solution;
 import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
 

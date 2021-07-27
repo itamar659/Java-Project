@@ -1,13 +1,13 @@
 package logic.schema;
 
-import logic.evoAlgorithm.base.Crossover;
-import logic.evoAlgorithm.base.Mutation;
-import logic.evoAlgorithm.base.Selection;
-import logic.evoAlgorithm.timeTableEvolution.crossovers.DayTimeOriented;
-import logic.evoAlgorithm.timeTableEvolution.factory.CrossoverFactory;
-import logic.evoAlgorithm.timeTableEvolution.factory.MutationFactory;
-import logic.evoAlgorithm.timeTableEvolution.factory.RuleFactory;
-import logic.evoAlgorithm.timeTableEvolution.factory.SelectionFactory;
+import engine.base.Crossover;
+import engine.base.Mutation;
+import engine.base.Selection;
+import logic.evoAlgorithm.crossovers.DayTimeOriented;
+import logic.evoAlgorithm.factory.CrossoverFactory;
+import logic.evoAlgorithm.factory.MutationFactory;
+import logic.evoAlgorithm.factory.RuleFactory;
+import logic.evoAlgorithm.factory.SelectionFactory;
 import logic.schema.generated.*;
 import logic.timeTable.*;
 import logic.timeTable.Class;

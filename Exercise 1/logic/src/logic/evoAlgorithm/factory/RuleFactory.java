@@ -1,4 +1,4 @@
-package logic.evoAlgorithm.timeTableEvolution.factory;
+package logic.evoAlgorithm.factory;
 
 import logic.timeTable.TimeTable;
 import logic.timeTable.rules.*;

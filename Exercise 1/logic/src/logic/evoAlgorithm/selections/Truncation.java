@@ -1,8 +1,8 @@
-package logic.evoAlgorithm.timeTableEvolution.selections;
+package logic.evoAlgorithm.selections;
 
 import logic.schema.Parameterizable;
-import logic.evoAlgorithm.base.Population;
-import logic.evoAlgorithm.base.Selection;
+import engine.base.Population;
+import engine.base.Selection;
 import logic.timeTable.TimeTable;
 
 public class Truncation implements Selection<TimeTable>, Parameterizable {

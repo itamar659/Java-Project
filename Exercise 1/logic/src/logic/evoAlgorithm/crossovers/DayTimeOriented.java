@@ -1,10 +1,10 @@
-package logic.evoAlgorithm.timeTableEvolution.crossovers;
+package logic.evoAlgorithm.crossovers;
 
 import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
-import logic.evoAlgorithm.base.Crossover;
-import logic.evoAlgorithm.base.Population;
-import logic.evoAlgorithm.base.Solution;
+import engine.base.Crossover;
+import engine.base.Population;
+import engine.base.Solution;
 
 import java.util.ArrayList;
 import java.util.List;

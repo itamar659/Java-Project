@@ -1,9 +1,9 @@
 package logic.timeTable;
 
-import logic.evoAlgorithm.timeTableEvolution.TimeTableProblem;
+import logic.evoAlgorithm.TimeTableProblem;
 import logic.timeTable.rules.base.Rule;
 import logic.timeTable.rules.base.Rules;
-import logic.evoAlgorithm.base.Solution;
+import engine.base.Solution;
 
 import java.io.Serializable;
 import java.util.*;
@@ -26,7 +26,7 @@ public class TimeTable implements Solution<TimeTable>, Serializable {
         return rules;
     }
 
-    public void setRules(Rules rules) {
+    public void setRules(Rules<TimeTable> rules) {
         this.rules = rules;
     }
 

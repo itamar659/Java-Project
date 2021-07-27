@@ -1,10 +1,10 @@
-package logic.evoAlgorithm.timeTableEvolution;
+package logic.evoAlgorithm;
 
-import logic.evoAlgorithm.base.Problem;
+import engine.base.Problem;
 import logic.timeTable.*;
 import logic.timeTable.Class;
 import logic.timeTable.rules.base.Rules;
-import logic.evoAlgorithm.base.Solution;
+import engine.base.Solution;
 
 import java.util.List;
 import java.util.Random;

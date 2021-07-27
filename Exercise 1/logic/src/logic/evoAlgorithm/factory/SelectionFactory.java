@@ -1,7 +1,7 @@
-package logic.evoAlgorithm.timeTableEvolution.factory;
+package logic.evoAlgorithm.factory;
 
-import logic.evoAlgorithm.base.Selection;
-import logic.evoAlgorithm.timeTableEvolution.selections.Truncation;
+import engine.base.Selection;
+import logic.evoAlgorithm.selections.Truncation;
 import logic.timeTable.TimeTable;
 
 public class SelectionFactory {

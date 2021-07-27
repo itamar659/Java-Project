@@ -1,7 +1,7 @@
-package logic.evoAlgorithm.timeTableEvolution.crossovers;
+package logic.evoAlgorithm.crossovers;
 
-import logic.evoAlgorithm.base.Crossover;
-import logic.evoAlgorithm.base.Population;
+import engine.base.Crossover;
+import engine.base.Population;
 import logic.timeTable.TimeTable;
 
 public class AspectOriented implements Crossover<TimeTable> {

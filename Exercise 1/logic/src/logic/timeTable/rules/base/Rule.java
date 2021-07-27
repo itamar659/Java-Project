@@ -1,6 +1,6 @@
 package logic.timeTable.rules.base;
 
-import logic.evoAlgorithm.base.Solution;
+import engine.base.Solution;
 import logic.timeTable.HasId;
 
 import java.io.Serializable;

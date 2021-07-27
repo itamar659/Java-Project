@@ -1,7 +1,7 @@
 package logic.timeTable.rules;
 
-import logic.evoAlgorithm.base.Solution;
-import logic.evoAlgorithm.timeTableEvolution.TimeTableProblem;
+import engine.base.Solution;
+import logic.evoAlgorithm.TimeTableProblem;
 import logic.timeTable.Class;
 import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;

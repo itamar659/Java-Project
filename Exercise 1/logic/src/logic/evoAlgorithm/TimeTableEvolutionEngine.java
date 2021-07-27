@@ -1,6 +1,6 @@
-package logic.evoAlgorithm.timeTableEvolution;
+package logic.evoAlgorithm;
 
-import logic.evoAlgorithm.base.EvolutionEngine;
+import engine.base.EvolutionEngine;
 import logic.timeTable.TimeTable;
 
 public class TimeTableEvolutionEngine extends EvolutionEngine<TimeTable> {

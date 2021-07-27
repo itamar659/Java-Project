@@ -1,10 +1,10 @@
 package logic.timeTable.rules;
 
-import logic.evoAlgorithm.timeTableEvolution.TimeTableProblem;
+import logic.evoAlgorithm.TimeTableProblem;
 import logic.timeTable.TimeTable;
 import logic.schema.Parameterizable;
 import logic.timeTable.rules.base.Rule;
-import logic.evoAlgorithm.base.Solution;
+import engine.base.Solution;
 import logic.timeTable.Course;
 import logic.timeTable.Lesson;
 
