@@ -1,4 +1,4 @@
-package logic.evoAlgorithm;
+package logic.schema;
 
 public interface Parameterizable {
 

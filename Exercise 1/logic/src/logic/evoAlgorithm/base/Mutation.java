@@ -2,7 +2,7 @@ package logic.evoAlgorithm.base;
 
 import java.io.Serializable;
 
-public abstract class Mutation implements Serializable {
+public abstract class Mutation<T> implements Serializable {
 
     protected double probability;
 
@@ -14,5 +14,5 @@ public abstract class Mutation implements Serializable {
         this.probability = probability;
     }
 
-    public abstract void mutatePopulation(Population population, Problem problem);
+    public abstract void mutatePopulation(Population<T> population, Problem<T> problem);
 }

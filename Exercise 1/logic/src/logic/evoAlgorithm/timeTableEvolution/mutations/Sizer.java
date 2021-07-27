@@ -1,6 +1,6 @@
 package logic.evoAlgorithm.timeTableEvolution.mutations;
 
-import logic.evoAlgorithm.Parameterizable;
+import logic.schema.Parameterizable;
 import logic.evoAlgorithm.base.Mutation;
 import logic.evoAlgorithm.base.Population;
 import logic.evoAlgorithm.base.Problem;
@@ -12,7 +12,7 @@ import logic.timeTable.TimeTable;
 import java.util.List;
 import java.util.Random;
 
-public class Sizer extends Mutation implements Parameterizable {
+public class Sizer extends Mutation<TimeTable> implements Parameterizable {
 
     private static final Random rand = new Random();
     private int totalTupples;
@@ -44,16 +44,16 @@ public class Sizer extends Mutation implements Parameterizable {
     }
 
     @Override
-    public void mutatePopulation(Population population, Problem problem) {
-        for (Solution solution : population.getSolutions()) {
+    public void mutatePopulation(Population<TimeTable> population, Problem<TimeTable> problem) {
+        for (Solution<TimeTable> solution : population.getSolutions()) {
             if (rand.nextDouble() <= probability) {
                 mutate(solution, problem);
             }
         }
     }
 
-    private void mutate(Solution solution, Problem problem) {
-        List<Lesson> lessons = ((TimeTable) solution).getLessons();
+    private void mutate(Solution<TimeTable> solution, Problem<TimeTable> problem) {
+        List<Lesson> lessons = solution.getGens().getLessons();
         TimeTableProblem theProblem = (TimeTableProblem) problem;
 
         if (totalTupples >= 0) {

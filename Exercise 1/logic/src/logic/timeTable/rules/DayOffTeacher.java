@@ -9,7 +9,7 @@ import logic.timeTable.Teacher;
 
 import java.util.*;
 
-public class DayOffTeacher extends Rule {
+public class DayOffTeacher extends Rule<TimeTable> {
 
     @Override
     public String getId() {
@@ -17,9 +17,9 @@ public class DayOffTeacher extends Rule {
     }
 
     @Override
-    public float calcFitness(Solution solution) {
-        List<Lesson> lessons = ((TimeTable) solution).getLessons();
-        TimeTableProblem problem = ((TimeTable) solution).getProblem();
+    public float calcFitness(Solution<TimeTable> solution) {
+        List<Lesson> lessons = solution.getGens().getLessons();
+        TimeTableProblem problem = solution.getGens().getProblem();
 
         int penalty = 0;
         int max = 0;

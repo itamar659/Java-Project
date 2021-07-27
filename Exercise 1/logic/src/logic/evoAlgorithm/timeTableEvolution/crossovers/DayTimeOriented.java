@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class DayTimeOriented implements Crossover {
+public class DayTimeOriented implements Crossover<TimeTable> {
 
     private static final Random rand = new Random();
 
@@ -27,17 +27,17 @@ public class DayTimeOriented implements Crossover {
 
     // Very generic method (but may not answer every crossover)
     @Override
-    public Population crossover(Population population, int size) {
-        Population newPopulation = population.initializeSubPopulation(size);
+    public Population<TimeTable> crossover(Population<TimeTable> population, int size) {
+        Population<TimeTable> newPopulation = population.initializeSubPopulation(size);
 
-        Solution father, mother;
+        Solution<TimeTable> father, mother;
 
         // change i in the inner for-loop
         for (int i = 0; i < size;) {
             father = population.getSolutionByIndex(rand.nextInt(population.getSize()));
             mother = population.getSolutionByIndex(rand.nextInt(population.getSize()));
 
-            List<Solution> children = null;
+            List<Solution<TimeTable>> children = null;
             try {
                 children = crossover(father, mother);
             } catch (CloneNotSupportedException e) {
@@ -65,14 +65,14 @@ public class DayTimeOriented implements Crossover {
     }
 
     // Very specific method for this situation
-    private List<Solution> crossover(Solution father, Solution mother) throws CloneNotSupportedException {
-        Parents parents = parentsLessonsOrdered(((TimeTable) father).getLessons(), ((TimeTable) mother).getLessons());
+    private List<Solution<TimeTable>> crossover(Solution<TimeTable> father, Solution<TimeTable> mother) throws CloneNotSupportedException {
+        Parents parents = parentsLessonsOrdered(father.getGens().getLessons(), mother.getGens().getLessons());
 
         // Now we can put the one each other and do the split.
-        TimeTable child1 = new TimeTable(((TimeTable) father).getProblem());
-        TimeTable child2 = new TimeTable(((TimeTable) father).getProblem());
-        child1.setRules(((TimeTable) father).getRules());
-        child2.setRules(((TimeTable) father).getRules());
+        TimeTable child1 = new TimeTable(father.getGens().getProblem());
+        TimeTable child2 = new TimeTable(father.getGens().getProblem());
+        child1.setRules(father.getGens().getRules());
+        child2.setRules(father.getGens().getRules());
 
         int swapAfter = parents.father.size() / this.cuttingPoints;
         if (swapAfter == 0) {
@@ -87,15 +87,15 @@ public class DayTimeOriented implements Crossover {
             }
 
             if (parents.father.get(i) != null) {
-                child1.addLesson((Lesson) parents.father.get(i).clone());
+                child1.addLesson(parents.father.get(i).clone());
             }
 
             if (parents.mother.get(i) != null) {
-                child2.addLesson((Lesson) parents.mother.get(i).clone());
+                child2.addLesson(parents.mother.get(i).clone());
             }
         }
 
-        List<Solution> children = new ArrayList<>();
+        List<Solution<TimeTable>> children = new ArrayList<>();
         children.add(child1);
         children.add(child2);
 

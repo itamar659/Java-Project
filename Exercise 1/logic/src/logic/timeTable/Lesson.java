@@ -81,8 +81,8 @@ public class Lesson implements Cloneable, Serializable {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public Lesson clone() throws CloneNotSupportedException {
+        return (Lesson) super.clone();
     }
 
     public int compareByDHCTS(Lesson lesson) {

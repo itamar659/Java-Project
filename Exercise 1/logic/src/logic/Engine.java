@@ -30,7 +30,7 @@ public class Engine implements Serializable {
     private int stopConditionMaxGenerations;
     private float stopConditionMaxFitness;
 
-    private final EvolutionEngine evoEngine;
+    private final EvolutionEngine<TimeTable> evoEngine;
     private final TTEvoEngineCreator TTEvoEngineCreator;
     private final evoEngineSettingsWrapper evoEngineSettings;
 
@@ -119,7 +119,7 @@ public class Engine implements Serializable {
     }
 
     public void updateEvoEngine() {
-        EvolutionEngine evolutionEngine = this.TTEvoEngineCreator.getLastCreatedTTEEngine();
+        EvolutionEngine<TimeTable> evolutionEngine = this.TTEvoEngineCreator.getLastCreatedTTEEngine();
         // Update the engine
         this.evoEngine.clearHistory();
         this.evoEngine.setPopulationSize(evolutionEngine.getPopulationSize());

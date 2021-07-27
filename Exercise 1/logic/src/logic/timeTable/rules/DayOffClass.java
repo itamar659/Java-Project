@@ -8,7 +8,7 @@ import logic.timeTable.Class;
 
 import java.util.*;
 
-public class DayOffClass extends Rule {
+public class DayOffClass extends Rule<TimeTable> {
 
     @Override
     public String getId() {
@@ -16,8 +16,8 @@ public class DayOffClass extends Rule {
     }
 
     @Override
-    public float calcFitness(Solution solution) {
-        List<Lesson> lessons = ((TimeTable) solution).getLessons();
+    public float calcFitness(Solution<TimeTable> solution) {
+        List<Lesson> lessons = solution.getGens().getLessons();
         final int DAYS_IN_WEEK = 7;
 
         Map<Class, boolean[]> class2daysOfStudy = new TreeMap<>(Comparator.comparing(Class::getId));

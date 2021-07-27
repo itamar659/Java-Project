@@ -2,7 +2,7 @@ package logic.timeTable.rules;
 
 import logic.evoAlgorithm.timeTableEvolution.TimeTableProblem;
 import logic.timeTable.TimeTable;
-import logic.evoAlgorithm.Parameterizable;
+import logic.schema.Parameterizable;
 import logic.timeTable.rules.base.Rule;
 import logic.evoAlgorithm.base.Solution;
 import logic.timeTable.Course;
@@ -10,7 +10,7 @@ import logic.timeTable.Lesson;
 
 import java.util.*;
 
-public class Sequentiality extends Rule implements Parameterizable {
+public class Sequentiality extends Rule<TimeTable> implements Parameterizable {
 
     @Override
     public String getId() {
@@ -28,9 +28,9 @@ public class Sequentiality extends Rule implements Parameterizable {
     }
 
     @Override
-    public float calcFitness(Solution solution) {
-        List<Lesson> lessons = ((TimeTable) solution).getLessons();
-        TimeTableProblem problem = ((TimeTable) solution).getProblem();
+    public float calcFitness(Solution<TimeTable> solution) {
+        List<Lesson> lessons = solution.getGens().getLessons();
+        TimeTableProblem problem = solution.getGens().getProblem();
 
         Map<Course, boolean[][]> course2schedule = course2teachTimeTable(problem.getDays(), problem.getHours(), lessons);
         int penalty = 0;

@@ -5,6 +5,7 @@ import logic.evoEngineSettingsWrapper;
 import logic.timeTable.Class;
 import logic.timeTable.Course;
 import logic.timeTable.Teacher;
+import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rule;
 import logic.timeTable.rules.base.Rules;
 
@@ -99,12 +100,12 @@ public class EvoInfoOutput {
     }
 
     public static String getRulesDetails(evoEngineSettingsWrapper evoEngineSettings) {
-        Rules rules = evoEngineSettings.getRules();
+        Rules<TimeTable> rules = evoEngineSettings.getRules();
         StringBuilder strBuilder = new StringBuilder();
 
         strBuilder.append(String.format("Number of rules: %d%n", rules.getListOfRules().size()));
         int index = 1;
-        for (Rule rule : rules.getListOfRules()) {
+        for (Rule<TimeTable> rule : rules.getListOfRules()) {
             strBuilder.append(String.format("%s%d. %s - %s%n", indents, index, rule.getId(), rule.getType()));
             index++;
         }
@@ -121,7 +122,7 @@ public class EvoInfoOutput {
         strBuilder.append(String.format("Mutations operators: %d%n", algorithmSettings.getMutations().size()));
 
         int index = 1;
-        for (Mutation mutation : algorithmSettings.getMutations()) {
+        for (Mutation<TimeTable> mutation : algorithmSettings.getMutations()) {
             strBuilder.append(String.format("%s%d. %s%n", indents, index, mutation.toString()));
             index++;
         }

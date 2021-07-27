@@ -2,8 +2,9 @@ package logic.evoAlgorithm.timeTableEvolution.crossovers;
 
 import logic.evoAlgorithm.base.Crossover;
 import logic.evoAlgorithm.base.Population;
+import logic.timeTable.TimeTable;
 
-public class AspectOriented implements Crossover {
+public class AspectOriented implements Crossover<TimeTable> {
 
     public enum Orientation {
         CLASS, TEACHER;
@@ -12,7 +13,7 @@ public class AspectOriented implements Crossover {
     private Orientation orientation;
 
     @Override
-    public Population crossover(Population population, int reachSize) {
+    public Population<TimeTable> crossover(Population<TimeTable> population, int reachSize) {
         return null;
     }
 }

@@ -3,6 +3,7 @@ package logic;
 import logic.evoAlgorithm.timeTableEvolution.TimeTableEvolutionEngine;
 import logic.evoAlgorithm.base.Crossover;
 import logic.evoAlgorithm.base.Mutation;
+import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rules;
 import logic.evoAlgorithm.base.Selection;
 import logic.timeTable.Class;
@@ -17,15 +18,15 @@ public class evoEngineSettingsWrapper implements Serializable {
 
     private final TimeTableEvolutionEngine TTEAlgorithm;
 
-    public Selection getSelection() {
+    public Selection<TimeTable> getSelection() {
         return TTEAlgorithm.getSelection();
     }
 
-    public Crossover getCrossover() {
+    public Crossover<TimeTable> getCrossover() {
         return TTEAlgorithm.getCrossover();
     }
 
-    public Set<Mutation> getMutations() {
+    public Set<Mutation<TimeTable>> getMutations() {
         return TTEAlgorithm.getMutations();
     }
 
@@ -53,7 +54,7 @@ public class evoEngineSettingsWrapper implements Serializable {
         return TTEAlgorithm.getProblem().getCourses();
     }
 
-    public Rules getRules() {
+    public Rules<TimeTable> getRules() {
         return TTEAlgorithm.getProblem().getRules();
     }
 

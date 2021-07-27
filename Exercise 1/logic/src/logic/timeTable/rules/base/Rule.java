@@ -6,7 +6,7 @@ import logic.timeTable.HasId;
 import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class Rule implements HasId, Serializable {
+public abstract class Rule<T> implements HasId, Serializable {
 
     private Rules.RULE_TYPE type;
 
@@ -18,7 +18,7 @@ public abstract class Rule implements HasId, Serializable {
         this.type = type;
     }
 
-    public abstract float calcFitness(Solution solution);
+    public abstract float calcFitness(Solution<T> solution);
 
     @Override
     public String toString() {
@@ -32,12 +32,12 @@ public abstract class Rule implements HasId, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Rule rule = (Rule) o;
-        return Objects.equals(getId(), rule.getId());
+        Rule<?> rule = (Rule<?>) o;
+        return type == rule.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
+        return Objects.hash(type);
     }
 }

@@ -9,7 +9,7 @@ import logic.evoAlgorithm.base.Solution;
 import java.util.List;
 import java.util.Random;
 
-public class TimeTableProblem implements Problem {
+public class TimeTableProblem implements Problem<TimeTable> {
 
     private static final Random rand = new Random();
 
@@ -20,7 +20,7 @@ public class TimeTableProblem implements Problem {
     // All the teachers that teach in this time table
     private List<Teacher> teachers;
     // The set of rules for this time table
-    private Rules rules;
+    private Rules<TimeTable> rules;
     // Days available to study
     private int days;
     // amount of max hours to study everyday
@@ -50,11 +50,11 @@ public class TimeTableProblem implements Problem {
         this.teachers = teachers;
     }
 
-    public Rules getRules() {
+    public Rules<TimeTable> getRules() {
         return rules;
     }
 
-    public void setRules(Rules rules) {
+    public void setRules(Rules<TimeTable> rules) {
         this.rules = rules;
     }
 
@@ -78,7 +78,7 @@ public class TimeTableProblem implements Problem {
     }
 
     @Override
-    public Solution createSolution() {
+    public Solution<TimeTable> createSolution() {
         TimeTable solution = new TimeTable(this);
         solution.setRules(this.rules);
 

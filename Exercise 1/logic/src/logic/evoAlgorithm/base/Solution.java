@@ -2,7 +2,9 @@ package logic.evoAlgorithm.base;
 
 import java.io.Serializable;
 
-public interface Solution extends Serializable {
+public interface Solution<T> extends Serializable {
 
     float getFitness();
+
+    T getGens();
 }

@@ -2,9 +2,7 @@ package logic.evoAlgorithm.base;
 
 import java.io.Serializable;
 
-public interface Problem extends Serializable {
+public interface Problem<T> extends Serializable {
 
-    Solution createSolution();
-
-
+    Solution<T> createSolution();
 }

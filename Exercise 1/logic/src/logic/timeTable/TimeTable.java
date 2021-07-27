@@ -8,11 +8,11 @@ import logic.evoAlgorithm.base.Solution;
 import java.io.Serializable;
 import java.util.*;
 
-public class TimeTable implements Solution, Serializable {
+public class TimeTable implements Solution<TimeTable>, Serializable {
 
     private final TimeTableProblem problem;
     private final List<Lesson> lessons;
-    private Rules rules;
+    private Rules<TimeTable> rules;
 
     public List<Lesson> getLessons() {
         return lessons;
@@ -22,7 +22,7 @@ public class TimeTable implements Solution, Serializable {
         return problem;
     }
 
-    public Rules getRules() {
+    public Rules<TimeTable> getRules() {
         return rules;
     }
 
@@ -52,7 +52,7 @@ public class TimeTable implements Solution, Serializable {
         float hardRatio = rules.getHardRuleWeight() / 100f;
         float softRatio = 1 - hardRatio;
 
-        for (Rule rule : this.rules.getListOfRules()) {
+        for (Rule<TimeTable> rule : this.rules.getListOfRules()) {
             if (rule.getType() == Rules.RULE_TYPE.HARD) {
                 hardFitness += rule.calcFitness(this);
                 hardRules++;
@@ -67,10 +67,15 @@ public class TimeTable implements Solution, Serializable {
         return fitnessSum / ((softRules * softRatio) + (hardRules * hardRatio));
     }
 
+    @Override
+    public TimeTable getGens() {
+        return this;
+    }
+
     public float getAvgFitness(Rules.RULE_TYPE type) {
         float total = 0;
         int counted = 0;
-        for (Rule rule : this.rules.getListOfRules()) {
+        for (Rule<TimeTable> rule : this.rules.getListOfRules()) {
             if (rule.getType() == type) {
                 counted++;
                 total += rule.calcFitness(this);

@@ -2,7 +2,7 @@ package logic.evoAlgorithm.base;
 
 import java.io.Serializable;
 
-public interface Crossover extends Serializable {
+public interface Crossover<T> extends Serializable {
 
-    Population crossover(Population population, int reachSize);
+    Population<T> crossover(Population<T> population, int reachSize);
 }

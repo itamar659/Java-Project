@@ -4,16 +4,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Rules implements Serializable {
+public class Rules<T> implements Serializable {
 
     public enum RULE_TYPE {
         SOFT, HARD;
     }
 
-    private List<Rule> rules;
+    private List<Rule<T>> rules;
     private int hardRuleWeight;
 
-    public List<Rule> getListOfRules() {
+    public List<Rule<T>> getListOfRules() {
         return rules;
     }
 
@@ -29,7 +29,7 @@ public class Rules implements Serializable {
         this.rules = new ArrayList<>();
     }
 
-    public void addRule(Rule rule) {
+    public void addRule(Rule<T> rule) {
         this.rules.add(rule);
     }
 

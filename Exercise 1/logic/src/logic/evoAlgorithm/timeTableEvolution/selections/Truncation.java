@@ -1,10 +1,11 @@
 package logic.evoAlgorithm.timeTableEvolution.selections;
 
-import logic.evoAlgorithm.Parameterizable;
+import logic.schema.Parameterizable;
 import logic.evoAlgorithm.base.Population;
 import logic.evoAlgorithm.base.Selection;
+import logic.timeTable.TimeTable;
 
-public class Truncation implements Selection, Parameterizable {
+public class Truncation implements Selection<TimeTable>, Parameterizable {
 
     private int topPercent;
 
@@ -21,7 +22,7 @@ public class Truncation implements Selection, Parameterizable {
     }
 
     @Override
-    public Population select(Population population) {
+    public Population<TimeTable> select(Population<TimeTable> population) {
         int newPopulationSize = topPercent * population.getSize() / 100;
         population.sort();
         return population.copySmallerPopulation(newPopulationSize);

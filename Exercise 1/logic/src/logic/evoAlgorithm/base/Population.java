@@ -3,24 +3,24 @@ package logic.evoAlgorithm.base;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public abstract class Population implements Serializable {
+public abstract class Population<T> implements Serializable {
 
-    protected Solution[] solutions;
+    protected Solution<T>[] solutions;
 
-    public Solution[] getSolutions() {
+    public Solution<T>[] getSolutions() {
         return solutions;
     }
 
-    public Solution getSolutionByIndex(int idx) {
+    public Solution<T> getSolutionByIndex(int idx) {
         return solutions[idx];
     }
 
-    public void setSolutionByIndex(int idx, Solution solution) {
+    public void setSolutionByIndex(int idx, Solution<T> solution) {
         solutions[idx] = solution;
     }
 
-    public Solution getBestSolutionFitness() {
-        Solution bestFitness = solutions[0];
+    public Solution<T> getBestSolutionFitness() {
+        Solution<T> bestFitness = solutions[0];
 
         for (int i = 1; i < solutions.length; i++) {
             if (bestFitness.getFitness() < solutions[i].getFitness()) {
@@ -33,19 +33,12 @@ public abstract class Population implements Serializable {
 
     // TODO: Fix an unknown bug.
     public void sort() {
-        Arrays.sort(solutions, (o1, o2) -> {
-            if (o1.getFitness() < o2.getFitness()) {
-                return 1;
-            } else if (o1.getFitness() == o2.getFitness()) {
-                return  0;
-            }
-            return -1;
-        });
+        Arrays.sort(solutions, (o1, o2) -> Float.compare(o2.getFitness(), o1.getFitness()));
     }
 
-    public abstract Population copySmallerPopulation(int size);
+    public abstract Population<T> copySmallerPopulation(int size);
 
-    public abstract Population initializeSubPopulation(int size);
+    public abstract Population<T> initializeSubPopulation(int size);
 
     public int getSize() {
         return solutions.length;

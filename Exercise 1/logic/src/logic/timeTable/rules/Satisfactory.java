@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Satisfactory extends Rule {
+public class Satisfactory extends Rule<TimeTable> {
 
     @Override
     public String getId() {
@@ -19,9 +19,9 @@ public class Satisfactory extends Rule {
     }
 
     @Override
-    public float calcFitness(Solution solution) {
-        List<Lesson> lessons = ((TimeTable) solution).getLessons();
-        TimeTableProblem problem = ((TimeTable) solution).getProblem();
+    public float calcFitness(Solution<TimeTable> solution) {
+        List<Lesson> lessons = solution.getGens().getLessons();
+        TimeTableProblem problem = solution.getGens().getProblem();
         Map<Class, Map<String, Integer>> class2course2hours = new HashMap<>();
 
         int penalty = 0;

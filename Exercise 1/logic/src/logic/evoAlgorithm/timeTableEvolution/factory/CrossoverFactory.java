@@ -2,10 +2,11 @@ package logic.evoAlgorithm.timeTableEvolution.factory;
 
 import logic.evoAlgorithm.timeTableEvolution.crossovers.DayTimeOriented;
 import logic.evoAlgorithm.base.Crossover;
+import logic.timeTable.TimeTable;
 
 public class CrossoverFactory {
 
-    public Crossover create(String crossoverName) {
+    public Crossover<TimeTable> create(String crossoverName) {
         if (crossoverName == null) {
             return null;
         }

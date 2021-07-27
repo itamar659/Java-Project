@@ -1,6 +1,5 @@
 package logic.schema;
 
-import logic.evoAlgorithm.Parameterizable;
 import logic.evoAlgorithm.base.Crossover;
 import logic.evoAlgorithm.base.Mutation;
 import logic.evoAlgorithm.base.Selection;
@@ -10,10 +9,8 @@ import logic.evoAlgorithm.timeTableEvolution.factory.MutationFactory;
 import logic.evoAlgorithm.timeTableEvolution.factory.RuleFactory;
 import logic.evoAlgorithm.timeTableEvolution.factory.SelectionFactory;
 import logic.schema.generated.*;
+import logic.timeTable.*;
 import logic.timeTable.Class;
-import logic.timeTable.Course;
-import logic.timeTable.HasId;
-import logic.timeTable.Teacher;
 import logic.timeTable.rules.base.Rule;
 import logic.timeTable.rules.base.Rules;
 
@@ -34,12 +31,12 @@ public class XMLExtractor {
         this.ettDescriptor = (ETTDescriptor) jaxbUnmarshaller.unmarshal(xmlFile);
     }
 
-    public Selection extractSelectionOperator() throws XMLExtractException {
+    public Selection<TimeTable> extractSelectionOperator() throws XMLExtractException {
         ETTSelection ettSelection = ettDescriptor.getETTEvolutionEngine().getETTSelection();
 
         // Step 1 - create the object
         SelectionFactory factory = new SelectionFactory();
-        Selection selection = factory.create(ettSelection.getType());
+        Selection<TimeTable> selection = factory.create(ettSelection.getType());
         if (selection == null) {
             throw new XMLExtractException(String.format("There is no selection type of '%s', or type not given.", ettSelection.getType()));
         }
@@ -50,12 +47,12 @@ public class XMLExtractor {
         return selection;
     }
 
-    public Crossover extractCrossoverOperator() throws XMLExtractException {
+    public Crossover<TimeTable> extractCrossoverOperator() throws XMLExtractException {
         ETTCrossover ettCrossover = ettDescriptor.getETTEvolutionEngine().getETTCrossover();
 
         // Step 1 - create the object
         CrossoverFactory factory = new CrossoverFactory();
-        Crossover crossover = factory.create(ettCrossover.getName());
+        Crossover<TimeTable> crossover = factory.create(ettCrossover.getName());
         if (crossover == null) {
             throw new XMLExtractException(String.format("There is no crossover named '%s', or name not given.", ettCrossover.getName()));
         }
@@ -76,15 +73,15 @@ public class XMLExtractor {
         return crossover;
     }
 
-    public Set<Mutation> extractMutationsOperator() throws XMLExtractException {
+    public Set<Mutation<TimeTable>> extractMutationsOperator() throws XMLExtractException {
         ETTMutations ettMutations = ettDescriptor.getETTEvolutionEngine().getETTMutations();
 
         MutationFactory factory = new MutationFactory();
-        Set<Mutation> mutations = new HashSet<>();
+        Set<Mutation<TimeTable>> mutations = new HashSet<>();
 
         for (ETTMutation ettMutation : ettMutations.getETTMutation()) {
             // Step 1 - create the object
-            Mutation mutation = factory.create(ettMutation.getName());
+            Mutation<TimeTable> mutation = factory.create(ettMutation.getName());
             if (mutation == null) {
                 throw new XMLExtractException(String.format("There is no mutation named '%s', or name not given.", ettMutation.getName()));
             }
@@ -105,11 +102,11 @@ public class XMLExtractor {
         return mutations;
     }
 
-    public Rules extractRules() throws XMLExtractException {
+    public Rules<TimeTable> extractRules() throws XMLExtractException {
         ETTRules ettRules = ettDescriptor.getETTTimeTable().getETTRules();
 
         RuleFactory factory = new RuleFactory();
-        Rules rules = new Rules();
+        Rules<TimeTable> rules = new Rules<TimeTable>();
 
         if (ettRules.getHardRulesWeight() < 0 || ettRules.getHardRulesWeight() > 100) {
             throw new XMLExtractException("Hard Rules Weight has to be a value between 0-100.");
@@ -119,7 +116,7 @@ public class XMLExtractor {
 
         for (ETTRule ettRule : ettRules.getETTRule()) {
             // Step 1 - create the object
-            Rule rule = factory.create(ettRule.getETTRuleId());
+            Rule<TimeTable> rule = factory.create(ettRule.getETTRuleId());
             if (rule == null) {
                 throw new XMLExtractException(String.format("There is no rule ID '%s', or ID not given.", ettRule.getETTRuleId()));
             }else if (ettRule.getType() == null) {

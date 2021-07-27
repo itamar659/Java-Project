@@ -1,6 +1,6 @@
 package logic.evoAlgorithm.timeTableEvolution.mutations;
 
-import logic.evoAlgorithm.Parameterizable;
+import logic.schema.Parameterizable;
 import logic.evoAlgorithm.base.*;
 import logic.timeTable.Lesson;
 import logic.evoAlgorithm.timeTableEvolution.TimeTableProblem;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Flipping extends Mutation implements Parameterizable {
+public class Flipping extends Mutation<TimeTable> implements Parameterizable {
 
     private enum Component {
         S, T, C, H, D;
@@ -59,16 +59,16 @@ public class Flipping extends Mutation implements Parameterizable {
     }
 
     @Override
-    public void mutatePopulation(Population population, Problem problem) {
-        for (Solution solution : population.getSolutions()) {
+    public void mutatePopulation(Population<TimeTable> population, Problem<TimeTable> problem) {
+        for (Solution<TimeTable> solution : population.getSolutions()) {
             if (rand.nextDouble() <= probability) {
                 mutate(solution, problem);
             }
         }
     }
 
-    private void mutate(Solution solution, Problem problem) {
-        List<Lesson> lessons = ((TimeTable) solution).getLessons();
+    private void mutate(Solution<TimeTable> solution, Problem<TimeTable> problem) {
+        List<Lesson> lessons = solution.getGens().getLessons();
         TimeTableProblem theProblem = (TimeTableProblem) problem;
 
         // Get the lessons to mutate

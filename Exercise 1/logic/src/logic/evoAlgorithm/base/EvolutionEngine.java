@@ -7,14 +7,14 @@ import java.util.function.Supplier;
 // TODO: All the fields can move to data object.
 
 // TODO: Can have a best solution field, and save a single solution after the algorithm finish. (and del population that takes 700kb)
-public abstract class EvolutionEngine implements Serializable {
+public abstract class EvolutionEngine<T> implements Serializable {
 
     protected int populationSize;
-    protected Population population;
-    protected Selection selection;
-    protected Crossover crossover;
-    protected Set<Mutation> mutations;
-    protected Problem problem;
+    protected Population<T> population;
+    protected Selection<T> selection;
+    protected Crossover<T> crossover;
+    protected Set<Mutation<T>> mutations;
+    protected Problem<T> problem;
     private int currentGeneration;
 
     private Supplier<Boolean> stopCondition;
@@ -25,39 +25,39 @@ public abstract class EvolutionEngine implements Serializable {
     private transient Set<Runnable> generationEndListeners;
     private transient Set<Runnable> finishRunListeners;
 
-    public Population getPopulation() {
+    public Population<T> getPopulation() {
         return population;
     }
 
-    public Problem getProblem() {
+    public Problem<T> getProblem() {
         return problem;
     }
 
-    public void setProblem(Problem problem) {
+    public void setProblem(Problem<T> problem) {
         this.problem = problem;
     }
 
-    public Selection getSelection() {
+    public Selection<T> getSelection() {
         return selection;
     }
 
-    public void setSelection(Selection selection) {
+    public void setSelection(Selection<T> selection) {
         this.selection = selection;
     }
 
-    public Crossover getCrossover() {
+    public Crossover<T> getCrossover() {
         return crossover;
     }
 
-    public void setCrossover(Crossover crossover) {
+    public void setCrossover(Crossover<T> crossover) {
         this.crossover = crossover;
     }
 
-    public Set<Mutation> getMutations() {
+    public Set<Mutation<T>> getMutations() {
         return mutations;
     }
 
-    public void setMutations(Set<Mutation> mutations) {
+    public void setMutations(Set<Mutation<T>> mutations) {
         this.mutations = mutations;
     }
 
@@ -108,7 +108,7 @@ public abstract class EvolutionEngine implements Serializable {
     }
 
     public void clearHistory() {
-        this.historyGeneration2Fitness = new HashMap<>();
+        this.historyGeneration2Fitness = new TreeMap<>();
         this.population = null;
     }
 
@@ -119,6 +119,7 @@ public abstract class EvolutionEngine implements Serializable {
 
             // Call listeners
             if (currentGeneration % updateGenerationInterval == 0) {
+                // TODO Ex 2: Can cause problems if transfer the parents to the next generation. we change the reference
                 historyGeneration2Fitness.put(currentGeneration, population.getBestSolutionFitness().getFitness());
                 onEndOfGeneration();
             }
@@ -129,18 +130,18 @@ public abstract class EvolutionEngine implements Serializable {
             }
 
             // Step 2 - selection
-            Population selected = selection.select(population);
+            Population<T> selected = selection.select(population);
 
             // Step 3 - crossover
             population = crossover.crossover(selected, populationSize);
 
             // Step 4 - mutate
-            for (Mutation mutation : this.mutations) {
+            for (Mutation<T> mutation : this.mutations) {
                 mutation.mutatePopulation(population, problem);
             }
         }
 
-        historyGeneration2Fitness.put(currentGeneration - 1, population.getBestSolutionFitness().getFitness());
+        historyGeneration2Fitness.put(currentGeneration, population.getBestSolutionFitness().getFitness());
         onFinish();
     }
 

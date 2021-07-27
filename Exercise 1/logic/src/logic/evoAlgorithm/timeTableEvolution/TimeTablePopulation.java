@@ -4,9 +4,9 @@ import logic.evoAlgorithm.base.Population;
 import logic.evoAlgorithm.base.Problem;
 import logic.timeTable.TimeTable;
 
-public class TimeTablePopulation extends Population {
+public class TimeTablePopulation extends Population<TimeTable> {
 
-    public TimeTablePopulation(int size, Problem createNewPopulationWithProblem) {
+    public TimeTablePopulation(int size, Problem<TimeTable> createNewPopulationWithProblem) {
         this.solutions = new TimeTable[size];
 
         if (createNewPopulationWithProblem != null) {
@@ -17,8 +17,8 @@ public class TimeTablePopulation extends Population {
     }
 
     @Override
-    public Population copySmallerPopulation(int size) {
-        Population newPopulation = new TimeTablePopulation(size, null);
+    public Population<TimeTable> copySmallerPopulation(int size) {
+        Population<TimeTable> newPopulation = new TimeTablePopulation(size, null);
 
         int copy = size;
         if (copy > this.getSize()) {
@@ -33,7 +33,7 @@ public class TimeTablePopulation extends Population {
     }
 
     @Override
-    public Population initializeSubPopulation(int size) {
+    public Population<TimeTable> initializeSubPopulation(int size) {
         return new TimeTablePopulation(size, null);
     }
 }

@@ -1,11 +1,12 @@
 package logic.evoAlgorithm.timeTableEvolution.factory;
 
+import logic.timeTable.TimeTable;
 import logic.timeTable.rules.*;
 import logic.timeTable.rules.base.Rule;
 
 public class RuleFactory {
 
-    public Rule create(String ruleName) {
+    public Rule<TimeTable> create(String ruleName) {
         if (ruleName == null) {
             return null;
         }

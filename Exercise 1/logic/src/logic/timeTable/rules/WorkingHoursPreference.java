@@ -1,10 +1,11 @@
 package logic.timeTable.rules;
 
+import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rule;
 import logic.evoAlgorithm.base.Solution;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-public class WorkingHoursPreference extends Rule {
+public class WorkingHoursPreference extends Rule<TimeTable> {
 
     @Override
     public String getId() {
@@ -12,7 +13,7 @@ public class WorkingHoursPreference extends Rule {
     }
 
     @Override
-    public float calcFitness(Solution solution) {
+    public float calcFitness(Solution<TimeTable> solution) {
         throw new NotImplementedException();
     }
 }

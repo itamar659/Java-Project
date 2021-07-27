@@ -2,7 +2,7 @@ package logic.evoAlgorithm.base;
 
 import java.io.Serializable;
 
-public interface Selection extends Serializable {
+public interface Selection<T> extends Serializable {
 
-    Population select(Population population);
+    Population<T> select(Population<T> population);
 }

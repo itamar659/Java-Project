@@ -1,8 +1,9 @@
 package logic.evoAlgorithm.timeTableEvolution;
 
 import logic.evoAlgorithm.base.EvolutionEngine;
+import logic.timeTable.TimeTable;
 
-public class TimeTableEvolutionEngine extends EvolutionEngine {
+public class TimeTableEvolutionEngine extends EvolutionEngine<TimeTable> {
 
     @Override
     public TimeTableProblem getProblem() {

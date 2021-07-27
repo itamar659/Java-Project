@@ -9,6 +9,7 @@ import logic.evoAlgorithm.timeTableEvolution.TimeTableProblem;
 import logic.timeTable.Class;
 import logic.timeTable.Course;
 import logic.timeTable.Teacher;
+import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rules;
 
 import javax.xml.bind.JAXBException;
@@ -19,9 +20,9 @@ import java.util.Set;
 
 public class TTEvoEngineCreator implements Serializable {
 
-    private EvolutionEngine lastCreatedTTEEngine;
+    private EvolutionEngine<TimeTable> lastCreatedTTEEngine;
 
-    public EvolutionEngine getLastCreatedTTEEngine() {
+    public EvolutionEngine<TimeTable> getLastCreatedTTEEngine() {
         return lastCreatedTTEEngine;
     }
 
@@ -36,7 +37,7 @@ public class TTEvoEngineCreator implements Serializable {
         List<Course> courses = xmlExtractor.extractCourses();
         List<Teacher> teachers = xmlExtractor.extractTeachers(courses);
         List<Class> classes = xmlExtractor.extractClasses(courses, days * hours);
-        Rules rules = xmlExtractor.extractRules();
+        Rules<TimeTable> rules = xmlExtractor.extractRules();
 
         // Initialize the problem
 
@@ -50,14 +51,14 @@ public class TTEvoEngineCreator implements Serializable {
 
         // --- Extract Evolution Engine Modifications ---
 
-        Selection selection = xmlExtractor.extractSelectionOperator();
-        Crossover crossover = xmlExtractor.extractCrossoverOperator();
-        Set<Mutation> mutations = xmlExtractor.extractMutationsOperator();
+        Selection<TimeTable> selection = xmlExtractor.extractSelectionOperator();
+        Crossover<TimeTable> crossover = xmlExtractor.extractCrossoverOperator();
+        Set<Mutation<TimeTable>> mutations = xmlExtractor.extractMutationsOperator();
         int populationSize = xmlExtractor.extractPopulationSize();
 
         // Initialize the Evolution engine
 
-        EvolutionEngine evoEngine = new TimeTableEvolutionEngine();
+        EvolutionEngine<TimeTable> evoEngine = new TimeTableEvolutionEngine();
         evoEngine.setSelection(selection);
         evoEngine.setCrossover(crossover);
         evoEngine.setMutations(mutations);

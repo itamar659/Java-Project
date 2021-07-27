@@ -7,7 +7,7 @@ import logic.timeTable.Lesson;
 
 import java.util.List;
 
-public class TeacherIsHuman extends Rule {
+public class TeacherIsHuman extends Rule<TimeTable> {
 
     @Override
     public String getId() {
@@ -15,8 +15,8 @@ public class TeacherIsHuman extends Rule {
     }
 
     @Override
-    public float calcFitness(Solution solution) {
-        List<Lesson> lessons = ((TimeTable) solution).getLessons();
+    public float calcFitness(Solution<TimeTable> solution) {
+        List<Lesson> lessons = solution.getGens().getLessons();
 
         int penalty = 0;
         int max = lessons.size();

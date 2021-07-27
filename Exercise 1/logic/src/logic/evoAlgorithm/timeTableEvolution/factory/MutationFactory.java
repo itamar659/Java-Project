@@ -3,10 +3,11 @@ package logic.evoAlgorithm.timeTableEvolution.factory;
 import logic.evoAlgorithm.base.Mutation;
 import logic.evoAlgorithm.timeTableEvolution.mutations.Flipping;
 import logic.evoAlgorithm.timeTableEvolution.mutations.Sizer;
+import logic.timeTable.TimeTable;
 
 public class MutationFactory {
 
-    public Mutation create(String mutationName) {
+    public Mutation<TimeTable> create(String mutationName) {
         if (mutationName == null) {
             return null;
         }
