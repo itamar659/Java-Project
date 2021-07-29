@@ -1,5 +1,7 @@
 package engine.base;
 
+import engine.Listeners;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.Supplier;
@@ -20,8 +22,8 @@ public abstract class EvolutionEngine<T> implements Serializable {
 
     private boolean isRunning;
     private int updateGenerationInterval;
-    private transient Set<Runnable> generationEndListeners;
-    private transient Set<Runnable> finishRunListeners;
+    private final Listeners generationEndListeners;
+    private final Listeners finishRunListeners;
 
     public Population<T> getPopulation() {
         return population;
@@ -75,10 +77,6 @@ public abstract class EvolutionEngine<T> implements Serializable {
         return (Map<Integer, Float>) ((TreeMap<Integer, Float>)historyGeneration2Fitness).clone();
     }
 
-    private synchronized void updateHistoryGeneration2Fitness(Integer gen, Float fitness) {
-        historyGeneration2Fitness.put(gen, fitness);
-    }
-
     public void setUpdateGenerationInterval(int updateGenerationInterval) {
         this.updateGenerationInterval = updateGenerationInterval;
     }
@@ -95,31 +93,41 @@ public abstract class EvolutionEngine<T> implements Serializable {
         this.bestSolution = bestSolution;
     }
 
-    public void generationEndListener(Runnable action) {
-        if (generationEndListeners == null) {
-            this.generationEndListeners = new HashSet<>();
-        }
-
+    public void addGenerationEndListener(Runnable action) {
         generationEndListeners.add(action);
     }
 
-    public void finishRunListener(Runnable action) {
-        if (finishRunListeners == null) {
-            this.finishRunListeners = new HashSet<>();
-        }
+    public void removeGenerationEndListener(Runnable action) {
+        generationEndListeners.remove(action);
+    }
 
+    public void addFinishRunListener(Runnable action) {
         finishRunListeners.add(action);
+    }
+
+    public boolean containsFinishRunListener(Runnable action) {
+        return finishRunListeners.contains(action);
+    }
+
+    public void removeFinishRunListener(Runnable action) {
+        finishRunListeners.remove(action);
     }
 
     public EvolutionEngine() {
         this.mutations = new HashSet<>();
         this.historyGeneration2Fitness = new TreeMap<>();
         this.updateGenerationInterval = 100;
+        this.generationEndListeners = new Listeners();
+        this.finishRunListeners = new Listeners();
     }
 
     public void clearHistory() {
         this.historyGeneration2Fitness = new TreeMap<>();
         this.population = null;
+    }
+
+    private synchronized void updateHistoryGeneration2Fitness(Integer gen, Float fitness) {
+        historyGeneration2Fitness.put(gen, fitness);
     }
 
     public void runAlgorithm() {
@@ -164,18 +172,10 @@ public abstract class EvolutionEngine<T> implements Serializable {
     }
 
     protected void onEndOfGeneration() {
-        if (generationEndListeners != null) {
-            for (Runnable action : generationEndListeners) {
-                action.run();
-            }
-        }
+        generationEndListeners.raiseEvent();
     }
 
     protected void onFinish() {
-        if (finishRunListeners != null) {
-            for (Runnable action : finishRunListeners) {
-                action.run();
-            }
-        }
+        finishRunListeners.raiseEvent();
     }
 }

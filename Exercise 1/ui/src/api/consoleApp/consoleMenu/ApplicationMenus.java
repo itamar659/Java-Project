@@ -13,6 +13,7 @@ public class ApplicationMenus {
         SHOW_ALGORITHM_HISTORY("Display the progress of the algorithm"),
         SAVE_TO_FILE("Save to file"),
         LOAD_FROM_FILE("Load from file"),
+        THREAD_OPTIONAL("Enable/Disable multi-threading"),
         EXIT("Exit");
 
         private final String title;

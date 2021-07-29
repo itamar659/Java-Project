@@ -17,21 +17,22 @@ import java.util.*;
 
 public class Application {
 
-    private static final boolean isMultiThreaded = true;
-
+    private boolean isMultiThreaded;
     private final Scanner scanner;
     private MainMenu mainMenu;
     private Engine engine;
 
+    private final Runnable updateMethod = this::displayAlgorithmProgressOnUpdate;
+
     public Application() {
         initializeMenu();
 
+        isMultiThreaded = false;
         scanner = new Scanner(System.in);
         engine = new Engine();
-        engine.finishRunListener((Runnable & Serializable) this::displayAlgorithmResultsOnFinished);
-        if (!isMultiThreaded) {
-            engine.generationEndListener((Runnable & Serializable) this::displayAlgorithmProgressOnUpdate);
-        }
+        engine.setMultiThreaded(isMultiThreaded);
+        engine.addFinishRunListener(this::displayAlgorithmResultsOnFinished);
+        subscribeAndUnsubscribeFromListeners();
     }
 
     public void run() {
@@ -48,6 +49,7 @@ public class Application {
         ApplicationMenus.MenuOptions.SHOW_ALGORITHM_HISTORY.updateActivation(this::showAlgorithmHistory);
         ApplicationMenus.MenuOptions.SAVE_TO_FILE.updateActivation(this::saveToFile);
         ApplicationMenus.MenuOptions.LOAD_FROM_FILE.updateActivation(this::loadFromFile);
+        ApplicationMenus.MenuOptions.THREAD_OPTIONAL.updateActivation(this::enableDisableMultiThreading);
         ApplicationMenus.MenuOptions.EXIT.updateActivation(this::exit);
 
         mainMenu.setCurrentMenu(ApplicationMenus.createFunctionalMenuFromEnum());
@@ -317,7 +319,7 @@ public class Application {
         try {
             AppIO.SerializeToFile(path, this.engine);
         } catch (IOException e) {
-            System.out.println("Cannot access the file.");
+            System.out.println("Cannot write into the file.");
             return;
         }
 
@@ -345,10 +347,10 @@ public class Application {
 
         try {
             engine = AppIO.DeserializeFromFile(path);
-            engine.finishRunListener((Runnable & Serializable) this::displayAlgorithmResultsOnFinished);
-            if (!isMultiThreaded) {
-                engine.generationEndListener((Runnable & Serializable) this::displayAlgorithmProgressOnUpdate);
-            }
+            engine.addFinishRunListener(this::displayAlgorithmResultsOnFinished);
+            engine.afterDeserialized();
+            this.isMultiThreaded = engine.isMultiThreaded();
+            subscribeAndUnsubscribeFromListeners();
         } catch (IOException e) {
             System.out.println("The file corrupted or not built for this application.");
             return;
@@ -358,6 +360,18 @@ public class Application {
         }
 
         System.out.println("File loaded completed!");
+    }
+
+    private void enableDisableMultiThreading() {
+        if (engine.getState() == Engine.State.RUNNING) {
+            System.out.println("Please wait for the algorithm to finish first.");
+            return;
+        }
+
+        isMultiThreaded = !isMultiThreaded;
+        engine.setMultiThreaded(isMultiThreaded);
+        subscribeAndUnsubscribeFromListeners();
+        System.out.printf("Multi threading: %s%n", isMultiThreaded ? "ON" : "OFF");
     }
 
     private synchronized void exit() {
@@ -373,6 +387,14 @@ public class Application {
         this.mainMenu.exitMainMenu();
     }
 
+    private void subscribeAndUnsubscribeFromListeners() {
+        if (!isMultiThreaded) {
+            engine.addGenerationEndListener(updateMethod);
+        } else {
+            engine.removeGenerationEndListener(updateMethod);
+        }
+    }
+
     private boolean isFileLoadedCheck() {
         if (!engine.isFileLoaded()) {
             System.out.println("Please open first an XML file with the correct format of the application.");
@@ -381,6 +403,9 @@ public class Application {
 
         return true;
     }
+
+
+    // HELPERS
 
     private int askIntegerFromUser(String message, int minValue) {
         int value = minValue - 1;

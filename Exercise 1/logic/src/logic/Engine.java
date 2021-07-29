@@ -23,6 +23,7 @@ public class Engine implements Serializable {
         IDLE, RUNNING, COMPLETED;
     }
 
+    private boolean multiThreaded;
     private boolean isFileLoaded;
     private State state;
     private StopCondition stopCondition;
@@ -38,6 +39,14 @@ public class Engine implements Serializable {
         return evoEngineSettings;
     }
 
+    public boolean isMultiThreaded() {
+        return multiThreaded;
+    }
+
+    public void setMultiThreaded(boolean multiThreaded) {
+        this.multiThreaded = multiThreaded;
+    }
+
     public boolean isFileLoaded() {
         return isFileLoaded;
     }
@@ -46,12 +55,20 @@ public class Engine implements Serializable {
         return state;
     }
 
-    public void generationEndListener(Runnable action) {
-        evoEngine.generationEndListener(action);
+    public void addGenerationEndListener(Runnable action) {
+        evoEngine.addGenerationEndListener(action);
     }
 
-    public void finishRunListener(Runnable action) {
-        evoEngine.finishRunListener(action);
+    public void removeGenerationEndListener(Runnable action) {
+        evoEngine.removeGenerationEndListener(action);
+    }
+
+    public void addFinishRunListener(Runnable action) {
+        evoEngine.addFinishRunListener(action);
+    }
+
+    public void removeFinishRunListener(Runnable action) {
+        evoEngine.removeFinishRunListener(action);
     }
 
     public  int getMaxGenerationsCondition() {
@@ -106,13 +123,13 @@ public class Engine implements Serializable {
     }
 
     public Engine() {
+        this.multiThreaded = false;
         this.state = State.IDLE;
         this.stopCondition = StopCondition.MAX_GENERATIONS;
         this.evoEngine = new TimeTableEvolutionEngine();
+        this.evoEngine.addFinishRunListener(this::algorithmFinished);
         this.evoEngineSettings = new evoEngineSettingsWrapper((TimeTableEvolutionEngine) this.evoEngine);
         this.TTEvoEngineCreator = new TTEvoEngineCreator();
-
-        this.evoEngine.finishRunListener(this::algorithmFinished);
     }
 
     public void validateXMLFile(File xmlFile) throws JAXBException, XMLExtractException {
@@ -121,6 +138,10 @@ public class Engine implements Serializable {
 
     public void updateEvoEngine() {
         EvolutionEngine<TimeTable> evolutionEngine = this.TTEvoEngineCreator.getLastCreatedTTEEngine();
+        if (evolutionEngine == null) {
+            return;
+        }
+
         // Update the engine
         this.evoEngine.clearHistory();
         this.evoEngine.setPopulationSize(evolutionEngine.getPopulationSize());
@@ -135,7 +156,11 @@ public class Engine implements Serializable {
 
     public void startAlgorithm() {
         this.state = State.RUNNING;
-        new Thread(this.evoEngine::runAlgorithm, "Evolution Algorithm thread").start();
+        if (multiThreaded) {
+            new Thread(this.evoEngine::runAlgorithm, "Evolution Algorithm thread").start();
+        } else {
+            this.evoEngine.runAlgorithm();
+        }
     }
 
     public void stopAlgorithm() {
@@ -144,5 +169,9 @@ public class Engine implements Serializable {
 
     private void algorithmFinished() {
         this.state = State.COMPLETED;
+    }
+
+    public void afterDeserialized() {
+        this.evoEngine.addFinishRunListener(this::algorithmFinished);
     }
 }
