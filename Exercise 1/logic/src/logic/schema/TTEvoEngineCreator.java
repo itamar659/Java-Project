@@ -6,6 +6,7 @@ import engine.base.Mutation;
 import engine.base.Selection;
 import logic.evoAlgorithm.TimeTableEvolutionEngine;
 import logic.evoAlgorithm.TimeTableProblem;
+import logic.schema.exceptions.XMLExtractException;
 import logic.timeTable.Class;
 import logic.timeTable.Course;
 import logic.timeTable.Teacher;

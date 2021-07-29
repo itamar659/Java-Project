@@ -5,6 +5,7 @@ import logic.timeTable.rules.base.Rule;
 import engine.base.Solution;
 import logic.timeTable.Lesson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Singularity extends Rule<TimeTable> {
@@ -16,7 +17,7 @@ public class Singularity extends Rule<TimeTable> {
 
     @Override
     public float calcFitness(Solution<TimeTable> solution) {
-        List<Lesson> lessons = solution.getGens().getLessons();
+        List<Lesson> lessons = new ArrayList<>(solution.getGens().getLessons());
 
         int penalty = 0;
         int max = lessons.size();

@@ -14,15 +14,15 @@ public class TimeTable implements Solution<TimeTable>, Serializable {
     private final List<Lesson> lessons;
     private Rules<TimeTable> rules;
 
-    public List<Lesson> getLessons() {
+    public final List<Lesson> getLessons() {
         return lessons;
     }
 
-    public TimeTableProblem getProblem() {
+    public final TimeTableProblem getProblem() {
         return problem;
     }
 
-    public Rules<TimeTable> getRules() {
+    public final Rules<TimeTable> getRules() {
         return rules;
     }
 
@@ -86,6 +86,7 @@ public class TimeTable implements Solution<TimeTable>, Serializable {
     }
 
     public Map<Teacher, List<Lesson>> getTeachersTimeTable() {
+        List<Lesson> lessons = new ArrayList<>(this.lessons);
         Map<Teacher, List<Lesson>> teacher2lessonsList = new TreeMap<>(Comparator.comparing(Teacher::getId));
         for (Lesson lesson : lessons) {
             if (!teacher2lessonsList.containsKey(lesson.getTeacher())) {
@@ -99,6 +100,7 @@ public class TimeTable implements Solution<TimeTable>, Serializable {
     }
 
     public Map<Class, List<Lesson>> getClassesTimeTable() {
+        List<Lesson> lessons = new ArrayList<>(this.lessons);
         Map<Class, List<Lesson>> teacher2lessonsList = new TreeMap<>(Comparator.comparing(Class::getId));
         for (Lesson lesson : lessons) {
             if (!teacher2lessonsList.containsKey(lesson.getaClass())) {

@@ -9,6 +9,7 @@ import engine.base.Solution;
 import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -53,7 +54,7 @@ public class Sizer extends Mutation<TimeTable> implements Parameterizable {
     }
 
     private void mutate(Solution<TimeTable> solution, Problem<TimeTable> problem) {
-        List<Lesson> lessons = solution.getGens().getLessons();
+        List<Lesson> lessons = new ArrayList<>(solution.getGens().getLessons());
         TimeTableProblem theProblem = (TimeTableProblem) problem;
 
         if (totalTupples >= 0) {

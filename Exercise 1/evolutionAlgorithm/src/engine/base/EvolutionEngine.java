@@ -16,11 +16,11 @@ public abstract class EvolutionEngine<T> implements Serializable {
     protected Set<Mutation<T>> mutations;
     protected Problem<T> problem;
     private int currentGeneration;
-
     private Supplier<Boolean> stopCondition;
-
+    private Solution<T> bestSolution;
     private Map<Integer, Float> historyGeneration2Fitness;
 
+    private boolean isRunning;
     private int updateGenerationInterval;
     private transient Set<Runnable> generationEndListeners;
     private transient Set<Runnable> finishRunListeners;
@@ -73,8 +73,12 @@ public abstract class EvolutionEngine<T> implements Serializable {
         return currentGeneration;
     }
 
-    public Map<Integer, Float> getHistoryGeneration2Fitness() {
-        return historyGeneration2Fitness;
+    public synchronized Map<Integer, Float> getHistoryGeneration2Fitness() {
+        return (Map<Integer, Float>) ((TreeMap<Integer, Float>)historyGeneration2Fitness).clone();
+    }
+
+    private synchronized void updateHistoryGeneration2Fitness(Integer gen, Float fitness) {
+        historyGeneration2Fitness.put(gen, fitness);
     }
 
     public void setUpdateGenerationInterval(int updateGenerationInterval) {
@@ -83,6 +87,14 @@ public abstract class EvolutionEngine<T> implements Serializable {
 
     public void setStopCondition(Supplier<Boolean> stopCondition) {
         this.stopCondition = stopCondition;
+    }
+
+    public synchronized Solution<T> getBestSolution() {
+        return bestSolution;
+    }
+
+    private synchronized void setBestSolution(Solution<T> bestSolution) {
+        this.bestSolution = bestSolution;
     }
 
     public void generationEndListener(Runnable action) {
@@ -113,14 +125,17 @@ public abstract class EvolutionEngine<T> implements Serializable {
     }
 
     public void runAlgorithm() {
-        historyGeneration2Fitness.clear();
+        this.isRunning = true;
+        this.historyGeneration2Fitness.clear();
+        bestSolution = population.getBestSolutionFitness();
 
-        for (currentGeneration = 0; !stopCondition.get(); currentGeneration++) {
+        for (currentGeneration = 0; isRunning && !stopCondition.get(); currentGeneration++) {
+
+            setBestSolution(population.getBestSolutionFitness());
 
             // Call listeners
             if (currentGeneration % updateGenerationInterval == 0) {
-                // TODO Ex 2: Can cause problems if transfer the parents to the next generation. we change the reference
-                historyGeneration2Fitness.put(currentGeneration, population.getBestSolutionFitness().getFitness());
+                updateHistoryGeneration2Fitness(currentGeneration, population.getBestSolutionFitness().getFitness());
                 onEndOfGeneration();
             }
 
@@ -141,19 +156,28 @@ public abstract class EvolutionEngine<T> implements Serializable {
             }
         }
 
-        historyGeneration2Fitness.put(currentGeneration, population.getBestSolutionFitness().getFitness());
+        bestSolution = population.getBestSolutionFitness();
+        updateHistoryGeneration2Fitness(currentGeneration, population.getBestSolutionFitness().getFitness());
         onFinish();
     }
 
+    public void stopAlgorithm() {
+        isRunning = false;
+    }
+
     protected void onEndOfGeneration() {
-        for (Runnable action : generationEndListeners) {
-            action.run();
+        if (generationEndListeners != null) {
+            for (Runnable action : generationEndListeners) {
+                action.run();
+            }
         }
     }
 
     protected void onFinish() {
-        for (Runnable action : finishRunListeners) {
-            action.run();
+        if (finishRunListeners != null) {
+            for (Runnable action : finishRunListeners) {
+                action.run();
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ import logic.evoAlgorithm.factory.CrossoverFactory;
 import logic.evoAlgorithm.factory.MutationFactory;
 import logic.evoAlgorithm.factory.RuleFactory;
 import logic.evoAlgorithm.factory.SelectionFactory;
+import logic.schema.exceptions.XMLExtractException;
 import logic.schema.generated.*;
 import logic.timeTable.*;
 import logic.timeTable.Class;

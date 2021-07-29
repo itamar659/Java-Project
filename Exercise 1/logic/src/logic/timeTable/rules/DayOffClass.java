@@ -17,7 +17,7 @@ public class DayOffClass extends Rule<TimeTable> {
 
     @Override
     public float calcFitness(Solution<TimeTable> solution) {
-        List<Lesson> lessons = solution.getGens().getLessons();
+        List<Lesson> lessons = new ArrayList<>(solution.getGens().getLessons());
         final int DAYS_IN_WEEK = 7;
 
         Map<Class, boolean[]> class2daysOfStudy = new TreeMap<>(Comparator.comparing(Class::getId));

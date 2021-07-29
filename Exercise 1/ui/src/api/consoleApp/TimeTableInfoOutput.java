@@ -16,15 +16,16 @@ public class TimeTableInfoOutput {
     public static String bestResultAsRAW(TimeTable bestResult) {
         final String headerFormat = "%-8s|%-8s|%-8s|%-8s|%-8s%n";
         StringBuilder strBuilder = new StringBuilder();
+        List<Lesson> lessons = new ArrayList<>(bestResult.getLessons());
 
         // Write the headers
-        strBuilder.append(String.format("Found %d lessons in this time table.%n", bestResult.getLessons().size()));
+        strBuilder.append(String.format("Found %d lessons in this time table.%n", lessons.size()));
         strBuilder.append(String.format(headerFormat, "Day", "Hour", "Class", "Teacher", "Course"));
         strBuilder.append(String.format("%s%n", createLineSeparator(9 * 5)));
 
         // Write the table
-        bestResult.getLessons().sort(Lesson::compareByDHCTS); // Sort by D-H-CLASS-T-COURSE
-        for (Lesson lesson : bestResult.getLessons()) {
+        lessons.sort(Lesson::compareByDHCTS); // Sort by D-H-CLASS-T-COURSE
+        for (Lesson lesson : lessons) {
             strBuilder.append(String.format(headerFormat,
                     lesson.getDay(), lesson.getHour(), lesson.getaClass().getId(), lesson.getTeacher().getId(), lesson.getCourse().getId()));
         }

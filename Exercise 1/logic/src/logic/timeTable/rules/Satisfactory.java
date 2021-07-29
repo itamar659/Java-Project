@@ -7,6 +7,7 @@ import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rule;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class Satisfactory extends Rule<TimeTable> {
 
     @Override
     public float calcFitness(Solution<TimeTable> solution) {
-        List<Lesson> lessons = solution.getGens().getLessons();
+        List<Lesson> lessons = new ArrayList<>(solution.getGens().getLessons());
         TimeTableProblem problem = solution.getGens().getProblem();
         Map<Class, Map<String, Integer>> class2course2hours = new HashMap<>();
 

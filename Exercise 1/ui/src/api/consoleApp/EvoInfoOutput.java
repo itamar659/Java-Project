@@ -9,6 +9,7 @@ import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rule;
 import logic.timeTable.rules.base.Rules;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,7 @@ public class EvoInfoOutput {
     private static final String indents = "  ";
 
     public static String getCoursesDetails(evoEngineSettingsWrapper evoEngineSettings) {
-        List<Course> courses = evoEngineSettings.getCourses();
+        List<Course> courses = new ArrayList<>(evoEngineSettings.getCourses());
         StringBuilder strBuilder = new StringBuilder();
 
         courses.sort(Comparator.comparing(Course::getId));
@@ -38,7 +39,7 @@ public class EvoInfoOutput {
     }
 
     public static String getTeachersDetails(evoEngineSettingsWrapper evoEngineSettings) {
-        List<Teacher> teachers = evoEngineSettings.getTeachers();
+        List<Teacher> teachers = new ArrayList<>(evoEngineSettings.getTeachers());
         StringBuilder strBuilder = new StringBuilder();
 
         teachers.sort(Comparator.comparing(Teacher::getId));
@@ -69,7 +70,7 @@ public class EvoInfoOutput {
     }
 
     public static String getClassesDetails(evoEngineSettingsWrapper evoEngineSettings) {
-        List<Class> classes = evoEngineSettings.getClasses();
+        List<Class> classes = new ArrayList<>(evoEngineSettings.getClasses());
         StringBuilder strBuilder = new StringBuilder();
 
         classes.sort(Comparator.comparing(Class::getId));

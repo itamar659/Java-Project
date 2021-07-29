@@ -1,4 +1,4 @@
-package logic.schema;
+package logic.schema.exceptions;
 
 public class XMLExtractException extends Exception {
 

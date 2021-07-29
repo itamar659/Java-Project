@@ -9,7 +9,7 @@ public class Teacher implements HasId, Cloneable, Serializable {
 
     private String id;
     private String name;
-    private final List<String> teachesCourses;
+    private ArrayList<String> teachesCourses;
 
     @Override
     public String getId() {
@@ -28,7 +28,7 @@ public class Teacher implements HasId, Cloneable, Serializable {
         this.name = name;
     }
 
-    public List<String> getTeachesCoursesIDs() {
+    public final List<String> getTeachesCoursesIDs() {
         return teachesCourses;
     }
 
@@ -63,7 +63,9 @@ public class Teacher implements HasId, Cloneable, Serializable {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public Teacher clone() throws CloneNotSupportedException {
+        Teacher t = (Teacher) super.clone();
+        t.teachesCourses = (ArrayList<String>) teachesCourses.clone();
+        return t;
     }
 }

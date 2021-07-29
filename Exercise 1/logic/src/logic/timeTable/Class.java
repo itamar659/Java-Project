@@ -9,7 +9,7 @@ public class Class implements HasId, Cloneable, Serializable {
 
     private String id;
     private String name;
-    private final Map<String, Integer> courseID2Hours;
+    private TreeMap<String, Integer> courseID2Hours;
     private int totalHours;
 
     @Override
@@ -29,7 +29,7 @@ public class Class implements HasId, Cloneable, Serializable {
         this.name = name;
     }
 
-    public Map<String, Integer> getCourseID2Hours() {
+    public final Map<String, Integer> getCourseID2Hours() {
         return courseID2Hours;
     }
 
@@ -69,7 +69,9 @@ public class Class implements HasId, Cloneable, Serializable {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public Class clone() throws CloneNotSupportedException {
+        Class c = (Class) super.clone();
+        c.courseID2Hours = (TreeMap<String, Integer>) this.courseID2Hours.clone();
+        return c;
     }
 }

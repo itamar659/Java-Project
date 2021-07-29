@@ -4,7 +4,7 @@ import logic.evoAlgorithm.TimeTableEvolutionEngine;
 import logic.timeTable.TimeTable;
 import engine.base.*;
 import logic.schema.TTEvoEngineCreator;
-import logic.schema.XMLExtractException;
+import logic.schema.exceptions.XMLExtractException;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -80,7 +80,7 @@ public class Engine implements Serializable {
 
     public TimeTable getBestResult() {
         // TODO: Multi-thread problem. May delete while looking for the best fitness.
-        return (TimeTable) evoEngine.getPopulation().getBestSolutionFitness();
+        return (TimeTable) evoEngine.getBestSolution();
     }
 
     public Map<Integer, Float> getHistoryGeneration2Fitness() {
@@ -112,6 +112,8 @@ public class Engine implements Serializable {
         this.evoEngine = new TimeTableEvolutionEngine();
         this.evoEngineSettings = new evoEngineSettingsWrapper((TimeTableEvolutionEngine) this.evoEngine);
         this.TTEvoEngineCreator = new TTEvoEngineCreator();
+
+        this.evoEngine.finishRunListener(this::algorithmFinished);
     }
 
     public void validateXMLFile(File xmlFile) throws JAXBException, XMLExtractException {
@@ -134,7 +136,14 @@ public class Engine implements Serializable {
 
     public void startAlgorithm() {
         this.state = State.RUNNING;
-        this.evoEngine.runAlgorithm();
+        new Thread(this.evoEngine::runAlgorithm, "Evolution Algorithm thread").start();
+    }
+
+    public void stopAlgorithm() {
+        this.evoEngine.stopAlgorithm();
+    }
+
+    private void algorithmFinished() {
         this.state = State.COMPLETED;
     }
 }

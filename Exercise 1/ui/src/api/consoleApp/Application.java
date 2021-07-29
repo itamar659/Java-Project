@@ -3,7 +3,8 @@ package api.consoleApp;
 import api.consoleApp.consoleMenu.ApplicationMenus;
 import api.consoleApp.consoleMenu.menu.MainMenu;
 import logic.*;
-import logic.schema.XMLExtractException;
+import logic.schema.exceptions.XMLExtractException;
+import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rule;
 import logic.timeTable.rules.base.Rules;
 
@@ -19,6 +20,8 @@ import java.util.*;
 
 public class Application {
 
+    private static final boolean isMultiThreaded = true;
+
     private final Scanner scanner;
     private MainMenu mainMenu;
     private Engine engine;
@@ -28,9 +31,10 @@ public class Application {
 
         scanner = new Scanner(System.in);
         engine = new Engine();
-        engine.generationEndListener((Runnable & Serializable) this::displayAlgorithmProgressOnUpdate);
         engine.finishRunListener((Runnable & Serializable) this::displayAlgorithmResultsOnFinished);
-        engine.setUpdateGenerationInterval(25);
+        if (!isMultiThreaded) {
+            engine.generationEndListener((Runnable & Serializable) this::displayAlgorithmProgressOnUpdate);
+        }
     }
 
     public void run() {
@@ -47,14 +51,15 @@ public class Application {
         ApplicationMenus.MenuOptions.SHOW_ALGORITHM_HISTORY.updateActivation(this::showAlgorithmHistory);
         ApplicationMenus.MenuOptions.SAVE_TO_FILE.updateActivation(this::saveToFile);
         ApplicationMenus.MenuOptions.LOAD_FROM_FILE.updateActivation(this::loadFromFile);
-        ApplicationMenus.MenuOptions.EXIT.updateActivation(mainMenu::exitMainMenu);
+        ApplicationMenus.MenuOptions.EXIT.updateActivation(this::exit);
 
         mainMenu.setCurrentMenu(ApplicationMenus.createFunctionalMenuFromEnum());
     }
 
-    private void displayAlgorithmResultsOnFinished() {
+    private synchronized void displayAlgorithmResultsOnFinished() {
         System.out.println("Algorithm finished!");
         System.out.printf("Best fitness found: %f%n", engine.getBestResult().getFitness());
+        notifyAll();
     }
 
     private void displayAlgorithmProgressOnUpdate() {
@@ -74,10 +79,11 @@ public class Application {
         }
         System.out.println("------------------------------");
     }
+
     private void openXMLFile() {
         if (engine.getState() == Engine.State.RUNNING) {
-            System.out.println("The algorithm now running. Please wait for it to complete.");
-            // TODO: Add stop method for the algorithm. than stop the algorithm if he wants.
+            System.out.println("The algorithm now running.");
+            System.out.println("Please wait for it to finish, or stop it before load a new file.");
             return;
         }
 
@@ -123,7 +129,7 @@ public class Application {
         return true;
     }
 
-    private void showSettingsNProperties() {
+    private void showSettingsNProperties() { // Multi-threaded supported
         if (!isFileLoadedCheck()) {
             return;
         }
@@ -146,7 +152,12 @@ public class Application {
             return;
         } else if (engine.getState() == Engine.State.RUNNING) {
             System.out.println("The algorithm already running.");
-            displayAlgorithmProgressOnUpdate();
+            System.out.println("Do you want to stop the algorithm? (y/n)");
+            if (!getUserYesNoAnswer()) {
+                System.out.println("Back to main menu");
+            } else {
+                engine.stopAlgorithm();
+            }
             return;
         } else if (engine.getState() == Engine.State.COMPLETED) {
             if (!confirmUserWantToEraseTheResults()) {
@@ -233,13 +244,17 @@ public class Application {
 
         System.out.printf("Best solution fitness: %f%n", engine.getBestResult().getFitness());
 
-        for (Rule rule : engine.getBestResult().getRules().getListOfRules()) {
+        for (Rule<TimeTable> rule : engine.getBestResult().getRules().getListOfRules()) {
             System.out.printf("Rule '%s' (%s) Score: %f%n",
                     rule.getId(), rule.getType(), rule.calcFitness(engine.getBestResult()));
         }
 
         System.out.printf("HARD rules avg fitness: %.1f%n", engine.getBestResult().getAvgFitness(Rules.RULE_TYPE.HARD));
         System.out.printf("SOFT rules avg fitness: %.1f%n", engine.getBestResult().getAvgFitness(Rules.RULE_TYPE.SOFT));
+
+        if (engine.getState() == Engine.State.RUNNING) {
+            displayAlgorithmProgressOnUpdate();
+        }
     }
 
     private void displayRequiredInformation(String input) {
@@ -281,9 +296,17 @@ public class Application {
 
             prevFitness = currentTTGeneration.getValue();
         }
+
+        if (engine.getState() == Engine.State.RUNNING) {
+            displayAlgorithmProgressOnUpdate();
+        }
     }
 
     private void saveToFile() {
+        if (engine.getState() == Engine.State.RUNNING) {
+            System.out.println("Please wait for the algorithm to finish first.");
+            return;
+        }
         System.out.println("Enter a file name or full path of the save file:");
         String path = scanner.nextLine();
         if (Files.exists(Paths.get(path))) {
@@ -305,6 +328,10 @@ public class Application {
     }
 
     private void loadFromFile() {
+        if (engine.getState() == Engine.State.RUNNING) {
+            System.out.println("Please wait for the algorithm to finish first.");
+            return;
+        }
         System.out.println("Enter a file name or full path to load the file:");
         String path = scanner.nextLine();
         if (!Files.exists(Paths.get(path))) {
@@ -321,8 +348,10 @@ public class Application {
 
         try {
             engine = AppIO.DeserializeFromFile(path);
-            engine.generationEndListener((Runnable & Serializable) this::displayAlgorithmProgressOnUpdate);
             engine.finishRunListener((Runnable & Serializable) this::displayAlgorithmResultsOnFinished);
+            if (!isMultiThreaded) {
+                engine.generationEndListener((Runnable & Serializable) this::displayAlgorithmProgressOnUpdate);
+            }
         } catch (IOException e) {
             System.out.println("The file corrupted or not built for this application.");
             return;
@@ -332,6 +361,19 @@ public class Application {
         }
 
         System.out.println("File loaded completed!");
+    }
+
+    private synchronized void exit() {
+        engine.stopAlgorithm();
+        while (engine.getState() == Engine.State.RUNNING) {
+            try {
+                this.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        this.mainMenu.exitMainMenu();
     }
 
     private boolean isFileLoadedCheck() {

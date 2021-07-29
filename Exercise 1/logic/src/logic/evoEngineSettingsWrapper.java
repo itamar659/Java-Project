@@ -18,15 +18,15 @@ public class evoEngineSettingsWrapper implements Serializable {
 
     private final TimeTableEvolutionEngine TTEAlgorithm;
 
-    public Selection<TimeTable> getSelection() {
+    public final Selection<TimeTable> getSelection() {
         return TTEAlgorithm.getSelection();
     }
 
-    public Crossover<TimeTable> getCrossover() {
+    public final Crossover<TimeTable> getCrossover() {
         return TTEAlgorithm.getCrossover();
     }
 
-    public Set<Mutation<TimeTable>> getMutations() {
+    public final Set<Mutation<TimeTable>> getMutations() {
         return TTEAlgorithm.getMutations();
     }
 
@@ -42,19 +42,19 @@ public class evoEngineSettingsWrapper implements Serializable {
         return TTEAlgorithm.getProblem().getHours();
     }
 
-    public List<Class> getClasses() {
+    public final List<Class> getClasses() {
         return TTEAlgorithm.getProblem().getClasses();
     }
 
-    public List<Teacher> getTeachers() {
+    public final List<Teacher> getTeachers() {
         return TTEAlgorithm.getProblem().getTeachers();
     }
 
-    public List<Course> getCourses() {
+    public final List<Course> getCourses() {
         return TTEAlgorithm.getProblem().getCourses();
     }
 
-    public Rules<TimeTable> getRules() {
+    public final Rules<TimeTable> getRules() {
         return TTEAlgorithm.getProblem().getRules();
     }
 
@@ -62,7 +62,7 @@ public class evoEngineSettingsWrapper implements Serializable {
         this.TTEAlgorithm = TTEAlgorithm;
     }
 
-    public Course findCourse(String courseID) {
+    public final Course findCourse(String courseID) {
         for (Course currentCourse : TTEAlgorithm.getProblem().getCourses()) {
             if (currentCourse.getId().equals(courseID)) {
                 return currentCourse;

@@ -26,7 +26,7 @@ public class TimeTableProblem implements Problem<TimeTable> {
     // amount of max hours to study everyday
     private int hours;
 
-    public List<Class> getClasses() {
+    public final List<Class> getClasses() {
         return classes;
     }
 
@@ -34,7 +34,7 @@ public class TimeTableProblem implements Problem<TimeTable> {
         this.classes = classes;
     }
 
-    public List<Course> getCourses() {
+    public final List<Course> getCourses() {
         return courses;
     }
 
@@ -42,7 +42,7 @@ public class TimeTableProblem implements Problem<TimeTable> {
         this.courses = courses;
     }
 
-    public List<Teacher> getTeachers() {
+    public final List<Teacher> getTeachers() {
         return teachers;
     }
 
@@ -50,7 +50,7 @@ public class TimeTableProblem implements Problem<TimeTable> {
         this.teachers = teachers;
     }
 
-    public Rules<TimeTable> getRules() {
+    public final Rules<TimeTable> getRules() {
         return rules;
     }
 

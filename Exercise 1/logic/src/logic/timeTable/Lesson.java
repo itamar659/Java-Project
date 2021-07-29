@@ -12,7 +12,7 @@ public class Lesson implements Cloneable, Serializable {
     private int hour;
     private int day;
 
-    public Class getaClass() {
+    public final Class getaClass() {
         return aClass;
     }
 
@@ -20,7 +20,7 @@ public class Lesson implements Cloneable, Serializable {
         this.aClass = aClass;
     }
 
-    public Teacher getTeacher() {
+    public final Teacher getTeacher() {
         return teacher;
     }
 
@@ -28,7 +28,7 @@ public class Lesson implements Cloneable, Serializable {
         this.teacher = teacher;
     }
 
-    public Course getCourse() {
+    public final Course getCourse() {
         return course;
     }
 
@@ -82,7 +82,11 @@ public class Lesson implements Cloneable, Serializable {
 
     @Override
     public Lesson clone() throws CloneNotSupportedException {
-        return (Lesson) super.clone();
+        Lesson l = (Lesson) super.clone();
+        l.teacher = this.teacher.clone();
+        l.course = this.course.clone();
+        l.aClass = this.aClass.clone();
+        return l;
     }
 
     public int compareByDHCTS(Lesson lesson) {

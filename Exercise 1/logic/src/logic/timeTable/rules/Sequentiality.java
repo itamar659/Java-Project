@@ -29,7 +29,7 @@ public class Sequentiality extends Rule<TimeTable> implements Parameterizable {
 
     @Override
     public float calcFitness(Solution<TimeTable> solution) {
-        List<Lesson> lessons = solution.getGens().getLessons();
+        List<Lesson> lessons = new ArrayList<>(solution.getGens().getLessons());
         TimeTableProblem problem = solution.getGens().getProblem();
 
         Map<Course, boolean[][]> course2schedule = course2teachTimeTable(problem.getDays(), problem.getHours(), lessons);

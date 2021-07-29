@@ -6,7 +6,7 @@ import logic.timeTable.TimeTable;
 public class TimeTableEvolutionEngine extends EvolutionEngine<TimeTable> {
 
     @Override
-    public TimeTableProblem getProblem() {
+    public final TimeTableProblem getProblem() {
         return (TimeTableProblem) super.getProblem();
     }
 

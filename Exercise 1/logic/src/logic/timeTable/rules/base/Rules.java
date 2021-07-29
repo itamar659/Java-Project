@@ -10,10 +10,10 @@ public class Rules<T> implements Serializable {
         SOFT, HARD;
     }
 
-    private List<Rule<T>> rules;
+    private final List<Rule<T>> rules;
     private int hardRuleWeight;
 
-    public List<Rule<T>> getListOfRules() {
+    public final List<Rule<T>> getListOfRules() {
         return rules;
     }
 

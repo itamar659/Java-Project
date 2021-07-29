@@ -47,7 +47,7 @@ public class Course implements HasId, Cloneable, Serializable {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public Course clone() throws CloneNotSupportedException {
+        return (Course) super.clone();
     }
 }
