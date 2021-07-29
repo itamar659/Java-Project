@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.function.Supplier;
 
-// TODO: All the fields can move to data object.
 
-// TODO: Can have a best solution field, and save a single solution after the algorithm finish. (and del population that takes 700kb)
 public abstract class EvolutionEngine<T> implements Serializable {
 
     protected int populationSize;

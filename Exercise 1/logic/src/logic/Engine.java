@@ -79,7 +79,6 @@ public class Engine implements Serializable {
     }
 
     public TimeTable getBestResult() {
-        // TODO: Multi-thread problem. May delete while looking for the best fitness.
         return (TimeTable) evoEngine.getBestSolution();
     }
 

@@ -31,7 +31,6 @@ public abstract class Population<T> implements Serializable {
         return bestFitness;
     }
 
-    // TODO: Fix an unknown bug.
     public void sort() {
         Arrays.sort(solutions, (o1, o2) -> Float.compare(o2.getFitness(), o1.getFitness()));
     }

@@ -15,9 +15,6 @@ import java.nio.file.Paths;
 import java.util.*;
 
 
-// TODO: Create the solution (and everything else(?)) generic - that get <TimeTable> as the type for our application.
-// TODO: Move some of the input stuff to another class
-
 public class Application {
 
     private static final boolean isMultiThreaded = true;
