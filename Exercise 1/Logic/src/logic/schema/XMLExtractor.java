@@ -165,16 +165,16 @@ public class XMLExtractor {
 
     public int extractDays() throws XMLExtractException {
         int days = ettDescriptor.getETTTimeTable().getDays();
-        if (days < 0 || days > 7) {
-            throw new XMLExtractException("Studies days has to be between 0-7");
+        if (days < 0) {
+            throw new XMLExtractException("Studies days has to be non-negative value");
         }
         return days;
     }
 
     public int extractHours() throws XMLExtractException {
         int hours = ettDescriptor.getETTTimeTable().getHours();
-        if (hours < 0 || hours > 24) {
-            throw new XMLExtractException("Hours value has to be between 0-24");
+        if (hours < 0) {
+            throw new XMLExtractException("Hours value has to be non-negative value");
         }
         return ettDescriptor.getETTTimeTable().getHours();
     }

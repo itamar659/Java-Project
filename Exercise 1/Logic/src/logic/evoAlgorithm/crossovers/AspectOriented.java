@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class AspectOriented implements Crossover<TimeTable>, Parameterizable {
 
@@ -242,16 +243,15 @@ public class AspectOriented implements Crossover<TimeTable>, Parameterizable {
 
     private void crossoverLessons(List<Lesson> p1, List<Lesson> p2,
                                   Solution<TimeTable> child1, Solution<TimeTable> child2) throws CloneNotSupportedException {
-        int swapAfter = p1.size() / this.cuttingPoints;
-        if (swapAfter <= 0) {
-            swapAfter = 1;
-        }
-
         Solution<TimeTable> c1 = child1;
         Solution<TimeTable> c2 = child2;
 
+        int[] cuts = IntStream.range(0, this.cuttingPoints).map(i -> rand.nextInt(p1.size() + 1)).sorted().toArray();
+        int cut_idx = 1;
+
         for (int i = 0; i < p1.size(); i++) {
-            if (i % swapAfter == 0) {
+            if (cut_idx <= this.cuttingPoints && cuts[cut_idx - 1] == i) {
+                cut_idx++;
                 Solution<TimeTable> temp = c1;
                 c1 = c2;
                 c2 = temp;

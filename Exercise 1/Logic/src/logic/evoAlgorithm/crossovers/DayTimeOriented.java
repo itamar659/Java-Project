@@ -9,6 +9,7 @@ import engine.base.Solution;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class DayTimeOriented implements Crossover<TimeTable> {
 
@@ -74,13 +75,12 @@ public class DayTimeOriented implements Crossover<TimeTable> {
         TimeTable child1 = (TimeTable) mother.createChild();
         TimeTable child2 = (TimeTable) mother.createChild();
 
-        int swapAfter = parents.father.size() / this.cuttingPoints;
-        if (swapAfter <= 0) {
-            swapAfter = 1;
-        }
+        int[] cuts = IntStream.range(0, this.cuttingPoints).map(i -> rand.nextInt(parents.father.size() + 1)).sorted().toArray();
+        int cut_idx = 1;
 
         for (int i = 0; i < parents.father.size(); i++) {
-            if (i % swapAfter == 0) {
+            if (cut_idx <= this.cuttingPoints && cuts[cut_idx - 1] == i) {
+                cut_idx++;
                 TimeTable temp = child1;
                 child1 = child2;
                 child2 = temp;
