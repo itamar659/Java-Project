@@ -7,6 +7,8 @@ import engine.base.Solution;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class TimeTable implements Solution<TimeTable>, Serializable {
 
@@ -72,6 +74,13 @@ public class TimeTable implements Solution<TimeTable>, Serializable {
         return this;
     }
 
+    @Override
+    public Solution<TimeTable> createChild() {
+        TimeTable child = new TimeTable(this.problem);
+        child.setRules(this.rules);
+        return child;
+    }
+
     public float getAvgFitness(Rules.RULE_TYPE type) {
         float total = 0;
         int counted = 0;
@@ -86,31 +95,28 @@ public class TimeTable implements Solution<TimeTable>, Serializable {
     }
 
     public Map<Teacher, List<Lesson>> getTeachersTimeTable() {
-        List<Lesson> lessons = new ArrayList<>(this.lessons);
-        Map<Teacher, List<Lesson>> teacher2lessonsList = new TreeMap<>(Comparator.comparing(Teacher::getId));
-        for (Lesson lesson : lessons) {
-            if (!teacher2lessonsList.containsKey(lesson.getTeacher())) {
-                teacher2lessonsList.put(lesson.getTeacher(), new ArrayList<>());
-            }
-
-            teacher2lessonsList.get(lesson.getTeacher()).add(lesson);
-        }
-
-        return teacher2lessonsList;
+        return  getSpecificTimeTable(Lesson::getTeacher);
     }
 
     public Map<Class, List<Lesson>> getClassesTimeTable() {
+        return  getSpecificTimeTable(Lesson::getaClass);
+    }
+
+    private <T extends HasId>Map<T, List<Lesson>> getSpecificTimeTable(Function<Lesson, T> TMethod) {
         List<Lesson> lessons = new ArrayList<>(this.lessons);
-        Map<Class, List<Lesson>> teacher2lessonsList = new TreeMap<>(Comparator.comparing(Class::getId));
+        lessons.sort(Lesson::compareByDHCTS);
+        Map<T, List<Lesson>> identifier2lessonsList = new TreeMap<>(T::compareByID);
+        T funcRtnObj;
         for (Lesson lesson : lessons) {
-            if (!teacher2lessonsList.containsKey(lesson.getaClass())) {
-                teacher2lessonsList.put(lesson.getaClass(), new ArrayList<>());
+            funcRtnObj = TMethod.apply(lesson);
+            if (!identifier2lessonsList.containsKey(funcRtnObj)) {
+                identifier2lessonsList.put(funcRtnObj, new ArrayList<>());
             }
 
-            teacher2lessonsList.get(lesson.getaClass()).add(lesson);
+            identifier2lessonsList.get(funcRtnObj).add(lesson);
         }
 
-        return teacher2lessonsList;
+        return identifier2lessonsList;
     }
 
     @Override

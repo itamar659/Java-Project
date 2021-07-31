@@ -36,6 +36,10 @@ public class DayOffTeacher extends Rule<TimeTable> {
             }
         }
 
+        if (max == 0) {
+            return 0;
+        }
+
         return (max - penalty) / ((float) max);
     }
 }

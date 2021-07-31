@@ -39,6 +39,10 @@ public class Singularity extends Rule<TimeTable> {
             }
         }
 
-        return (float)Math.pow((max - penalty) / ((float) max), 3);
+        if (max == 0) {
+            return 0;
+        }
+
+        return (float)Math.pow((max - penalty) / ((float) max), 2);
     }
 }

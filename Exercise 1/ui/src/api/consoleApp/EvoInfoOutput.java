@@ -25,13 +25,13 @@ public class EvoInfoOutput {
         List<Course> courses = new ArrayList<>(evoEngineSettings.getCourses());
         StringBuilder strBuilder = new StringBuilder();
 
-        courses.sort(Comparator.comparing(Course::getId));
+        courses.sort(Course::compareByID);
         strBuilder.append(String.format("Number of courses: %d%n", courses.size()));
 
         // Write a list of the courses
         int index = 1;
         for (Course course : courses) {
-            strBuilder.append(String.format("%s%d. %s - %s%n", indents, index, course.getName(), course.getId()));
+            strBuilder.append(String.format("%s%2d. %s - %s%n", indents, index, course.getName(), course.getId()));
             index += 1;
         }
 
@@ -42,7 +42,7 @@ public class EvoInfoOutput {
         List<Teacher> teachers = new ArrayList<>(evoEngineSettings.getTeachers());
         StringBuilder strBuilder = new StringBuilder();
 
-        teachers.sort(Comparator.comparing(Teacher::getId));
+        teachers.sort(Teacher::compareByID);
         strBuilder.append(String.format("Number of teachers: %d%n", teachers.size()));
 
         // Write the required information about every teacher
@@ -73,7 +73,7 @@ public class EvoInfoOutput {
         List<Class> classes = new ArrayList<>(evoEngineSettings.getClasses());
         StringBuilder strBuilder = new StringBuilder();
 
-        classes.sort(Comparator.comparing(Class::getId));
+        classes.sort(Class::compareByID);
         strBuilder.append(String.format("Number of classes: %d%n", classes.size()));
 
         // Write all the information about every class
@@ -107,7 +107,7 @@ public class EvoInfoOutput {
         strBuilder.append(String.format("Number of rules: %d%n", rules.getListOfRules().size()));
         int index = 1;
         for (Rule<TimeTable> rule : rules.getListOfRules()) {
-            strBuilder.append(String.format("%s%d. %s - %s%n", indents, index, rule.getId(), rule.getType()));
+            strBuilder.append(String.format("%s%2d. %s - %s%n", indents, index, rule.getId(), rule.getType()));
             index++;
         }
 

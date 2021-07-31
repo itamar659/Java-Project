@@ -43,7 +43,7 @@ public class Flipping extends Mutation<TimeTable> implements Parameterizable {
         } else if (parameterName.equals("Component")) {
             setComponent((String) value);
         } else {
-            throw new IllegalArgumentException("Not found parameter name in " + this.getClass().getSimpleName());
+            throw new IllegalArgumentException("Parameter name not found in " + this.getClass().getSimpleName());
         }
     }
 
@@ -54,7 +54,7 @@ public class Flipping extends Mutation<TimeTable> implements Parameterizable {
         } else if (parameterName.equals("Component")) {
             return getComponent();
         } else {
-            throw new IllegalArgumentException("Not found parameter name in " + this.getClass().getSimpleName());
+            throw new IllegalArgumentException("Parameter name not found in " + this.getClass().getSimpleName());
         }
     }
 

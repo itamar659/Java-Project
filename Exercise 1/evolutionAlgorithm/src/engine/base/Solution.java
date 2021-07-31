@@ -7,4 +7,6 @@ public interface Solution<T> extends Serializable {
     float getFitness();
 
     T getGens();
+
+    Solution<T> createChild();
 }

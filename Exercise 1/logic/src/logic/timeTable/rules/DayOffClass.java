@@ -20,7 +20,7 @@ public class DayOffClass extends Rule<TimeTable> {
         List<Lesson> lessons = new ArrayList<>(solution.getGens().getLessons());
         final int DAYS_IN_WEEK = 7;
 
-        Map<Class, boolean[]> class2daysOfStudy = new TreeMap<>(Comparator.comparing(Class::getId));
+        Map<Class, boolean[]> class2daysOfStudy = new TreeMap<>(Class::compareByID);
         int penalty = 0;
 
         // calculate for every class in which days they study.

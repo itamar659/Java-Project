@@ -55,7 +55,7 @@ public class Sequentiality extends Rule<TimeTable> implements Parameterizable {
     }
 
     private Map<Course, boolean[][]> course2teachTimeTable(int days, int hours, List<Lesson> lessons) {
-        Map<Course, boolean[][]> course2schedule = new TreeMap<>(Comparator.comparing(Course::getId));
+        Map<Course, boolean[][]> course2schedule = new TreeMap<>(Course::compareByID);
 
         for (Lesson lesson : lessons) {
             if (!course2schedule.containsKey(lesson.getCourse())) {

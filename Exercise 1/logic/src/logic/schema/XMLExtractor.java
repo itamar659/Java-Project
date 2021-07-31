@@ -34,6 +34,9 @@ public class XMLExtractor {
 
     public Selection<TimeTable> extractSelectionOperator() throws XMLExtractException {
         ETTSelection ettSelection = ettDescriptor.getETTEvolutionEngine().getETTSelection();
+        if (ettSelection == null) {
+            throw new XMLExtractException("You have to give a selection method in the xml.");
+        }
 
         // Step 1 - create the object
         SelectionFactory factory = new SelectionFactory();
@@ -50,6 +53,9 @@ public class XMLExtractor {
 
     public Crossover<TimeTable> extractCrossoverOperator() throws XMLExtractException {
         ETTCrossover ettCrossover = ettDescriptor.getETTEvolutionEngine().getETTCrossover();
+        if (ettCrossover == null) {
+            throw new XMLExtractException("You have to give a crossover method in the xml.");
+        }
 
         // Step 1 - create the object
         CrossoverFactory factory = new CrossoverFactory();
@@ -61,14 +67,11 @@ public class XMLExtractor {
         // Step 2 - set the configurations (object parameters) if there are any
         setParametersIfPossible(crossover, ettCrossover.getConfiguration());
 
-        // Step 2.1 - set DayTimeOriented parameter
-        if (crossover instanceof DayTimeOriented) {
-            if (ettCrossover.getCuttingPoints() < 0) {
-                throw new XMLExtractException("Cutting-Points is a non-negative number.");
-            }
-
-            ((DayTimeOriented) crossover).setCuttingPoints(ettCrossover.getCuttingPoints());
+        if (ettCrossover.getCuttingPoints() < 0) {
+            throw new XMLExtractException("Cutting-Points is a non-negative number.");
         }
+
+        crossover.setCuttingPoints(ettCrossover.getCuttingPoints());
 
         // Step 3 - return the object
         return crossover;
@@ -76,6 +79,10 @@ public class XMLExtractor {
 
     public Set<Mutation<TimeTable>> extractMutationsOperator() throws XMLExtractException {
         ETTMutations ettMutations = ettDescriptor.getETTEvolutionEngine().getETTMutations();
+        if (ettMutations == null) {
+            throw new XMLExtractException("You have to give at least an empty list of mutations " +
+                    "(to make sure it's not made by a mistake but on purpose).");
+        }
 
         MutationFactory factory = new MutationFactory();
         Set<Mutation<TimeTable>> mutations = new HashSet<>();
@@ -105,6 +112,9 @@ public class XMLExtractor {
 
     public Rules<TimeTable> extractRules() throws XMLExtractException {
         ETTRules ettRules = ettDescriptor.getETTTimeTable().getETTRules();
+        if (ettRules == null) {
+            throw new XMLExtractException("Missing rules in the xml.");
+        }
 
         RuleFactory factory = new RuleFactory();
         Rules<TimeTable> rules = new Rules<TimeTable>();
@@ -171,6 +181,10 @@ public class XMLExtractor {
 
     public List<Course> extractCourses() throws XMLExtractException {
         ETTSubjects ettSubjects = ettDescriptor.getETTTimeTable().getETTSubjects();
+        if (ettSubjects == null) {
+            throw new XMLExtractException("You have to give at least an empty list of subjects " +
+                    "(to make sure it's not made by a mistake but on purpose).");
+        }
 
         List<Course> courses = new ArrayList<>();
 
@@ -189,13 +203,26 @@ public class XMLExtractor {
 
     public List<Teacher> extractTeachers(List<Course> courses) throws XMLExtractException {
         ETTTeachers ettTeachers = ettDescriptor.getETTTimeTable().getETTTeachers();
+        if (ettTeachers == null) {
+            throw new XMLExtractException("You have to give at least an empty list of teachers " +
+                    "(to make sure it's not made by a mistake but on purpose).");
+        }
 
         List<Teacher> teachers = new ArrayList<>();
 
         for (ETTTeacher ettTeacher : ettTeachers.getETTTeacher()) {
             Teacher teacher = new Teacher();
             teacher.setId(Integer.toString(ettTeacher.getId()));
+
+            if (ettTeacher.getETTName() == null) {
+                ettTeacher.setETTName("No Name");
+            }
             teacher.setName(ettTeacher.getETTName());
+
+            if (ettTeacher.getETTTeaching() == null) {
+                throw new XMLExtractException(String.format("Teacher ass ID '%s' has to have at least an empty list of 'Teaching' courses " +
+                        "(to make sure it's not made by a mistake but on purpose).", ettTeacher.getId()));
+            }
 
             for (ETTTeaches ettTeaches : ettTeacher.getETTTeaching().getETTTeaches()) {
                 String courseID = Integer.toString(ettTeaches.getSubjectId());
@@ -217,13 +244,26 @@ public class XMLExtractor {
 
     public List<Class> extractClasses(List<Course> courses, int totalTime) throws XMLExtractException {
         ETTClasses ettClasses = ettDescriptor.getETTTimeTable().getETTClasses();
+        if (ettClasses == null) {
+            throw new XMLExtractException("You have to give at least an empty list of classes " +
+                    "(to make sure it's not made by a mistake but on purpose).");
+        }
 
         List<Class> classes = new ArrayList<>();
 
         for (ETTClass ettClass : ettClasses.getETTClass()) {
             Class aclass = new Class();
             aclass.setId(Integer.toString(ettClass.getId()));
+
+            if (ettClass.getETTName() == null) {
+                ettClass.setETTName("No Name");
+            }
             aclass.setName(ettClass.getETTName());
+
+            if (ettClass.getETTRequirements() == null) {
+                throw new XMLExtractException(String.format("Class ID '%s' has to have at least an empty list of 'Requirements' " +
+                        "(to make sure it's not made by a mistake but on purpose).", ettClass.getId()));
+            }
 
             int studyHours = 0;
             for (ETTStudy ettStudy : ettClass.getETTRequirements().getETTStudy()) {

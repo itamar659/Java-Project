@@ -27,6 +27,10 @@ public class Knowledgeable extends Rule<TimeTable> {
             }
         }
 
+        if (max == 0) {
+            return 0;
+        }
+
         return (float) Math.pow((max - penalty) / ((double) max), 3);
     }
 }

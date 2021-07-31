@@ -11,6 +11,7 @@ import logic.timeTable.rules.base.Rules;
 import javax.xml.bind.JAXBException;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -27,7 +28,7 @@ public class Application {
     public Application() {
         initializeMenu();
 
-        isMultiThreaded = false;
+        isMultiThreaded = true;
         scanner = new Scanner(System.in);
         engine = new Engine();
         engine.setMultiThreaded(isMultiThreaded);
@@ -113,15 +114,20 @@ public class Application {
         }
 
         engine.updateEvoEngine();
-        System.out.println("The file loaded correctly (hopefully)! New settings and properties have been created.");
+        System.out.println("The file loaded correctly (hopefully)! New settings and properties have been set.");
     }
 
     private boolean isFileXMLExists(String filePath) {
-        if (!filePath.endsWith(".xml")) {
-            System.out.println("The fine is not an xml file.");
-            return false;
-        } else if (!Files.exists(Paths.get(filePath))) {
-            System.out.println("File not exists in the current path.");
+        try {
+            if (!filePath.endsWith(".xml")) {
+                System.out.println("The fine is not an xml file.");
+                return false;
+            } else if (!Files.exists(Paths.get(filePath))) {
+                System.out.println("File not exists in the current path.");
+                return false;
+            }
+        } catch (InvalidPathException e) {
+            System.out.println("Invalid path.");
             return false;
         }
 

@@ -16,10 +16,12 @@ public class DayTimeOriented implements Crossover<TimeTable> {
 
     private int cuttingPoints;
 
+    @Override
     public int getCuttingPoints() {
         return cuttingPoints;
     }
 
+    @Override
     public void setCuttingPoints(int cuttingPoints) {
         // Can be bigger from the population. it'll cut every single block
         this.cuttingPoints = cuttingPoints;
@@ -39,8 +41,8 @@ public class DayTimeOriented implements Crossover<TimeTable> {
 
             List<Solution<TimeTable>> children = null;
             try {
-                children = crossover(father, mother);
-            } catch (CloneNotSupportedException e) {
+                children = crossoverParents(father, mother);
+            } catch (CloneNotSupportedException e) { // Won't come here. Change to ignored
                 e.printStackTrace();
                 throw new NullPointerException("children (crossover return value) cannot be null after crossover activated.");
             }
@@ -65,17 +67,15 @@ public class DayTimeOriented implements Crossover<TimeTable> {
     }
 
     // Very specific method for this situation
-    private List<Solution<TimeTable>> crossover(Solution<TimeTable> father, Solution<TimeTable> mother) throws CloneNotSupportedException {
+    private List<Solution<TimeTable>> crossoverParents(Solution<TimeTable> father, Solution<TimeTable> mother) throws CloneNotSupportedException {
         Parents parents = parentsLessonsOrdered(father.getGens().getLessons(), mother.getGens().getLessons());
 
         // Now we can put the one each other and do the split.
-        TimeTable child1 = new TimeTable(father.getGens().getProblem());
-        TimeTable child2 = new TimeTable(father.getGens().getProblem());
-        child1.setRules(father.getGens().getRules());
-        child2.setRules(father.getGens().getRules());
+        TimeTable child1 = (TimeTable) mother.createChild();
+        TimeTable child2 = (TimeTable) mother.createChild();
 
         int swapAfter = parents.father.size() / this.cuttingPoints;
-        if (swapAfter == 0) {
+        if (swapAfter <= 0) {
             swapAfter = 1;
         }
 
@@ -120,16 +120,16 @@ public class DayTimeOriented implements Crossover<TimeTable> {
             cmpResult = currentFatherLesson.compareByDHCTS(currentMotherLesson);
 
             if (cmpResult < 0) {
-                parent1.add((Lesson) currentFatherLesson.clone());
+                parent1.add(currentFatherLesson.clone());
                 parent2.add(null);
                 fatherIdx++;
             } else if (cmpResult > 0) {
                 parent1.add(null);
-                parent2.add((Lesson) currentMotherLesson.clone());
+                parent2.add(currentMotherLesson.clone());
                 motherIdx++;
             } else {
-                parent1.add((Lesson) currentFatherLesson.clone());
-                parent2.add((Lesson) currentMotherLesson.clone());
+                parent1.add(currentFatherLesson.clone());
+                parent2.add(currentMotherLesson.clone());
                 motherIdx++;
                 fatherIdx++;
             }
@@ -137,14 +137,14 @@ public class DayTimeOriented implements Crossover<TimeTable> {
 
         for (;fatherIdx < fatherLessons.size(); fatherIdx++) {
             Lesson currentFatherLesson = fatherLessons.get(fatherIdx);
-            parent1.add((Lesson) currentFatherLesson.clone());
+            parent1.add(currentFatherLesson.clone());
             parent2.add(null);
         }
 
         for (;motherIdx < motherLessons.size(); motherIdx++) {
             Lesson currentMotherLesson = motherLessons.get(motherIdx);
             parent1.add(null);
-            parent2.add((Lesson) currentMotherLesson.clone());
+            parent2.add(currentMotherLesson.clone());
         }
 
         return new Parents(parent1, parent2);

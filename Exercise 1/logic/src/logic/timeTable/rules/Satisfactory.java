@@ -67,10 +67,11 @@ public class Satisfactory extends Rule<TimeTable> {
             }
         }
 
-        if (penalty > max) {
+
+        if (penalty > max || max == 0) {
             return 0;
         }
 
-        return (float) Math.pow((max - penalty) / ((double) max), 4);
+        return (float) Math.pow((max - penalty) / ((double) max), 3);
     }
 }
