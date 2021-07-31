@@ -246,7 +246,16 @@ public class AspectOriented implements Crossover<TimeTable>, Parameterizable {
         Solution<TimeTable> c1 = child1;
         Solution<TimeTable> c2 = child2;
 
-        int[] cuts = IntStream.range(0, this.cuttingPoints).map(i -> rand.nextInt(p1.size() + 1)).sorted().toArray();
+        int numOfCuts = this.cuttingPoints;
+        if (this.cuttingPoints > p1.size()) {
+            numOfCuts = p1.size();
+        }
+
+        int[] cuts = IntStream.generate(() -> rand.nextInt(p1.size() + 1))
+                .distinct()
+                .limit(numOfCuts)
+                .sorted().toArray();
+
         int cut_idx = 1;
 
         for (int i = 0; i < p1.size(); i++) {

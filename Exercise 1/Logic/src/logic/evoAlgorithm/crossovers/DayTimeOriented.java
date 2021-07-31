@@ -75,7 +75,16 @@ public class DayTimeOriented implements Crossover<TimeTable> {
         TimeTable child1 = (TimeTable) mother.createChild();
         TimeTable child2 = (TimeTable) mother.createChild();
 
-        int[] cuts = IntStream.range(0, this.cuttingPoints).map(i -> rand.nextInt(parents.father.size() + 1)).sorted().toArray();
+        int numOfCuts = this.cuttingPoints;
+        if (this.cuttingPoints > parents.father.size()) {
+            numOfCuts = parents.father.size();
+        }
+
+        int[] cuts = IntStream.generate(() -> rand.nextInt(parents.father.size() + 1))
+                .distinct()
+                .limit(numOfCuts)
+                .sorted().toArray();
+
         int cut_idx = 1;
 
         for (int i = 0; i < parents.father.size(); i++) {
