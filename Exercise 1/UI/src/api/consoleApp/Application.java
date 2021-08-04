@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Application {
@@ -291,9 +292,9 @@ public class Application {
         System.out.printf("Recorded %d stages of generations.%n", generations2Fitness.size());
 
         Float prevFitness = null;
-        for (Map.Entry<Integer, Float> currentTTGeneration : generations2Fitness.entrySet()) {
+        for (Map.Entry<Integer, Float> currentTTGeneration : getTheCorrectMap(generations2Fitness)) {
             if (prevFitness == null) {
-                System.out.printf("First generation fitness: %.2f%n", currentTTGeneration.getValue());
+                System.out.printf("Generation %d fitness: %.2f%n", currentTTGeneration.getKey(), currentTTGeneration.getValue());
             } else {
                 System.out.printf("Generation %d fitness: %.2f (%+.2f)%n",
                         currentTTGeneration.getKey(), currentTTGeneration.getValue(), (currentTTGeneration.getValue() - prevFitness));
@@ -305,6 +306,22 @@ public class Application {
         if (engine.getState() == Engine.State.RUNNING) {
             displayAlgorithmProgressOnUpdate();
         }
+    }
+
+    private List<Map.Entry<Integer, Float>> getTheCorrectMap(Map<Integer, Float> generation2Fitness) {
+        if (engine.getState() != Engine.State.RUNNING) {
+            return new ArrayList<>(generation2Fitness.entrySet());
+        }
+
+        int remains = generation2Fitness.size() - 10;
+        if (remains < 0) {
+            remains = 0;
+        }
+
+        return generation2Fitness.entrySet()
+                .stream()
+                .skip(remains)
+                .collect(Collectors.toList());
     }
 
     private void saveToFile() {

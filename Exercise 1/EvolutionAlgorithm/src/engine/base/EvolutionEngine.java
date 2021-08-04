@@ -133,7 +133,7 @@ public abstract class EvolutionEngine<T> implements Serializable {
     public void runAlgorithm() {
         this.isRunning = true;
         this.historyGeneration2Fitness.clear();
-        bestSolution = population.getBestSolutionFitness();
+        setBestSolution(population.getBestSolutionFitness());
 
         for (currentGeneration = 0; isRunning && !stopCondition.get(); currentGeneration++) {
 
@@ -162,7 +162,7 @@ public abstract class EvolutionEngine<T> implements Serializable {
             }
         }
 
-        bestSolution = population.getBestSolutionFitness();
+        setBestSolution(population.getBestSolutionFitness());
         updateHistoryGeneration2Fitness(currentGeneration, population.getBestSolutionFitness().getFitness());
         onFinish();
     }
