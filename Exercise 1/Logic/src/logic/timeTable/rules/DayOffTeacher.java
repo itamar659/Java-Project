@@ -40,6 +40,6 @@ public class DayOffTeacher extends Rule<TimeTable> {
             return 0;
         }
 
-        return (max - penalty) / ((float) max);
+        return (max - penalty) / ((float) MAX_PERCENTAGE);
     }
 }

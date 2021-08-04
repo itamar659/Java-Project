@@ -8,6 +8,8 @@ import java.util.Objects;
 
 public abstract class Rule<T> implements HasId, Serializable {
 
+    protected static final float MAX_PERCENTAGE = 100;
+
     private Rules.RULE_TYPE type;
 
     public Rules.RULE_TYPE getType() {

@@ -58,7 +58,7 @@ public class Application {
 
     private synchronized void displayAlgorithmResultsOnFinished() {
         System.out.println("Algorithm finished!");
-        System.out.printf("Best fitness found: %f%n", engine.getBestResult().getFitness());
+        System.out.printf("Best fitness found: %.2f%n", engine.getBestResult().getFitness());
         notifyAll();
     }
 
@@ -67,13 +67,13 @@ public class Application {
             float progressPercentage = ((float) engine.getCurrentGeneration()) / engine.getMaxGenerationsCondition() * 100f;
             System.out.printf("Progress (%.2f%%): %d / %d generations%n",
                     progressPercentage, engine.getCurrentGeneration(), engine.getMaxGenerationsCondition());
-            System.out.printf("Best current fitness: %f%n", engine.getBestResult().getFitness());
+            System.out.printf("Best current fitness: %.2f%n", engine.getBestResult().getFitness());
 
         } else if (engine.getStopCondition() == Engine.StopCondition.REQUESTED_FITNESS) {
             float progressPercentage = (engine.getBestResult().getFitness()) / engine.getMaxFitnessCondition() * 100f;
             if (progressPercentage > 100) progressPercentage = 100;
             System.out.printf("Generation: %d%n", engine.getCurrentGeneration());
-            System.out.printf("Progress (%.2f%%): %f / %f best fitness%n",
+            System.out.printf("Progress (%.2f%%): %.2f / %.2f best fitness%n",
                     progressPercentage, engine.getBestResult().getFitness(), engine.getMaxFitnessCondition());
 
         }
@@ -203,14 +203,14 @@ public class Application {
     }
 
     private void stopCondMaxFitness() {
-        System.out.println("Please insert the fitness to stop at (a value between 0 to 1):");
+        System.out.println("Please insert the fitness to stop at (a value between 0 to 100):");
         float maxFitness;
         String input;
         do {
             input = scanner.nextLine();
             try {
                 maxFitness = Float.parseFloat(input);
-                if (maxFitness < 0 || maxFitness > 1.000001f) {
+                if (maxFitness < 0 || maxFitness > 100.000000f) {
                     System.out.println("Choose a value between 0 to 1.");
                 } else {
                     break;
@@ -247,15 +247,15 @@ public class Application {
         String input = scanner.nextLine();
         displayRequiredInformation(input);
 
-        System.out.printf("Best solution fitness: %f%n", engine.getBestResult().getFitness());
+        System.out.printf("Best solution fitness: %.2f%n", engine.getBestResult().getFitness());
 
         for (Rule<TimeTable> rule : engine.getBestResult().getRules().getListOfRules()) {
-            System.out.printf("Rule '%s' (%s) Score: %f%n",
+            System.out.printf("Rule '%s' (%s) Score: %.2f%n",
                     rule.getId(), rule.getType(), rule.calcFitness(engine.getBestResult()));
         }
 
-        System.out.printf("HARD rules avg fitness: %.1f%n", engine.getBestResult().getAvgFitness(Rules.RULE_TYPE.HARD));
-        System.out.printf("SOFT rules avg fitness: %.1f%n", engine.getBestResult().getAvgFitness(Rules.RULE_TYPE.SOFT));
+        System.out.printf("HARD rules avg fitness: %.2f%n", engine.getBestResult().getAvgFitness(Rules.RULE_TYPE.HARD));
+        System.out.printf("SOFT rules avg fitness: %.2f%n", engine.getBestResult().getAvgFitness(Rules.RULE_TYPE.SOFT));
 
         if (engine.getState() == Engine.State.RUNNING) {
             displayAlgorithmProgressOnUpdate();
@@ -293,9 +293,9 @@ public class Application {
         Float prevFitness = null;
         for (Map.Entry<Integer, Float> currentTTGeneration : generations2Fitness.entrySet()) {
             if (prevFitness == null) {
-                System.out.printf("First generation fitness: %f%n", currentTTGeneration.getValue());
+                System.out.printf("First generation fitness: %.2f%n", currentTTGeneration.getValue());
             } else {
-                System.out.printf("Generation %d fitness: %f (%+.4f)%n",
+                System.out.printf("Generation %d fitness: %.2f (%+.2f)%n",
                         currentTTGeneration.getKey(), currentTTGeneration.getValue(), (currentTTGeneration.getValue() - prevFitness));
             }
 
@@ -312,14 +312,20 @@ public class Application {
             System.out.println("Please wait for the algorithm to finish first.");
             return;
         }
+
         System.out.println("Enter a file name or full path of the save file:");
         String path = scanner.nextLine();
-        if (Files.exists(Paths.get(path))) {
-            System.out.println("This file already exists. Are you sure you overwrite it? (y/n)");
-            if (!getUserYesNoAnswer()) {
-                System.out.println("Back to main menu");
-                return;
+        try {
+            if (Files.exists(Paths.get(path))) {
+                System.out.println("This file already exists. Are you sure you overwrite it? (y/n)");
+                if (!getUserYesNoAnswer()) {
+                    System.out.println("Back to main menu");
+                    return;
+                }
             }
+        } catch(InvalidPathException e) {
+            System.out.println("File path error.");
+            return;
         }
 
         try {
@@ -339,8 +345,13 @@ public class Application {
         }
         System.out.println("Enter a file name or full path to load the file:");
         String path = scanner.nextLine();
-        if (!Files.exists(Paths.get(path))) {
-            System.out.println("This doesn't exists.");
+        try {
+            if (!Files.exists(Paths.get(path))) {
+                System.out.println("This doesn't exists.");
+                return;
+            }
+        } catch(InvalidPathException e) {
+            System.out.println("File path error.");
             return;
         }
 

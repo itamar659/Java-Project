@@ -51,7 +51,7 @@ public class Sequentiality extends Rule<TimeTable> implements Parameterizable {
             }
         }
 
-        return 1f / (1 + penalty);
+        return 1f / (1 + penalty) * MAX_PERCENTAGE;
     }
 
     private Map<Course, boolean[][]> course2teachTimeTable(int days, int hours, List<Lesson> lessons) {

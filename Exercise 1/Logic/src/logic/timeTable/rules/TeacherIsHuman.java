@@ -43,6 +43,6 @@ public class TeacherIsHuman extends Rule<TimeTable> {
             return 0;
         }
 
-        return (float)Math.pow((max - penalty) / ((float) max), 2);
+        return (float)Math.pow((max - penalty) / ((float) max), 2) * MAX_PERCENTAGE;
     }
 }

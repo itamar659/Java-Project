@@ -146,7 +146,7 @@ public abstract class EvolutionEngine<T> implements Serializable {
             }
 
             // Step 1 - check if finished
-            if (population.getBestSolutionFitness().getFitness() >= 1.0f) {
+            if (population.getBestSolutionFitness().getFitness() >= 100.0f) {
                 break;
             }
 

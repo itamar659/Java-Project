@@ -72,6 +72,6 @@ public class Satisfactory extends Rule<TimeTable> {
             return 0;
         }
 
-        return (float) Math.pow((max - penalty) / ((double) max), 3);
+        return (float) Math.pow((max - penalty) / ((double) max), 3) * MAX_PERCENTAGE;
     }
 }
