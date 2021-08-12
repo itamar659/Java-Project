@@ -9,7 +9,6 @@ public class AppIO {
                 new ObjectOutputStream(
                         new FileOutputStream(path))) {
             out.writeObject(obj);
-            out.close();
         }
     }
 
