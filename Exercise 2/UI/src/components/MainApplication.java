@@ -1,7 +1,7 @@
 package components;
 
+import components.application.ApplicationController;
 import components.timeTable.LessonsInfoResourcesConsts;
-import components.timeTable.timeTableComponent.TimeTableController;
 import components.timeTable.timeTablePanel.TimeTablePanelController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -22,12 +22,12 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
-        URL url = getClass().getResource(LessonsInfoResourcesConsts.TOP_FXML_RESOURCE_IDENTIFIER);
+        URL url = getClass().getResource("/components/application/Application.fxml");
         loader.setLocation(url);
         Parent root = loader.load(url.openStream());
 
-        TimeTablePanelController c = loader.getController();
-        c.createTimeTableGrid(createList(), 3, 6);
+        ApplicationController controller = loader.getController();
+        controller.setPrimaryStage(primaryStage);
 
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
@@ -48,8 +48,8 @@ public class MainApplication extends Application {
         l.setCourse(c);
         l.setaClass(cc);
         l.setTeacher(t);
-        l.setDay(1);
-        l.setHour(1);
+        l.setDay(0);
+        l.setHour(0);
 
         Lesson l2 = new Lesson();
         Teacher t2 = new Teacher();
@@ -58,8 +58,8 @@ public class MainApplication extends Application {
         l2.setCourse(c);
         l2.setaClass(cc);
         l2.setTeacher(t2);
-        l2.setDay(2);
-        l2.setHour(6);
+        l2.setDay(1);
+        l2.setHour(3);
 
 
         ObservableList<Lesson> lessons = FXCollections.observableArrayList();

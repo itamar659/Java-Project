@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import logic.timeTable.Lesson;
 
 import java.io.IOException;
@@ -65,7 +66,7 @@ public class LessonsInfoController {
     private ComboBox<Lesson> lessonsOptionComboBox;
 
     @FXML
-    private AnchorPane lessonInfoAnchor;
+    private Pane lessonInfoAnchor;
 
     @FXML
     public void selectedLessonChanged(ActionEvent event) {

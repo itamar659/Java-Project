@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.281" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.tableInfo.teacherInfo.TeacherInfoController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="53.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints fillHeight="false" maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+    <RowConstraints fillHeight="false" maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Label text="Name:" />
+      <Label layoutX="10.0" layoutY="69.0" text="ID:" GridPane.rowIndex="1" />
+      <Label fx:id="nameLbl" layoutX="10.0" layoutY="69.0" text="-" GridPane.columnIndex="1" />
+      <Label fx:id="idLbl" layoutX="67.0" layoutY="69.0" text="-" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+         <children>
+            <Label text="Teaches:" />
+         </children>
+      </Pane>
+      <ListView fx:id="teachesViewList" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</GridPane>

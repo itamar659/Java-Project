@@ -8,6 +8,9 @@ import logic.timeTable.Teacher;
 
 public class LessonInfoController {
 
+    public static final int PREF_WIDTH = 180;
+    public static final int PREF_HEIGHT = 100;
+
     @FXML
     private Label topLabelInfo;
 

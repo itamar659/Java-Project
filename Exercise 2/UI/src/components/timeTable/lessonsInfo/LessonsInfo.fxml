@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
 
-
-<BorderPane xmlns="http://javafx.com/javafx/8.0.281" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.timeTable.lessonsInfo.LessonsInfoController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="100.0" minWidth="180.0" prefHeight="100.0" prefWidth="180.0" xmlns="http://javafx.com/javafx/8.0.281" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.timeTable.lessonsInfo.LessonsInfoController">
    <top>
       <ComboBox fx:id="lessonsOptionComboBox" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#selectedLessonChanged" promptText="None" BorderPane.alignment="CENTER" />
    </top>
    <center>
-      <AnchorPane fx:id="lessonInfoAnchor" prefHeight="20.0" BorderPane.alignment="CENTER" />
+      <Pane fx:id="lessonInfoAnchor" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </Pane>
    </center>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
 </BorderPane>
