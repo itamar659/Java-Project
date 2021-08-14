@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Teacher implements HasId, Cloneable, Serializable {
+public class Teacher implements HasId, HasName, Cloneable, Serializable {
 
     private String id;
     private String name;
@@ -20,6 +20,7 @@ public class Teacher implements HasId, Cloneable, Serializable {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }

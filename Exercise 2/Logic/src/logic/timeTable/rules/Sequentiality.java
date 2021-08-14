@@ -1,6 +1,7 @@
 package logic.timeTable.rules;
 
 import logic.evoAlgorithm.TimeTableProblem;
+import logic.timeTable.HasId;
 import logic.timeTable.TimeTable;
 import logic.schema.Parameterizable;
 import logic.timeTable.rules.base.Rule;
@@ -55,7 +56,7 @@ public class Sequentiality extends Rule<TimeTable> implements Parameterizable {
     }
 
     private Map<Course, boolean[][]> course2teachTimeTable(int days, int hours, List<Lesson> lessons) {
-        Map<Course, boolean[][]> course2schedule = new TreeMap<>(Course::compareByID);
+        Map<Course, boolean[][]> course2schedule = new TreeMap<>(HasId::compareByID);
 
         for (Lesson lesson : lessons) {
             if (!course2schedule.containsKey(lesson.getCourse())) {

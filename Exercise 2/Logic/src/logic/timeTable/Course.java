@@ -3,7 +3,7 @@ package logic.timeTable;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Course implements HasId, Cloneable, Serializable {
+public class Course implements HasId, HasName, Cloneable, Serializable {
 
     private String id;
     private String name;
@@ -17,6 +17,7 @@ public class Course implements HasId, Cloneable, Serializable {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }

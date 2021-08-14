@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
-public class Class implements HasId, Cloneable, Serializable {
+public class Class implements HasId, HasName, Cloneable, Serializable {
 
     private String id;
     private String name;
@@ -21,6 +21,7 @@ public class Class implements HasId, Cloneable, Serializable {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }

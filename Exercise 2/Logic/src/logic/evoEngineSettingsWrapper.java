@@ -1,8 +1,10 @@
 package logic;
 
+import engine.base.Problem;
 import logic.evoAlgorithm.TimeTableEvolutionEngine;
 import engine.base.Crossover;
 import engine.base.Mutation;
+import logic.evoAlgorithm.TimeTableProblem;
 import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rules;
 import engine.base.Selection;
@@ -17,6 +19,10 @@ import java.util.Set;
 public class evoEngineSettingsWrapper implements Serializable {
 
     private final TimeTableEvolutionEngine TTEAlgorithm;
+
+    public final TimeTableProblem getProblem() {
+        return TTEAlgorithm.getProblem();
+    }
 
     public final Selection<TimeTable> getSelection() {
         return TTEAlgorithm.getSelection();
