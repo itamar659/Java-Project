@@ -1,6 +1,7 @@
 package logic.evoAlgorithm.factory;
 
 import engine.base.Selection;
+import logic.evoAlgorithm.selections.RouletteWheel;
 import logic.evoAlgorithm.selections.Truncation;
 import logic.timeTable.TimeTable;
 
@@ -13,6 +14,8 @@ public class SelectionFactory {
 
         if (selectionName.equals(Truncation.class.getSimpleName())) {
             return new Truncation();
+        } else if (selectionName.equals(RouletteWheel.class.getSimpleName())) {
+            return new RouletteWheel();
         }
 
         return null;

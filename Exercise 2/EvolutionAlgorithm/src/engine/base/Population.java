@@ -35,6 +35,23 @@ public abstract class Population<T> implements Serializable {
         Arrays.sort(solutions, (o1, o2) -> Float.compare(o2.getFitness(), o1.getFitness()));
     }
 
+    public Population<T> mergePopulations(Population<T> p1) {
+        if (p1 == null) {
+            return this;
+        }
+
+        Population<T> merged = initializeSubPopulation(p1.getSize() + this.getSize());
+
+        for (int i = 0; i < p1.getSize(); i++) {
+            merged.setSolutionByIndex(i, p1.getSolutionByIndex(i));
+        }
+        for (int i = p1.getSize(); i < p1.getSize() + this.getSize(); i++) {
+            merged.setSolutionByIndex(i, this.getSolutionByIndex(i));
+        }
+
+        return merged;
+    }
+
     public abstract Population<T> copySmallerPopulation(int size);
 
     public abstract Population<T> initializeSubPopulation(int size);

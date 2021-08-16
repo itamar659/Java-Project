@@ -4,5 +4,5 @@ import java.io.Serializable;
 
 public interface Selection<T> extends Serializable {
 
-    Population<T> select(Population<T> population);
+    Population<T> select(Population<T> population, int reduceSize);
 }

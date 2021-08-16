@@ -22,24 +22,21 @@ public class DayOffTeacher extends Rule<TimeTable> {
         TimeTableProblem problem = solution.getGens().getProblem();
 
         int penalty = 0;
-        int max = 0;
+        int max = problem.getTeachers().size();
+
         for (Teacher teacher : problem.getTeachers()) {
             int workingDays = (int) lessons.stream()
                     .filter(t -> t.getTeacher().equals(teacher))
+                    .distinct()
                     .mapToInt(Lesson::getDay)
                     .distinct()
                     .count();
 
-            if (workingDays > 0) {
-                penalty += problem.getDays() - workingDays;
-                max += problem.getDays();
+            if (workingDays == 0) {
+                penalty += 1;
             }
         }
 
-        if (max == 0) {
-            return 0;
-        }
-
-        return (max - penalty) / ((float) MAX_PERCENTAGE);
+        return ((max - penalty) / (float)max) * MAX_PERCENTAGE;
     }
 }

@@ -179,6 +179,22 @@ public class XMLExtractor {
         return ettDescriptor.getETTTimeTable().getHours();
     }
 
+    public int extractElitism() throws XMLExtractException {
+        ETTSelection selection = ettDescriptor.getETTEvolutionEngine().getETTSelection();
+
+        int elitism = 0;
+        if (selection.getETTElitism() != null) {
+            elitism = ettDescriptor.getETTEvolutionEngine().getETTSelection().getETTElitism();
+        }
+
+        int popSize = extractPopulationSize();
+        if (!(0 <= elitism && elitism <= popSize)) {
+            throw new XMLExtractException("Elitism has to be value between 0 and the population size");
+        }
+
+        return elitism;
+    }
+
     public List<Course> extractCourses() throws XMLExtractException {
         ETTSubjects ettSubjects = ettDescriptor.getETTTimeTable().getETTSubjects();
         if (ettSubjects == null) {

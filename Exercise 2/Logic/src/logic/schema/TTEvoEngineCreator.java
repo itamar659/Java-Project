@@ -56,6 +56,7 @@ public class TTEvoEngineCreator implements Serializable {
         Crossover<TimeTable> crossover = xmlExtractor.extractCrossoverOperator();
         Set<Mutation<TimeTable>> mutations = xmlExtractor.extractMutationsOperator();
         int populationSize = xmlExtractor.extractPopulationSize();
+        int elitism = xmlExtractor.extractElitism();
 
         // Initialize the Evolution engine
 
@@ -63,6 +64,7 @@ public class TTEvoEngineCreator implements Serializable {
         evoEngine.setSelection(selection);
         evoEngine.setCrossover(crossover);
         evoEngine.setMutations(mutations);
+        evoEngine.setElitism(elitism);
         evoEngine.setPopulationSize(populationSize);
         evoEngine.setProblem(problem);
 

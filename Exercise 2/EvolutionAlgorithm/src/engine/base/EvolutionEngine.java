@@ -15,6 +15,8 @@ public abstract class EvolutionEngine<T> implements Serializable {
     protected Crossover<T> crossover;
     protected Set<Mutation<T>> mutations;
     protected Problem<T> problem;
+    protected int elitism;
+
     private int currentGeneration;
     private Supplier<Boolean> stopCondition;
     private Solution<T> bestSolution;
@@ -69,6 +71,14 @@ public abstract class EvolutionEngine<T> implements Serializable {
         this.populationSize = populationSize;
     }
 
+    public int getElitism() {
+        return elitism;
+    }
+
+    public void setElitism(int elitism) {
+        this.elitism = elitism;
+    }
+
     public int getCurrentGeneration() {
         return currentGeneration;
     }
@@ -114,6 +124,8 @@ public abstract class EvolutionEngine<T> implements Serializable {
     }
 
     public EvolutionEngine() {
+        this.elitism = 0;
+        this.populationSize = 0;
         this.mutations = new HashSet<>();
         this.historyGeneration2Fitness = new TreeMap<>();
         this.updateGenerationInterval = 100;
@@ -150,11 +162,16 @@ public abstract class EvolutionEngine<T> implements Serializable {
                 break;
             }
 
+            // Step 1.9 - elitism
+            population.sort();
+            Population<T> elitePop = population.copySmallerPopulation(elitism);
+
             // Step 2 - selection
-            Population<T> selected = selection.select(population);
+            Population<T> selected = selection.select(population, elitism);
 
             // Step 3 - crossover
-            population = crossover.crossover(selected, populationSize);
+            population = crossover.crossover(elitePop.mergePopulations(selected), populationSize - elitism)
+                                        .mergePopulations(elitePop);
 
             // Step 4 - mutate
             for (Mutation<T> mutation : this.mutations) {

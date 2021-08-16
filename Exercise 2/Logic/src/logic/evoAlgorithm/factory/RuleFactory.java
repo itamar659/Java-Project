@@ -24,7 +24,7 @@ public class RuleFactory {
             return new Satisfactory();
 
         } else if (Sequentiality.class.getSimpleName().equals(ruleName)) {
-            new Sequentiality();
+            return new Sequentiality();
 
         } else if (Singularity.class.getSimpleName().equals(ruleName)) {
             return new Singularity();

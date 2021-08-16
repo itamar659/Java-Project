@@ -22,10 +22,12 @@ public class Truncation implements Selection<TimeTable>, Parameterizable {
     }
 
     @Override
-    public Population<TimeTable> select(Population<TimeTable> population) {
-        int newPopulationSize = topPercent * population.getSize() / 100;
-        population.sort();
-        return population.copySmallerPopulation(newPopulationSize);
+    public Population<TimeTable> select(Population<TimeTable> population, int reduceSize) {
+        int newPopulationSize = topPercent * population.getSize() / 100 - reduceSize;
+        if (newPopulationSize > 0) {
+            return population.copySmallerPopulation(newPopulationSize);
+        }
+        return population.copySmallerPopulation(0);
     }
 
     @Override

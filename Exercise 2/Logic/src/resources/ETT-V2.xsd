@@ -63,11 +63,15 @@
 	</xs:element>
 	<xs:element name="ETT-Selection">
 		<xs:complexType>
+			<xs:all>
+				<xs:element name="ETT-Elitism" type="xs:int" minOccurs="0"/>
+			</xs:all>
 			<xs:attribute name="type" use="required">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
 						<xs:enumeration value="Truncation"/>
 						<xs:enumeration value="RouletteWheel"/>
+						<xs:enumeration value="Tournament"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>
@@ -88,6 +92,8 @@
 				<xs:enumeration value="TeacherIsHuman"/>
 				<xs:enumeration value="Singularity"/>
 				<xs:enumeration value="Knowledgeable"/>
+				<xs:enumeration value="DayOffTeacher"/>
+				<xs:enumeration value="Sequentiality"/>
 				<xs:enumeration value="Satisfactory"/>
 			</xs:restriction>
 		</xs:simpleType>
