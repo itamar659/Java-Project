@@ -170,13 +170,15 @@ public abstract class EvolutionEngine<T> implements Serializable {
             Population<T> selected = selection.select(population, elitism);
 
             // Step 3 - crossover
-            population = crossover.crossover(elitePop.mergePopulations(selected), populationSize - elitism)
-                                        .mergePopulations(elitePop);
+            population = crossover.crossover(elitePop.mergePopulations(selected), populationSize - elitism);
 
             // Step 4 - mutate
             for (Mutation<T> mutation : this.mutations) {
                 mutation.mutatePopulation(population, problem);
             }
+
+            // Step 4.1 - Add the elite population
+            population = population.mergePopulations(elitePop);
         }
 
         setBestSolution(population.getBestSolutionFitness());
