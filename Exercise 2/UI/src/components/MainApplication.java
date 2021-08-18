@@ -2,6 +2,7 @@ package components;
 
 import components.application.ApplicationController;
 import components.timeTable.LessonsInfoResourcesConsts;
+import components.timeTable.timeTableComponent.TimeTableController;
 import components.timeTable.timeTablePanel.TimeTablePanelController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -22,12 +23,14 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
-        URL url = getClass().getResource("/components/application/Application.fxml");
+        URL url = getClass().getResource("/components/timeTable/timeTablePanel/TimeTablePanel.fxml");
         loader.setLocation(url);
         Parent root = loader.load(url.openStream());
 
-        ApplicationController controller = loader.getController();
-        controller.setPrimaryStage(primaryStage);
+//        ApplicationController controller = loader.getController();
+//        controller.setPrimaryStage(primaryStage);
+        TimeTablePanelController controller = loader.getController();
+        controller.createTimeTableGrid(createList(), 2, 4);
 
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
