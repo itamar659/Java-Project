@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -53,6 +54,10 @@ public class TimeTableController {
     }
 
     private void buildGrid() {
+        Node saveGroupForTable = timeTableGrid.getChildren().get(0);
+        timeTableGrid.getChildren().clear();
+        timeTableGrid.getChildren().add(saveGroupForTable);
+
         timeTableGrid.getColumnConstraints().clear();
         timeTableGrid.getRowConstraints().clear();
 
