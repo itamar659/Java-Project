@@ -2,6 +2,7 @@ package components;
 
 import components.application.ApplicationController;
 import components.timeTable.LessonsInfoResourcesConsts;
+
 import components.timeTable.timeTablePanel.TimeTablePanelController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -10,12 +11,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import logic.evoAlgorithm.TimeTableProblem;
+import logic.timeTable.*;
 import logic.timeTable.Class;
-import logic.timeTable.Course;
-import logic.timeTable.Lesson;
-import logic.timeTable.Teacher;
 
 import java.net.URL;
+import java.util.Arrays;
 
 public class MainApplication extends Application {
 
@@ -28,13 +29,16 @@ public class MainApplication extends Application {
 
         ApplicationController controller = loader.getController();
         controller.setPrimaryStage(primaryStage);
+              TimeTablePanelController controller = loader.getController();
+        controller.setTimeTable(createList());
+
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    public static ObservableList<Lesson> createList() {
+    public static TimeTable createList() {
         Course c = new Course();
         c.setName("ABC");
         c.setId("1");
@@ -69,6 +73,15 @@ public class MainApplication extends Application {
         lessons.add(l);
         lessons.add(l2);
 
-        return lessons;
+        TimeTableProblem p = new TimeTableProblem();
+        p.setDays(2);
+        p.setHours(4);
+        p.setClasses(Arrays.asList(cc));
+        p.setCourses(Arrays.asList(c));
+        p.setTeachers(Arrays.asList(t, t2));
+        TimeTable bestSolutionTest = new TimeTable(p);
+        bestSolutionTest.getLessons().addAll(lessons);
+
+        return bestSolutionTest;
     }
 }

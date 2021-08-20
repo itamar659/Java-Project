@@ -5,16 +5,13 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-
-<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.281" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.timeTable.timeTablePanel.TimeTablePanelController">
+<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.281" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.timeTable.timeTablePanel.TimeTablePanelController">
    <content>
-      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
-         <center>
-            <ScrollPane fx:id="timeTableScrollPane" fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-         </center>
+      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
          <top>
             <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
                <children>
@@ -23,17 +20,17 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Label>
-                  <ComboBox prefWidth="100.0">
+                  <ComboBox fx:id="comboBoxTargetType" onAction="#comboBoxTargetType_ItemChanged" prefWidth="100.0">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </ComboBox>
-                  <Label text="[TARGET_HOLDER]:">
+                  <Label fx:id="labelTargetType" text="[TARGET_HOLDER]:">
                      <HBox.margin>
                         <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Label>
-                  <ComboBox prefWidth="100.0" promptText="Class A">
+                  <ComboBox fx:id="comboBoxTarget" onAction="#comboBoxTarget_ItemChanged" prefWidth="100.0" promptText="None">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -43,7 +40,7 @@
                         <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="RAW">
+                  <Button mnemonicParsing="false" onAction="#buttonRaw_Clicked" text="RAW">
                      <HBox.margin>
                         <Insets bottom="5.0" left="20.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -54,6 +51,9 @@
                </padding>
             </HBox>
          </top>
+         <center>
+            <AnchorPane fx:id="paneTimeTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+         </center>
       </BorderPane>
    </content>
 </ScrollPane>
