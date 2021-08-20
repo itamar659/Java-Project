@@ -1,47 +1,49 @@
 package logic.evoAlgorithm.mutations;
 
+import engine.base.*;
+import logic.configurable.Configurable;
+import logic.configurable.Configuration;
+import logic.configurable.ReadOnlyConfiguration;
 import logic.evoAlgorithm.TimeTableProblem;
-import logic.schema.Parameterizable;
-import engine.base.Mutation;
-import engine.base.Population;
-import engine.base.Problem;
-import engine.base.Solution;
 import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Sizer extends Mutation<TimeTable> implements Parameterizable {
+public class Sizer extends Mutation<TimeTable> implements Configurable {
+
+    private static final String PARAMETER_TOTAL_TUPPLES = "TotalTupples";
 
     private static final Random rand = new Random();
-    private int totalTupples;
+    private final Configuration configuration;
+
+    @Override
+    public ReadOnlyConfiguration getConfiguration() {
+        return configuration.getProxy();
+    }
+
+    @Override
+    public void setParameter(String parameterName, String value) {
+        if (parameterName.equals(PARAMETER_TOTAL_TUPPLES)) {
+            Integer.parseInt(value);
+        } else {
+            throw new IllegalArgumentException("Not found parameter name in " + this.getClass().getSimpleName());
+        }
+
+        configuration.setParameter(parameterName, value);
+    }
+
+    public Sizer() {
+        configuration = new Configuration(
+                new AbstractMap.SimpleEntry<>(PARAMETER_TOTAL_TUPPLES, "0")
+        );
+    }
 
     public int getTotalTupples() {
-        return totalTupples;
-    }
-
-    public void setTotalTupples(int totalTupples) {
-        this.totalTupples = totalTupples;
-    }
-
-    @Override
-    public void setValue(String parameterName, Object value) {
-        if (parameterName.equals("TotalTupples")) {
-            setTotalTupples(Integer.parseInt(value.toString()));
-        } else {
-            throw new IllegalArgumentException("Not found parameter name in " + this.getClass().getSimpleName());
-        }
-    }
-
-    @Override
-    public Object getValue(String parameterName) {
-        if (parameterName.equals("TotalTupples")) {
-            return getTotalTupples();
-        } else {
-            throw new IllegalArgumentException("Not found parameter name in " + this.getClass().getSimpleName());
-        }
+        return Integer.parseInt(configuration.getParameter(PARAMETER_TOTAL_TUPPLES));
     }
 
     @Override
@@ -57,7 +59,7 @@ public class Sizer extends Mutation<TimeTable> implements Parameterizable {
         List<Lesson> lessons = new ArrayList<>(solution.getGens().getLessons());
         TimeTableProblem theProblem = (TimeTableProblem) problem;
 
-        if (totalTupples >= 0) {
+        if (getTotalTupples() >= 0) {
             addLessons(lessons, theProblem);
         } else {
             removeLessons(lessons, theProblem);
@@ -65,7 +67,7 @@ public class Sizer extends Mutation<TimeTable> implements Parameterizable {
     }
 
     private void addLessons(List<Lesson>lessons, TimeTableProblem theProblem) {
-        for (int i = 0; i < totalTupples; i++) {
+        for (int i = 0; i < getTotalTupples(); i++) {
             if (lessons.size() >= theProblem.getDays() * theProblem.getHours()) {
                 break;
             }
@@ -75,7 +77,7 @@ public class Sizer extends Mutation<TimeTable> implements Parameterizable {
     }
 
     private void removeLessons(List<Lesson>lessons, TimeTableProblem theProblem) {
-        int removes = rand.nextInt( (-1) * totalTupples);
+        int removes = rand.nextInt( (-1) * getTotalTupples());
 
         for (int i = 0; i < removes; i++) {
             if (lessons.size() <= theProblem.getDays()) {
@@ -90,7 +92,7 @@ public class Sizer extends Mutation<TimeTable> implements Parameterizable {
     public String toString() {
         return "Sizer{" +
                 "probability=" + probability +
-                ", totalTupples=" + totalTupples +
+                ", totalTupples=" + getTotalTupples() +
                 '}';
     }
 }

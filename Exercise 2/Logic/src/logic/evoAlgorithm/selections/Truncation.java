@@ -1,29 +1,49 @@
 package logic.evoAlgorithm.selections;
 
-import logic.schema.Parameterizable;
-import engine.base.Population;
-import engine.base.Selection;
+import engine.base.*;
+import logic.configurable.Configurable;
+import logic.configurable.Configuration;
+import logic.configurable.ReadOnlyConfiguration;
 import logic.timeTable.TimeTable;
 
-public class Truncation implements Selection<TimeTable>, Parameterizable {
+import java.util.AbstractMap;
 
-    private int topPercent;
+public class Truncation implements Selection<TimeTable>, Configurable {
 
-    public int getTopPercent() {
-        return topPercent;
+    private static final String PARAMETER_TOP_PERCENT = "TopPercent";
+
+    private final Configuration configuration;
+
+    @Override
+    public ReadOnlyConfiguration getConfiguration() {
+        return configuration.getProxy();
     }
 
-    public void setTopPercent(int topPercent) {
-        this.topPercent = topPercent;
+    @Override
+    public void setParameter(String parameterName, String value) {
+        if (parameterName.equals(PARAMETER_TOP_PERCENT)) {
+            Integer.parseInt(value);
+        } else {
+            throw new IllegalArgumentException("Not found parameter name in" + this.getClass().getSimpleName());
+        }
+
+        configuration.setParameter(parameterName, value);
     }
 
     public Truncation() {
-        this.topPercent = 10; // default value
+        configuration = new Configuration(
+                new AbstractMap.SimpleEntry<>(PARAMETER_TOP_PERCENT, "10")
+        );
+    }
+
+
+    public int getTopPercent() {
+        return Integer.parseInt(configuration.getParameter(PARAMETER_TOP_PERCENT));
     }
 
     @Override
     public Population<TimeTable> select(Population<TimeTable> population, int reduceSize) {
-        int newPopulationSize = topPercent * population.getSize() / 100 - reduceSize;
+        int newPopulationSize = getTopPercent() * population.getSize() / 100 - reduceSize;
         if (newPopulationSize > 0) {
             return population.copySmallerPopulation(newPopulationSize);
         }
@@ -33,25 +53,7 @@ public class Truncation implements Selection<TimeTable>, Parameterizable {
     @Override
     public String toString() {
         return "Truncation{" +
-                "topPercent=" + topPercent +
+                "topPercent=" + getTopPercent() +
                 '}';
-    }
-
-    @Override
-    public void setValue(String parameterName, Object value) {
-        if (parameterName.equals("TopPercent")) {
-            topPercent = Integer.parseInt(value.toString());
-        } else {
-            throw new IllegalArgumentException("Not found parameter name in" + this.getClass().getSimpleName());
-        }
-    }
-
-    @Override
-    public Object getValue(String parameterName) {
-        if (parameterName.equals("TopPercent")) {
-            return topPercent;
-        } else {
-            throw new IllegalArgumentException("Not found parameter name in" + this.getClass().getSimpleName());
-        }
     }
 }
