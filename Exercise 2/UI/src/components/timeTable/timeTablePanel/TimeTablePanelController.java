@@ -10,6 +10,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -98,7 +100,7 @@ public class TimeTablePanelController {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(LessonsInfoResourcesConsts.GRID_TABLE_FXML_RESOURCE);
-            Parent grid = loader.load();
+            GridPane grid = loader.load();
 
             paneTimeTable.getChildren().clear();
             paneTimeTable.getChildren().add(grid);

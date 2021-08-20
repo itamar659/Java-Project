@@ -1,5 +1,8 @@
 package components;
 
+import components.application.ApplicationController;
+import components.timeTable.LessonsInfoResourcesConsts;
+
 import components.timeTable.timeTablePanel.TimeTablePanelController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -20,16 +23,17 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
-        URL url = getClass().getResource("/components/timeTable/timeTablePanel/TimeTablePanel.fxml");
+        URL url = getClass().getResource("/components/application/App.fxml");
         loader.setLocation(url);
         Parent root = loader.load(url.openStream());
 
-//        ApplicationController controller = loader.getController();
-//        controller.setPrimaryStage(primaryStage);
-        TimeTablePanelController controller = loader.getController();
+        ApplicationController controller = loader.getController();
+        controller.setPrimaryStage(primaryStage);
+              TimeTablePanelController controller = loader.getController();
         controller.setTimeTable(createList());
 
-        Scene scene = new Scene(root, 800, 600);
+
+        Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

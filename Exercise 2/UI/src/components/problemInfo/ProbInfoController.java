@@ -12,108 +12,106 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import logic.evoAlgorithm.TimeTableProblem;
-import logic.timeTable.*;
+import logic.evoEngineSettingsWrapper;
 import logic.timeTable.Class;
-import logic.timeTable.rules.base.Rule;
+import logic.timeTable.Course;
+import logic.timeTable.HasId;
+import logic.timeTable.HasName;
+import logic.timeTable.Teacher;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class ProblemInfoController {
+public class ProbInfoController {
+    @FXML private Label labelSysInfoPop;
+    @FXML private Label labelSysInfoDays;
+    @FXML private Label labelSysInfoHours;
+
+    @FXML private Label labelCrossoverName;
+    @FXML private Label labelCrossoverCP;
+    @FXML private Label labelSelectionType;
+    @FXML private Label labelSelectionConfig;
+
+    @FXML private Label teachersCountLbl;
+    @FXML private Label classesCountLbl;
+    @FXML private Label coursesCountLbl;
+
+    @FXML private Accordion accordionTeachers;
+    @FXML private Accordion accordionMutations;
+    @FXML private Accordion accordionClasses;
+    @FXML private Accordion accordionCourses;
+
 
     private final ProblemModule problemModule;
 
-    public ProblemInfoController() {
+    public ProbInfoController() {
         problemModule = new ProblemModule();
     }
 
-    public void setProblem(TimeTableProblem problem) {
-       // problemModule.setTheProblem(problem);
+    public void setProblem(evoEngineSettingsWrapper evoEngineSettings) {
+        problemModule.setTheProblem(evoEngineSettings.getProblem(), evoEngineSettings);
 
-//        fillAccordion(teachersAccordion,
-//                problemModule.teachersProperty(),
-//                "Teaches:",
-//                this::getTeacherTeachesList);
+         fillAccordion(accordionTeachers,
+                  problemModule.teachersProperty(),
+                 "Teaches:",
+                 this::getTeacherTeachesList);
 
-        fillAccordion(classesAccordion,
+        fillAccordion(accordionClasses,
                 problemModule.classesProperty(),
                 "Studies:",
                 this::getClassStudiesList);
 
         // TODO: Create custom course titledPane (accordion item)
-        fillAccordion(coursesAccordion,
+        fillAccordion(accordionCourses,
                 problemModule.coursesProperty(),
                 "",
                 null);
 
+
+
         // TODO: Be able to know if the rule have properties to modifies
-        fillRuleAccordion();
+        //fillRuleAccordion();
     }
 
-    private void fillRuleAccordion() {
-        rulesAccordion.getPanes().clear();
-
-        problemModule.rulesProperty().forEach((rule) -> {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/components/problemInfo/ruleAccordionItem/RuleAccordionItem.fxml"));
-
-            try {
-                TitledPane node = loader.load();
-
-                RuleAccordionItemController controller = loader.getController();
-                controller.setName(rule.getId());
-                controller.setType(rule.getType().name());
-
-                rulesAccordion.getPanes().add(node);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    @FXML
-    private Label daysLbl;
-
-    @FXML
-    private Label hoursLbl;
-
-    @FXML
-    private Label hardRuleWeightLbl;
-
-    @FXML
-    private Label classesCountLbl;
-
-    @FXML
-    private Label teachersCountLbl;
-
-    @FXML
-    private Label coursesCountLbl;
-
-    @FXML
-    private Label rulesCountLbl;
-
-    @FXML
-    private Accordion classesAccordion;
-
-    @FXML
-    private Accordion coursesAccordion;
-
-    @FXML
-    private Accordion rulesAccordion;
+//    private void fillRuleAccordion() {
+//        rulesAccordion.getPanes().clear();
+//
+//        problemModule.rulesProperty().forEach((rule) -> {
+//            FXMLLoader loader = new FXMLLoader();
+//            loader.setLocation(getClass().getResource("/components/problemInfo/ruleAccordionItem/RuleAccordionItem.fxml"));
+//
+//            try {
+//                TitledPane node = loader.load();
+//
+//                RuleAccordionItemController controller = loader.getController();
+//                controller.setName(rule.getId());
+//                controller.setType(rule.getType().name());
+//
+//                rulesAccordion.getPanes().add(node);
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//    }
 
 
     @FXML
     private void initialize() {
-        daysLbl.textProperty().bind(Bindings.format("%d", problemModule.daysProperty()));
-        hoursLbl.textProperty().bind(Bindings.format("%d", problemModule.hoursProperty()));
+        labelSysInfoDays.textProperty().bind(Bindings.format("%d", problemModule.daysProperty()));
+        labelSysInfoHours.textProperty().bind(Bindings.format("%d", problemModule.hoursProperty()));
+        labelSysInfoPop.textProperty().bind(Bindings.format("%d", problemModule.populationProperty()));
+
         teachersCountLbl.textProperty().bind(Bindings.format("%d", problemModule.teachersProperty().sizeProperty()));
         classesCountLbl.textProperty().bind(Bindings.format("%d", problemModule.classesProperty().sizeProperty()));
         coursesCountLbl.textProperty().bind(Bindings.format("%d", problemModule.coursesProperty().sizeProperty()));
-        rulesCountLbl.textProperty().bind(Bindings.format("%d", problemModule.rulesProperty().sizeProperty()));
-        hardRuleWeightLbl.textProperty().bind(Bindings.format("%d", problemModule.hardRuleWeightProperty()));
+
+
+        //labelCrossoverName.textProperty().bind(Bindings.format("%d", problemModule.crossoverProperty()));
+        //labelCrossoverCP.textProperty().bind(Bindings.format("%d", problemModule.crossoverProperty()));
+        //labelSelectionType.textProperty().bind(Bindings.format("%d", problemModule.selectionProperty()));
     }
 
     private <T extends HasId & HasName>void fillAccordion(Accordion accordion,

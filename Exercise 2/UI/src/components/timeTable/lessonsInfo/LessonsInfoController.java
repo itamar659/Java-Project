@@ -3,16 +3,17 @@ package components.timeTable.lessonsInfo;
 import components.timeTable.LessonsInfoResourcesConsts;
 import components.timeTable.lessonInfo.LessonInfoController;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import logic.timeTable.Lesson;
 
@@ -20,10 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class LessonsInfoController {
-
-    public static final int MAX_WIDTH = 200;
-    public static final int MAX_HEIGHT = 125;
-
 
     private final ListProperty<Lesson> lessons;
     private final ObservableList<Lesson> lessonsArray;
@@ -39,79 +36,62 @@ public class LessonsInfoController {
         this.displayTeachers = displayTeachers;
     }
 
+    public void setLessons(ObservableList<Lesson> lessons) {
+        this.lessons.set(lessons);
+        onLessonsChanged();
+    }
+
     public void addLesson(Lesson lesson) {
         this.lessonsArray.add(lesson);
-        lessonsComboBox.getSelectionModel().selectFirst();
+        onLessonsChanged();
+    }
 
-        if (lessonsArray.size() == 1) {
-            // Create the block for this specific day/hour and bind it.
-            createLessonBlock();
-        }
+    private void onLessonsChanged() {
+        lessonsOptionComboBox.getSelectionModel().selectFirst();
+        selectedLessonChanged(null);
     }
 
     @FXML
     private void initialize() {
-        lessonsComboBox.setCellFactory(lv -> new LessonCell());
-        lessonsComboBox.setButtonCell(new LessonCell());
-        lessonsComboBox.itemsProperty().bind(this.lessons);
-        lessonsComboBox.managedProperty().bind(lessonsComboBox.visibleProperty());
+        lessonsOptionComboBox.setCellFactory(lv -> new LessonCell());
+        lessonsOptionComboBox.setButtonCell(new LessonCell());
+        lessonsOptionComboBox.itemsProperty().bind(this.lessons);
+        lessonsOptionComboBox.managedProperty().bind(lessonsOptionComboBox.visibleProperty());
         lessons.sizeProperty().addListener((observable, oldValue, newValue) -> {
-            lessonsComboBox.setVisible(this.lessons.size() > 1);
+            lessonsOptionComboBox.setVisible(this.lessons.size() > 1);
         });
     }
 
     @FXML
-    private ComboBox<Lesson> lessonsComboBox;
+    private ComboBox<Lesson> lessonsOptionComboBox;
 
     @FXML
     private Pane lessonInfoAnchor;
 
-    private void createLessonBlock() {
-        // TODO: Do something with this shit code
-        // Create a new block and bind the requested lesson
+    @FXML
+    public void selectedLessonChanged(ActionEvent event) {
+        lessonInfoAnchor.getChildren().clear();
+        if (lessonsOptionComboBox.getItems().size() == 0) {
+            return;
+        }
+
+        createLessonsBox();
+    }
+
+    private void createLessonsBox() {
         try {
+            Lesson chosen = lessonsOptionComboBox.getValue();
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(LessonsInfoResourcesConsts.SINGLE_LESSON_TT_FXML_RESOURCE);
             Node lessInfo = loader.load();
 
             LessonInfoController controller = loader.getController();
-
+            controller.setCourse(chosen.getCourse());
             if (displayTeachers) {
-                controller.topDetailsProperty().bind(Bindings.format("Teacher:"));
+                controller.setTeacher(chosen.getTeacher());
             } else {
-                controller.topDetailsProperty().bind(Bindings.format("Class:"));
+                controller.setaClass(chosen.getaClass());
             }
-
-            controller.topInfoProperty().bind(new StringBinding() {
-                {
-                    super.bind(lessonsComboBox.selectionModelProperty());
-                }
-
-                @Override
-                protected String computeValue() {
-                    if (displayTeachers) {
-                        return lessonsComboBox.getSelectionModel().getSelectedItem().getTeacher().getName();
-                    } else {
-                        return lessonsComboBox.getSelectionModel().getSelectedItem().getaClass().getName();
-                    }
-                }
-            });
-
-            controller.botDetailsProperty().bind(Bindings.format("Course:"));
-
-            controller.botInfoProperty().bind(new StringBinding() {
-                {
-                    super.bind(lessonsComboBox.selectionModelProperty());
-                }
-
-                @Override
-                protected String computeValue() {
-                    return String.format("%s (%s)",
-                            lessonsComboBox.getSelectionModel().getSelectedItem().getCourse().getName(),
-                            lessonsComboBox.getSelectionModel().getSelectedItem().getCourse().getId());
-                }
-            });
-
 
             lessonInfoAnchor.getChildren().add(lessInfo);
         } catch (IOException e) {
