@@ -1,9 +1,8 @@
 package components.application;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
+import engine.base.Crossover;
+import engine.base.Selection;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import logic.evoAlgorithm.TimeTableProblem;
@@ -12,6 +11,9 @@ import logic.timeTable.Course;
 import logic.timeTable.Teacher;
 import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rule;
+import logic.evoEngineSettingsWrapper;
+
+import java.sql.Time;
 
 public class ProblemModule {
 
@@ -24,11 +26,17 @@ public class ProblemModule {
     private final IntegerProperty days = new SimpleIntegerProperty(0);
     private final IntegerProperty hours = new SimpleIntegerProperty(0);
 
+    //Daniel Here:
+    private final StringProperty crossover = new SimpleStringProperty();
+    private final StringProperty selection = new SimpleStringProperty();
+    private final IntegerProperty population = new SimpleIntegerProperty(0);
+
+
     // Information about the rules
     private final ListProperty<Rule<TimeTable>> rules = new SimpleListProperty<>();
     private final IntegerProperty hardRuleWeight = new SimpleIntegerProperty();
 
-    public void setTheProblem(TimeTableProblem theProblem) {
+    public void setTheProblem(TimeTableProblem theProblem, evoEngineSettingsWrapper settingsWrapper) {
         this.theProblem = theProblem;
 
         teachers.set(FXCollections.observableArrayList(theProblem.getTeachers()));
@@ -36,6 +44,10 @@ public class ProblemModule {
         courses.set(FXCollections.observableArrayList(theProblem.getCourses()));
         days.set(theProblem.getDays());
         hours.set(theProblem.getHours());
+
+        population.set(settingsWrapper.getPopulationSize());
+        crossover.set(settingsWrapper.getCrossover().getClass().getSimpleName());
+        selection.set(settingsWrapper.getSelection().getClass().getSimpleName());
 
         rules.set(FXCollections.observableArrayList(theProblem.getRules().getListOfRules()));
         hardRuleWeight.set(theProblem.getRules().getHardRuleWeight());
@@ -68,4 +80,10 @@ public class ProblemModule {
     public IntegerProperty hardRuleWeightProperty() {
         return hardRuleWeight;
     }
+
+    public  StringProperty crossoverProperty() { return crossover;}
+
+    public  StringProperty selectionProperty() { return selection;}
+
+    public IntegerProperty populationProperty() { return population; }
 }

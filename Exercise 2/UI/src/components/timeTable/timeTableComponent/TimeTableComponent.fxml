@@ -1,25 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.281" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.timeTable.timeTableComponent.TimeTableController">
-   <content>
-      <GridPane fx:id="timeTableGrid" gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" />
-          <ColumnConstraints hgrow="SOMETIMES" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints vgrow="ALWAYS" />
-          <RowConstraints vgrow="SOMETIMES" />
-          <RowConstraints vgrow="ALWAYS" />
-            <RowConstraints vgrow="ALWAYS" />
-            <RowConstraints vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
-        </rowConstraints>
-      </GridPane>
-   </content>
-</ScrollPane>
+<GridPane fx:id="timeTableGrid" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.281" fx:controller="components.timeTable.timeTableComponent.TimeTableController">
+</GridPane>

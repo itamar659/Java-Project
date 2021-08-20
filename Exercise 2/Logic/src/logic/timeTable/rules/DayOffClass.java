@@ -1,5 +1,6 @@
 package logic.timeTable.rules;
 
+import logic.timeTable.HasId;
 import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rule;
 import engine.base.Solution;
@@ -20,7 +21,7 @@ public class DayOffClass extends Rule<TimeTable> {
         List<Lesson> lessons = new ArrayList<>(solution.getGens().getLessons());
         final int DAYS_IN_WEEK = 7;
 
-        Map<Class, boolean[]> class2daysOfStudy = new TreeMap<>(Class::compareByID);
+        Map<Class, boolean[]> class2daysOfStudy = new TreeMap<>(HasId::compareByID);
         int penalty = 0;
 
         // calculate for every class in which days they study.

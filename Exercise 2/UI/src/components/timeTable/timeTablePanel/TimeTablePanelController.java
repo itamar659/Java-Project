@@ -9,8 +9,8 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.GridPane;
 import logic.timeTable.Lesson;
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class TimeTablePanelController {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(LessonsInfoResourcesConsts.GRID_TABLE_FXML_RESOURCE);
-            Parent grid = loader.load();
+            GridPane grid = loader.load();
 
             timeTableScrollPane.setContent(grid);
 
