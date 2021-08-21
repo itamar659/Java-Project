@@ -1,51 +1,52 @@
 package logic.timeTable.rules;
 
+import logic.configurable.Configurable;
+import logic.configurable.Configuration;
+import logic.configurable.ReadOnlyConfiguration;
 import logic.evoAlgorithm.TimeTableProblem;
-import logic.timeTable.Class;
-import logic.timeTable.HasId;
 import logic.timeTable.TimeTable;
-import logic.schema.Parameterizable;
 import logic.timeTable.rules.base.Rule;
 import engine.base.Solution;
 import logic.timeTable.Course;
 import logic.timeTable.Lesson;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class Sequentiality extends Rule<TimeTable> implements Parameterizable {
+public class Sequentiality extends Rule<TimeTable> implements Configurable {
+
+    private static final String PARAMETER_TOTAL_HOURS = "TotalHours";
+
+    private final Configuration configuration;
+
+    @Override
+    public ReadOnlyConfiguration getConfiguration() {
+        return configuration.getProxy();
+    }
+
+    @Override
+    public void setParameter(String parameterName, String value) {
+        if (parameterName.equals(PARAMETER_TOTAL_HOURS)) {
+            Integer.parseInt(value);
+        }else {
+            throw new IllegalArgumentException("Not found parameter name in" + this.getClass().getSimpleName());
+        }
+
+        configuration.setParameter(parameterName, value);
+    }
 
     @Override
     public String getId() {
         return "Sequentiality";
     }
 
-    private int totalHours;
-
     public int getTotalHours() {
-        return totalHours;
+        return Integer.parseInt(configuration.getParameter(PARAMETER_TOTAL_HOURS));
     }
 
-    public void setTotalHours(int totalHours) {
-        this.totalHours = totalHours;
-    }
-
-    @Override
-    public void setValue(String parameterName, Object value) {
-        if (parameterName.equals("TotalHours")) {
-            setTotalHours(Integer.parseInt(value.toString()));
-        }else {
-            throw new IllegalArgumentException("Not found parameter name in" + this.getClass().getSimpleName());
-        }
-    }
-
-    @Override
-    public Object getValue(String parameterName) {
-        if (parameterName.equals("TotalHours")) {
-            return getTotalHours();
-        }else {
-            throw new IllegalArgumentException("Not found parameter name in" + this.getClass().getSimpleName());
-        }
+    public Sequentiality() {
+        configuration = new Configuration(
+                new AbstractMap.SimpleEntry<>(PARAMETER_TOTAL_HOURS, "0")
+        );
     }
 
     @Override

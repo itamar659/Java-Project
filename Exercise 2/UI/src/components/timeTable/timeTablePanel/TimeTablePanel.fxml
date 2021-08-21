@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -12,48 +13,59 @@
 <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.281" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.timeTable.timeTablePanel.TimeTablePanelController">
    <content>
       <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
-         <top>
-            <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
-               <children>
-                  <Label text="Chose target:">
-                     <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </HBox.margin>
-                  </Label>
-                  <ComboBox fx:id="comboBoxTargetType" onAction="#comboBoxTargetType_ItemChanged" prefWidth="100.0">
-                     <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </HBox.margin>
-                  </ComboBox>
-                  <Label fx:id="labelTargetType" text="[TARGET_HOLDER]:">
-                     <HBox.margin>
-                        <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
-                     </HBox.margin>
-                  </Label>
-                  <ComboBox fx:id="comboBoxTarget" onAction="#comboBoxTarget_ItemChanged" prefWidth="100.0" promptText="None">
-                     <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </HBox.margin>
-                  </ComboBox>
-                  <Button mnemonicParsing="false" text="SHOW">
-                     <HBox.margin>
-                        <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button mnemonicParsing="false" onAction="#buttonRaw_Clicked" text="RAW">
-                     <HBox.margin>
-                        <Insets bottom="5.0" left="20.0" right="5.0" top="5.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </HBox>
-         </top>
          <center>
             <AnchorPane fx:id="paneTimeTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
          </center>
+         <top>
+            <BorderPane BorderPane.alignment="CENTER">
+               <right>
+                  <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+                     <children>
+                        <Separator orientation="VERTICAL" />
+                        <Button mnemonicParsing="false" onAction="#buttonTable_Clicked" text="TABLE">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#buttonRaw_Clicked" text="RAW">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </right>
+               <left>
+                  <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
+                     <children>
+                        <Label text="Chose target:">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <ComboBox fx:id="comboBoxTargetType" onAction="#comboBoxTargetType_ItemChanged" prefWidth="100.0">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </ComboBox>
+                        <Label fx:id="labelTargetType" text="[TARGET_HOLDER]:">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <ComboBox fx:id="comboBoxTarget" onAction="#comboBoxTarget_ItemChanged" prefWidth="100.0" promptText="None">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </ComboBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+               </left>
+            </BorderPane>
+         </top>
       </BorderPane>
    </content>
 </ScrollPane>

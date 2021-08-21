@@ -1,61 +1,61 @@
 package logic.evoAlgorithm.mutations;
 
+import logic.configurable.Configurable;
+import logic.configurable.Configuration;
+import logic.configurable.ReadOnlyConfiguration;
 import logic.evoAlgorithm.TimeTableProblem;
-import logic.schema.Parameterizable;
 import engine.base.*;
 import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Flipping extends Mutation<TimeTable> implements Parameterizable {
+public class Flipping extends Mutation<TimeTable> implements Configurable {
 
     private enum Component {
         S, T, C, H, D;
     }
 
+    private static final String PARAMETER_COMPONENT = "Component";
+    private static final String PARAMETER_MAX_TUPPLES = "MaxTupples";
     private static final Random rand = new Random();
-    private int maxTupples;
-    private Component component;
+
+    private final Configuration configuration;
+
+    @Override
+    public ReadOnlyConfiguration getConfiguration() {
+        return configuration.getProxy();
+    }
+
+    @Override
+    public void setParameter(String parameterName, String value) {
+        if (parameterName.equals(PARAMETER_MAX_TUPPLES)) {
+            Integer.parseInt(value);
+        } else if (parameterName.equals(PARAMETER_COMPONENT)) {
+            Component.valueOf(value);
+        } else {
+            throw new IllegalArgumentException("Parameter name not found in " + this.getClass().getSimpleName());
+        }
+
+        configuration.setParameter(parameterName, value);
+    }
+
+    public Flipping() {
+        configuration = new Configuration(
+                new AbstractMap.SimpleEntry<>(PARAMETER_COMPONENT, Component.C.name()),
+                new AbstractMap.SimpleEntry<>(PARAMETER_MAX_TUPPLES, "0")
+        );
+    }
 
     public int getMaxTupples() {
-        return maxTupples;
+        return Integer.parseInt(configuration.getParameter(PARAMETER_MAX_TUPPLES));
     }
 
-    public void setMaxTupples(int maxTupples) {
-        this.maxTupples = maxTupples;
-    }
-
-    public String getComponent() {
-        return component.name();
-    }
-
-    public void setComponent(String component) {
-        this.component = Component.valueOf(component);
-    }
-
-    @Override
-    public void setValue(String parameterName, Object value) {
-        if (parameterName.equals("MaxTupples")) {
-            setMaxTupples(Integer.parseInt(value.toString()));
-        } else if (parameterName.equals("Component")) {
-            setComponent((String) value);
-        } else {
-            throw new IllegalArgumentException("Parameter name not found in " + this.getClass().getSimpleName());
-        }
-    }
-
-    @Override
-    public Object getValue(String parameterName) {
-        if (parameterName.equals("MaxTupples")) {
-            return getMaxTupples();
-        } else if (parameterName.equals("Component")) {
-            return getComponent();
-        } else {
-            throw new IllegalArgumentException("Parameter name not found in " + this.getClass().getSimpleName());
-        }
+    public Component getComponent() {
+        return Component.valueOf(configuration.getParameter(PARAMETER_COMPONENT));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class Flipping extends Mutation<TimeTable> implements Parameterizable {
         TimeTableProblem theProblem = (TimeTableProblem) problem;
 
         // Get the lessons to mutate
-        int numOfMutates = rand.nextInt(this.maxTupples) + 1;
+        int numOfMutates = rand.nextInt(getMaxTupples()) + 1;
         List<Lesson> lessonsChosen = new ArrayList<>(numOfMutates);
 
         if (lessons.size() <= 0) {
@@ -85,7 +85,7 @@ public class Flipping extends Mutation<TimeTable> implements Parameterizable {
 
         // mutate the chosen lessons
         for (Lesson lesson : lessonsChosen) {
-            switch (component) {
+            switch (getComponent()) {
                 case S:
                     lesson.setCourse(theProblem.randomizeCourse());
                     break;
@@ -109,8 +109,8 @@ public class Flipping extends Mutation<TimeTable> implements Parameterizable {
     public String toString() {
         return "Flipping{" +
                 "probability=" + probability +
-                ", maxTupples=" + maxTupples +
-                ", component=" + component +
+                ", maxTupples=" + getMaxTupples() +
+                ", component=" + getComponent() +
                 '}';
     }
 }
