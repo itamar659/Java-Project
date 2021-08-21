@@ -66,6 +66,9 @@ public class TimeTablePanelController {
 
     @FXML
     void comboBoxTargetType_ItemChanged(ActionEvent event) {
+        if(timeTableSolution == null){
+            return;
+        }
         comboBoxTarget.getItems().clear();
 
         if (comboBoxTargetType.getSelectionModel().getSelectedItem().equals(targetTypes[0])) {

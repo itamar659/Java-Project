@@ -6,20 +6,20 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.291" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.application.ApplicationController">
+
+<BorderPane minHeight="600.0" minWidth="800.0" xmlns="http://javafx.com/javafx/8.0.291" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.application.ApplicationController">
    <top>
-      <Label text="Evolutinary Engine" BorderPane.alignment="CENTER">
-         <font>
-            <Font name="Century Gothic" size="36.0" />
-         </font>
-      </Label>
-   </top>
-   <center>
-      <VBox BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
          <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" text="Evolutinary Engine" textAlignment="CENTER">
+               <font>
+                  <Font name="Century Gothic" size="36.0" />
+               </font>
+            </Label>
             <HBox>
                <children>
                   <Button mnemonicParsing="false" onAction="#openButtonClicked" prefHeight="25.0" prefWidth="160.0" text="Open File">
@@ -53,11 +53,21 @@
             </HBox>
             <Separator>
                <VBox.margin>
-                  <Insets bottom="5.0" top="5.0" />
+                  <Insets top="5.0" />
                </VBox.margin>
             </Separator>
             <BorderPane fx:id="mainHolder" />
          </children>
       </VBox>
+   </top>
+   <center>
+      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+         <left>
+            <StackPane fx:id="stackPaneLeft" style="-fx-background-color: blue;" BorderPane.alignment="CENTER" />
+         </left>
+         <center>
+            <StackPane fx:id="stackPaneCenter" style="-fx-background-color: red;" BorderPane.alignment="CENTER" />
+         </center>
+      </BorderPane>
    </center>
 </BorderPane>

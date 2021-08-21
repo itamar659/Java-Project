@@ -2,6 +2,7 @@ package components.application;
 
 import components.centerscreen.CenterHolderController;
 import components.problemInfo.ProbInfoController;
+import components.timeTable.timeTablePanel.TimeTablePanelController;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -10,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import logic.Engine;
@@ -25,8 +27,6 @@ public class ApplicationController {
 
     private ProbInfoController probInfoController;
     private CenterHolderController centerHolderController;
-
-
 
 
     private final SimpleBooleanProperty isFileLoaded = new SimpleBooleanProperty();
@@ -51,6 +51,8 @@ public class ApplicationController {
 
     @FXML private Label pathLbl;
     @FXML private BorderPane mainHolder;
+    @FXML private StackPane stackPaneLeft;
+    @FXML private StackPane stackPaneCenter;
 
     @FXML
     private void openButtonClicked(ActionEvent event) {
@@ -93,7 +95,7 @@ public class ApplicationController {
                         Node node = loader.load();
                         probInfoController = loader.getController();
                         probInfoController.setProblem(theEngine.getEvoEngineSettings());
-                        mainHolder.setLeft(node);
+                        stackPaneLeft.getChildren().add(node);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -103,7 +105,7 @@ public class ApplicationController {
                     try{
                         Node node1 = loader2.load();
                         centerHolderController = loader2.getController();
-                        mainHolder.setCenter(node1);
+                        stackPaneCenter.getChildren().add(node1);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
