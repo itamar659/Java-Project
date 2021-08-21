@@ -29,8 +29,8 @@ public class MainApplication extends Application {
 
         ApplicationController controller = loader.getController();
         controller.setPrimaryStage(primaryStage);
-              TimeTablePanelController controller = loader.getController();
-        controller.setTimeTable(createList());
+        //TimeTablePanelController controller = loader.getController();
+        //controller.setTimeTable(createList());
 
 
         Scene scene = new Scene(root);
