@@ -1,7 +1,7 @@
 package components.application;
 
+import components.centerscreen.CenterHolderController;
 import components.problemInfo.ProbInfoController;
-import components.problemInfo.ProblemInfoController;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -10,7 +10,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import logic.Engine;
@@ -25,6 +24,9 @@ public class ApplicationController {
     private final Engine theEngine;
 
     private ProbInfoController probInfoController;
+    private CenterHolderController centerHolderController;
+
+
 
 
     private final SimpleBooleanProperty isFileLoaded = new SimpleBooleanProperty();
@@ -39,6 +41,7 @@ public class ApplicationController {
         theEngine = new Engine();
         adapter = new UIAdapter(theEngine);
         probInfoController = new ProbInfoController();
+        centerHolderController = new CenterHolderController();
     }
 
     @FXML
@@ -86,19 +89,26 @@ public class ApplicationController {
                     isFileLoaded.set(true);
                     FXMLLoader loader = new FXMLLoader();
                     loader.setLocation(getClass().getResource("/components/problemInfo/ProbInfo.fxml"));
-
                     try {
                         Node node = loader.load();
                         probInfoController = loader.getController();
                         probInfoController.setProblem(theEngine.getEvoEngineSettings());
-
                         mainHolder.setLeft(node);
-             //           node.prefHeight(mainHolder.getHeight());
-
-
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
+                    FXMLLoader loader2 = new FXMLLoader();
+                    loader2.setLocation(getClass().getResource("/components/centerscreen/centerHolder.fxml"));
+                    try{
+                        Node node1 = loader2.load();
+                        centerHolderController = loader2.getController();
+                        mainHolder.setCenter(node1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
                 },
                 // On failed
                 event -> {
