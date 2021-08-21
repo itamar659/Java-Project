@@ -50,9 +50,10 @@ public class ApplicationController {
     }
 
     @FXML private Label pathLbl;
-    @FXML private BorderPane mainHolder;
     @FXML private StackPane stackPaneLeft;
     @FXML private StackPane stackPaneCenter;
+    @FXML private SplitPane stackPaneRight;
+
 
     @FXML
     private void openButtonClicked(ActionEvent event) {
