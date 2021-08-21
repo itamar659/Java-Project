@@ -51,8 +51,8 @@ public class ApplicationController {
 
     @FXML private Label pathLbl;
     @FXML private StackPane stackPaneLeft;
-    @FXML private StackPane stackPaneCenter;
     @FXML private SplitPane stackPaneRight;
+    @FXML private ScrollPane scrollPaneCenter;
 
 
     @FXML
@@ -106,7 +106,8 @@ public class ApplicationController {
                     try{
                         Node node1 = loader2.load();
                         centerHolderController = loader2.getController();
-                        stackPaneCenter.getChildren().add(node1);
+                        //stackPaneCenter.getChildren().add(node1);
+                        scrollPaneCenter.setContent(node1);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

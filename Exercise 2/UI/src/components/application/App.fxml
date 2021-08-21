@@ -68,12 +68,12 @@
                <left>
                   <StackPane fx:id="stackPaneLeft" style="-fx-background-color: blue;" BorderPane.alignment="CENTER" />
                </left>
-               <center>
-                  <StackPane fx:id="stackPaneCenter" style="-fx-background-color: red;" BorderPane.alignment="CENTER" />
-               </center>
                <right>
                   <SplitPane fx:id="stackPaneRight" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
                </right>
+               <center>
+                  <ScrollPane fx:id="scrollPaneCenter" fitToHeight="true" fitToWidth="true" minHeight="0.0" minWidth="0.0" BorderPane.alignment="CENTER" />
+               </center>
             </BorderPane>
          </center>
       </BorderPane>
