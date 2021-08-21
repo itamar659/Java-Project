@@ -1,5 +1,6 @@
 package components.centerscreen;
 
+import components.application.UIAdapter;
 import components.timeTable.LessonsInfoResourcesConsts;
 import components.timeTable.timeTablePanel.TimeTablePanelController;
 import javafx.fxml.FXML;
@@ -7,18 +8,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import sun.plugin.javascript.navig.Anchor;
 
 import java.io.IOException;
 import java.net.URL;
 
 public class CenterHolderController {
+
+    private UIAdapter uiAdapter;
+
     @FXML private Label labelPrecents;
     @FXML private ProgressBar progressBarTask;
     @FXML private StackPane stackPaneCenter;
+
     private TimeTablePanelController timeTablePanelController;
 
     @FXML
@@ -38,4 +40,8 @@ public class CenterHolderController {
         }
     }
 
+    public void setUiAdapter(UIAdapter uiAdapter) {
+        this.uiAdapter = uiAdapter;
+        timeTablePanelController.timeTableSolutionProperty().bind(uiAdapter.getTheEngine().bestSolutionProperty());
+    }
 }

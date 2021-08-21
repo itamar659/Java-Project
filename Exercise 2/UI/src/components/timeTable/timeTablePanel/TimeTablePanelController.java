@@ -4,6 +4,8 @@ import components.timeTable.LessonsInfoResourcesConsts;
 import components.timeTable.rawInfo.RawInfoController;
 import components.timeTable.timeTableComponent.TimeTableController;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,22 +15,24 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.AnchorPane;
-import logic.timeTable.Class;
 import logic.timeTable.HasName;
 import logic.timeTable.Lesson;
-import logic.timeTable.Teacher;
 import logic.timeTable.TimeTable;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 public class TimeTablePanelController {
 
     private final String[] targetTypes = {"Teachers", "Classes"};
 
-    private TimeTable timeTableSolution;
+    private final ObjectProperty<TimeTable> timeTableSolutionProperty = new SimpleObjectProperty<>();
+
+    private Parent timeTableParent;
+    private Parent rawInfoParent;
+
     private TimeTableController timeTableController;
+    private RawInfoController rawInfoController;
 
     @FXML
     private Label labelTargetType;
@@ -44,47 +48,33 @@ public class TimeTablePanelController {
 
     @FXML
     void buttonRaw_Clicked(ActionEvent event) {
-        // Display the lessons in an alert.
         paneTimeTable.getChildren().clear();
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/components/timeTable/rawInfo/RawInfo.fxml"));
-        try {
-            Parent parent = loader.load();
-            RawInfoController c = loader.getController();
-            c.setTimeTableSolution(this.timeTableSolution);
-            paneTimeTable.getChildren().add(parent);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        paneTimeTable.getChildren().add(rawInfoParent);
     }
 
     @FXML
     void buttonTable_Clicked(ActionEvent event) {
-        createTimeTableController();
-        comboBoxTargetType_ItemChanged(null);
+        paneTimeTable.getChildren().clear();
+        paneTimeTable.getChildren().add(timeTableParent);
     }
 
     @FXML
     void comboBoxTargetType_ItemChanged(ActionEvent event) {
-        if(timeTableSolution == null){
+        if(timeTableSolutionProperty.get() == null){
             return;
         }
-        comboBoxTarget.getItems().clear();
 
-        if (comboBoxTargetType.getSelectionModel().getSelectedItem().equals(targetTypes[0])) {
-            this.timeTableController.setDisplayTeachers(true);
-            comboBoxTarget.getItems().addAll(timeTableSolution.getProblem().getTeachers());
-        } else {
-            this.timeTableController.setDisplayTeachers(false);
-            comboBoxTarget.getItems().addAll(timeTableSolution.getProblem().getClasses());
-        }
-
+        createComboBoxes();
         comboBoxTarget.getSelectionModel().selectFirst();
-        comboBoxTarget_ItemChanged(null);
+        createTimeTableGrid();
     }
 
     @FXML
     void comboBoxTarget_ItemChanged(ActionEvent event) {
+        if(timeTableSolutionProperty.get() == null){
+            return;
+        }
+
         createTimeTableGrid();
     }
 
@@ -96,7 +86,6 @@ public class TimeTablePanelController {
 
         // init the combo box types
         comboBoxTargetType.getItems().addAll(targetTypes);
-        comboBoxTargetType.getSelectionModel().selectFirst();
 
         // Bind the target label to the target type combo box
         labelTargetType.textProperty().bind(new StringBinding() {
@@ -106,36 +95,26 @@ public class TimeTablePanelController {
 
             @Override
             protected String computeValue() {
-                if (comboBoxTargetType.getSelectionModel().selectedItemProperty().get().equals(targetTypes[0])) {
+                if (targetTypes[0].equals(comboBoxTargetType.getSelectionModel().selectedItemProperty().get())) {
                     return "Teacher:";
                 }
                 return "Class:";
             }
         });
 
+        timeTableSolutionProperty.addListener((observable, oldValue, newValue) -> {
+            if (paneTimeTable.getChildren().get(0) == timeTableParent) {
+                createTimeTableGrid();
+            }
+        });
+
+        createRawInfoController();
         createTimeTableController();
+        paneTimeTable.getChildren().add(rawInfoParent);
     }
 
-    private void createTimeTableController() {
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(LessonsInfoResourcesConsts.GRID_TABLE_FXML_RESOURCE);
-            Parent grid = loader.load();
-
-            paneTimeTable.getChildren().clear();
-            paneTimeTable.getChildren().add(grid);
-
-            this.timeTableController = loader.getController();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void setTimeTableSolution(TimeTable timeTableSolution) {
-        this.timeTableSolution = timeTableSolution;
-
-        comboBoxTargetType_ItemChanged(null);
+    public ObjectProperty<TimeTable> timeTableSolutionProperty() {
+        return timeTableSolutionProperty;
     }
 
     private void createTimeTableGrid() {
@@ -146,24 +125,64 @@ public class TimeTablePanelController {
         String findName = comboBoxTarget.getSelectionModel().getSelectedItem().getName();
         final List<Lesson>[] lessons = new List[1];
         if (timeTableController.isDisplayTeachers()) {
-            this.timeTableSolution.getTeachersTimeTable().forEach((t, l) -> {
+            this.timeTableSolutionProperty.get().getTeachersTimeTable().forEach((t, l) -> {
                 if (t.getName().equals(findName)) {
                     lessons[0] = l;
                 }
             });
         } else {
-            this.timeTableSolution.getClassesTimeTable().forEach((t, l) -> {
+            this.timeTableSolutionProperty.get().getClassesTimeTable().forEach((t, l) -> {
                 if (t.getName().equals(findName)) {
                     lessons[0] = l;
                 }
             });
         }
 
-        this.timeTableController.createTimeTableGrid(
-                FXCollections.observableArrayList(lessons[0]),
-                timeTableSolution.getProblem().getDays(),
-                timeTableSolution.getProblem().getHours()
-        );
+        if (lessons[0] != null) {
+            this.timeTableController.createTimeTableGrid(
+                    FXCollections.observableArrayList(lessons[0]),
+                    timeTableSolutionProperty.get().getProblem().getDays(),
+                    timeTableSolutionProperty.get().getProblem().getHours()
+            );
+        }
+    }
+
+    private void createComboBoxes() {
+        if (comboBoxTargetType.getSelectionModel().getSelectedItem() == null) {
+            return;
+        }
+
+        comboBoxTarget.getItems().clear();
+        if (comboBoxTargetType.getSelectionModel().getSelectedItem().equals(targetTypes[0])) {
+            this.timeTableController.setDisplayTeachers(true);
+            comboBoxTarget.getItems().addAll(timeTableSolutionProperty.get().getProblem().getTeachers());
+        } else {
+            this.timeTableController.setDisplayTeachers(false);
+            comboBoxTarget.getItems().addAll(timeTableSolutionProperty.get().getProblem().getClasses());
+        }
+    }
+
+    private void createRawInfoController() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/components/timeTable/rawInfo/RawInfo.fxml")); // TODO: Add to consts resources
+            rawInfoParent = loader.load();
+            rawInfoController = loader.getController();
+            rawInfoController.timeTableSolutionProperty().bind(this.timeTableSolutionProperty);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createTimeTableController() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(LessonsInfoResourcesConsts.GRID_TABLE_FXML_RESOURCE);
+            timeTableParent = loader.load();
+            timeTableController = loader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static class TargetTypeCell extends ListCell<HasName> {

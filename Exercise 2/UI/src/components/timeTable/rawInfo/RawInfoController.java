@@ -16,8 +16,8 @@ public class RawInfoController {
 
     private final ObjectProperty<TimeTable> timeTableSolution = new SimpleObjectProperty<>();
 
-    public void setTimeTableSolution(TimeTable timeTableSolution) {
-        this.timeTableSolution.set(timeTableSolution);
+    public ObjectProperty<TimeTable> timeTableSolutionProperty() {
+        return timeTableSolution;
     }
 
     @FXML
@@ -33,8 +33,8 @@ public class RawInfoController {
 
             int[] rowIdx = {1};
             timeTableSolution.get().getLessons().forEach(lesson -> {
-                Label day = new Label(Integer.toString(lesson.getDay()));
-                Label hour = new Label(Integer.toString(lesson.getHour()));
+                Label day = new Label(Integer.toString(lesson.getDay() + 1));
+                Label hour = new Label(Integer.toString(lesson.getHour() + 1));
                 Label aclass = new Label(String.format("%s (%s)", lesson.getaClass().getName(), lesson.getaClass().getId()));
                 Label teacher = new Label(String.format("%s (%s)", lesson.getTeacher().getName(), lesson.getTeacher().getId()));
                 Label course = new Label(String.format("%s (%s)", lesson.getCourse().getName(), lesson.getCourse().getId()));

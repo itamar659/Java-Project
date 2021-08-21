@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.281" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.timeTable.timeTablePanel.TimeTablePanelController">
    <center>
       <AnchorPane fx:id="paneTimeTable" BorderPane.alignment="CENTER" />
@@ -41,7 +40,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Label>
-                  <ComboBox fx:id="comboBoxTargetType" onAction="#comboBoxTargetType_ItemChanged" prefWidth="100.0">
+                  <ComboBox fx:id="comboBoxTargetType" onAction="#comboBoxTargetType_ItemChanged" prefWidth="100.0" promptText="Select Type">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -51,7 +50,7 @@
                         <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Label>
-                  <ComboBox fx:id="comboBoxTarget" onAction="#comboBoxTarget_ItemChanged" prefWidth="100.0" promptText="None">
+                  <ComboBox fx:id="comboBoxTarget" onAction="#comboBoxTarget_ItemChanged" prefWidth="100.0" promptText="Select Target">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
