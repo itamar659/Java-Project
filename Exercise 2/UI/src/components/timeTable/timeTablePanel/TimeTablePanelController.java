@@ -1,6 +1,7 @@
 package components.timeTable.timeTablePanel;
 
 import components.timeTable.LessonsInfoResourcesConsts;
+import components.timeTable.rawInfo.RawInfoController;
 import components.timeTable.timeTableComponent.TimeTableController;
 import javafx.beans.binding.StringBinding;
 import javafx.collections.FXCollections;
@@ -44,6 +45,23 @@ public class TimeTablePanelController {
     @FXML
     void buttonRaw_Clicked(ActionEvent event) {
         // Display the lessons in an alert.
+        paneTimeTable.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/components/timeTable/rawInfo/RawInfo.fxml"));
+        try {
+            Parent parent = loader.load();
+            RawInfoController c = loader.getController();
+            c.setTimeTableSolution(this.timeTableSolution);
+            paneTimeTable.getChildren().add(parent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void buttonTable_Clicked(ActionEvent event) {
+        createTimeTableController();
+        comboBoxTargetType_ItemChanged(null);
     }
 
     @FXML
