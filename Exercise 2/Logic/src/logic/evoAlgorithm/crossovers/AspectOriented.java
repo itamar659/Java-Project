@@ -1,27 +1,42 @@
 package logic.evoAlgorithm.crossovers;
 
-import engine.base.Crossover;
-import engine.base.Population;
-import engine.base.Solution;
-import logic.schema.Parameterizable;
+import engine.base.*;
+import logic.configurable.Configurable;
+import logic.configurable.Configuration;
+import logic.configurable.ReadOnlyConfiguration;
 import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.IntStream;
 
-public class AspectOriented implements Crossover<TimeTable>, Parameterizable {
-
-    private static final Random rand = new Random();
+public class AspectOriented implements Crossover<TimeTable>, Configurable {
 
     public enum Orientation {
         CLASS, TEACHER;
     }
 
+    private static final String PARAMETER_ORIENTATION = "Orientation";
+    private static final Random rand = new Random();
+
+    private final Configuration configuration;
     private int cuttingPoints;
+
+    @Override
+    public ReadOnlyConfiguration getConfiguration() {
+        return configuration.getProxy();
+    }
+
+    @Override
+    public void setParameter(String parameterName, String value) {
+        if (parameterName.equals(PARAMETER_ORIENTATION)) {
+            Orientation.valueOf(value);
+        } else {
+            throw new IllegalArgumentException("Parameter name not found in " + this.getClass().getSimpleName());
+        }
+
+        configuration.setParameter(parameterName, value);
+    }
 
     @Override
     public int getCuttingPoints() {
@@ -30,40 +45,17 @@ public class AspectOriented implements Crossover<TimeTable>, Parameterizable {
 
     @Override
     public void setCuttingPoints(int cuttingPoints) {
-        // Can be bigger from the population. it'll cut every single block
         this.cuttingPoints = cuttingPoints;
     }
 
-    private Orientation orientation;
-
-    public Orientation getOrientation() {
-        return orientation;
+    public AspectOriented() {
+        this.configuration = new Configuration(
+                new AbstractMap.SimpleEntry<>(PARAMETER_ORIENTATION, Orientation.CLASS.name())
+        );
     }
 
-    public void setOrientation(Orientation orientation) {
-        this.orientation = orientation;
-    }
-
-    @Override
-    public void setValue(String parameterName, Object value) {
-        if (parameterName.equals("Orientation")) {
-            if (value.toString().equals("CLASS")) {
-                setOrientation(Orientation.CLASS);
-            } else {
-                setOrientation(Orientation.TEACHER);
-            }
-        } else {
-            throw new IllegalArgumentException("Parameter name not found in " + this.getClass().getSimpleName());
-        }
-    }
-
-    @Override
-    public Object getValue(String parameterName) {
-        if (parameterName.equals("Orientation")) {
-            return getOrientation();
-        } else {
-            throw new IllegalArgumentException("Parameter name not found in " + this.getClass().getSimpleName());
-        }
+    public String getOrientation() {
+        return configuration.getParameter(PARAMETER_ORIENTATION);
     }
 
     @Override
@@ -97,7 +89,7 @@ public class AspectOriented implements Crossover<TimeTable>, Parameterizable {
     public String toString() {
         return "AspectOriented{" +
                 "cuttingPoints=" + cuttingPoints +
-                ", orientation=" + orientation +
+                ", orientation=" + getOrientation() +
                 '}';
     }
 
@@ -136,7 +128,7 @@ public class AspectOriented implements Crossover<TimeTable>, Parameterizable {
     }
 
     private <T> List<T> getWhatAvailable(Solution<TimeTable> father) {
-        if (orientation == Orientation.CLASS) {
+        if (getOrientation().equals(Orientation.CLASS.name())) {
             return (List<T>) father.getGens().getProblem().getClasses();
         } else {
             return (List<T>) father.getGens().getProblem().getTeachers();
@@ -144,7 +136,7 @@ public class AspectOriented implements Crossover<TimeTable>, Parameterizable {
     }
 
     private <T>Map<T, List<Lesson>> getMap(Solution<TimeTable> tt) {
-        if (orientation == Orientation.CLASS) {
+        if (getOrientation().equals(Orientation.CLASS.name())) {
             return (Map<T, List<Lesson>>) tt.getGens().getClassesTimeTable();
         } else {
             return (Map<T, List<Lesson>>) tt.getGens().getTeachersTimeTable();

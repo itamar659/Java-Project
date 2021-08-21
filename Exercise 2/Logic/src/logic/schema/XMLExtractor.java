@@ -1,9 +1,9 @@
 package logic.schema;
 
+import logic.configurable.Configurable;
 import engine.base.Crossover;
 import engine.base.Mutation;
 import engine.base.Selection;
-import logic.evoAlgorithm.crossovers.DayTimeOriented;
 import logic.evoAlgorithm.factory.CrossoverFactory;
 import logic.evoAlgorithm.factory.MutationFactory;
 import logic.evoAlgorithm.factory.RuleFactory;
@@ -320,8 +320,8 @@ public class XMLExtractor {
         String[][] parameterNameNValue = createConfiguration(configuration);
 
         // Step 2.1 - set the configurations (object parameters) if there are any
-        if (object instanceof Parameterizable && parameterNameNValue != null) {
-            setParameterizableParameters((Parameterizable) object, parameterNameNValue);
+        if (object instanceof Configurable && parameterNameNValue != null) {
+            setParameterizableParameters((Configurable) object, parameterNameNValue);
         }
     }
 
@@ -340,23 +340,23 @@ public class XMLExtractor {
         return parameters;
     }
 
-    private void setParameterizableParameters(Parameterizable parameterizable, String[][] configuration) throws XMLExtractException {
+    private void setParameterizableParameters(Configurable configurable, String[][] configuration) throws XMLExtractException {
         for (String[] parameterNameValue : configuration) {
             if (parameterNameValue.length != 2) {
-                throw new XMLExtractException(String.format("Sent to '%s' wrong configuration.", parameterizable.getClass().getSimpleName()));
+                throw new XMLExtractException(String.format("Sent to '%s' wrong configuration.", configurable.getClass().getSimpleName()));
             }
             String paramName = parameterNameValue[0];
             String paramValue = parameterNameValue[1];
 
             try {
-                parameterizable.setValue(paramName, paramValue);
+                configurable.setParameter(paramName, paramValue);
 
             } catch (IllegalArgumentException e) {
                 throw new XMLExtractException(
-                        String.format("Sent to '%s' a bad value for the parameter: %s.", parameterizable.getClass().getSimpleName(), paramName), e);
+                        String.format("Sent to '%s' a bad value for the parameter: %s.", configurable.getClass().getSimpleName(), paramName), e);
             } catch (ClassCastException e) {
                 throw new XMLExtractException(
-                        String.format("Sent to '%s' a wrong parameter type for the parameter value: %s.", parameterizable.getClass().getSimpleName(), paramName), e);
+                        String.format("Sent to '%s' a wrong parameter type for the parameter value: %s.", configurable.getClass().getSimpleName(), paramName), e);
             }
         }
     }
