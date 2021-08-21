@@ -1,34 +1,32 @@
 package components.timeTable.timeTablePanel;
 
 import components.timeTable.LessonsInfoResourcesConsts;
-import components.timeTable.lessonsInfo.LessonsInfoController;
 import components.timeTable.timeTableComponent.TimeTableController;
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.AnchorPane;
+import logic.timeTable.Class;
 import logic.timeTable.HasName;
 import logic.timeTable.Lesson;
+import logic.timeTable.Teacher;
 import logic.timeTable.TimeTable;
 
 import java.io.IOException;
-import java.util.concurrent.Callable;
+import java.util.List;
+import java.util.Map;
 
 public class TimeTablePanelController {
 
     private final String[] targetTypes = {"Teachers", "Classes"};
 
-    private TimeTable timeTable;
+    private TimeTable timeTableSolution;
     private TimeTableController timeTableController;
 
     @FXML
@@ -50,25 +48,23 @@ public class TimeTablePanelController {
 
     @FXML
     void comboBoxTargetType_ItemChanged(ActionEvent event) {
-
         comboBoxTarget.getItems().clear();
 
         if (comboBoxTargetType.getSelectionModel().getSelectedItem().equals(targetTypes[0])) {
             this.timeTableController.setDisplayTeachers(true);
-            comboBoxTarget.getItems().addAll(timeTable.getProblem().getTeachers());
+            comboBoxTarget.getItems().addAll(timeTableSolution.getProblem().getTeachers());
         } else {
             this.timeTableController.setDisplayTeachers(false);
-            comboBoxTarget.getItems().addAll(timeTable.getProblem().getClasses());
+            comboBoxTarget.getItems().addAll(timeTableSolution.getProblem().getClasses());
         }
 
         comboBoxTarget.getSelectionModel().selectFirst();
-
-
-        createTimeTableGrid();
+        comboBoxTarget_ItemChanged(null);
     }
 
     @FXML
     void comboBoxTarget_ItemChanged(ActionEvent event) {
+        createTimeTableGrid();
     }
 
     @FXML
@@ -96,11 +92,14 @@ public class TimeTablePanelController {
             }
         });
 
-        // Create the time table controller to work with
+        createTimeTableController();
+    }
+
+    private void createTimeTableController() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(LessonsInfoResourcesConsts.GRID_TABLE_FXML_RESOURCE);
-            GridPane grid = loader.load();
+            Parent grid = loader.load();
 
             paneTimeTable.getChildren().clear();
             paneTimeTable.getChildren().add(grid);
@@ -112,31 +111,49 @@ public class TimeTablePanelController {
         }
     }
 
-    public void setTimeTable(TimeTable timeTable) {
-        this.timeTable = timeTable;
+    public void setTimeTableSolution(TimeTable timeTableSolution) {
+        this.timeTableSolution = timeTableSolution;
 
         comboBoxTargetType_ItemChanged(null);
     }
 
     private void createTimeTableGrid() {
+        if (comboBoxTarget.getSelectionModel().getSelectedItem() == null) {
+            return;
+        }
+
+        String findName = comboBoxTarget.getSelectionModel().getSelectedItem().getName();
+        final List<Lesson>[] lessons = new List[1];
+        if (timeTableController.isDisplayTeachers()) {
+            this.timeTableSolution.getTeachersTimeTable().forEach((t, l) -> {
+                if (t.getName().equals(findName)) {
+                    lessons[0] = l;
+                }
+            });
+        } else {
+            this.timeTableSolution.getClassesTimeTable().forEach((t, l) -> {
+                if (t.getName().equals(findName)) {
+                    lessons[0] = l;
+                }
+            });
+        }
+
         this.timeTableController.createTimeTableGrid(
-                FXCollections.observableArrayList(timeTable.getLessons()),
-                timeTable.getProblem().getDays(),
-                timeTable.getProblem().getHours()
+                FXCollections.observableArrayList(lessons[0]),
+                timeTableSolution.getProblem().getDays(),
+                timeTableSolution.getProblem().getHours()
         );
     }
 
     private static class TargetTypeCell extends ListCell<HasName> {
-
         @Override
         protected void updateItem(HasName item, boolean empty) {
             super.updateItem(item, empty);
 
-            textProperty().unbind();
             if (empty || item == null) {
-                setText("ERROR - The object is empty...");
+                setText("");
             } else {
-                textProperty().bind(Bindings.format("%s", item.getName()));
+                setText(String.format("%s", item.getName()));
             }
         }
     }

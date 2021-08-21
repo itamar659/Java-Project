@@ -1,50 +1,50 @@
 package components.timeTable.lessonInfo;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import logic.timeTable.Class;
-import logic.timeTable.Course;
-import logic.timeTable.Teacher;
 
 public class LessonInfoController {
 
-    public static final int PREF_WIDTH = 180;
-    public static final int PREF_HEIGHT = 100;
+    private final StringProperty topDetails = new SimpleStringProperty();
+    private final StringProperty botDetails = new SimpleStringProperty();
+    private final StringProperty topInfo = new SimpleStringProperty();
+    private final StringProperty botInfo = new SimpleStringProperty();
 
-    @FXML
-    private Label topLabelInfo;
-
-    @FXML
-    private Label botLabelInfo;
-
-    @FXML
-    private Label topLabelDetails;
-
-    @FXML
-    private Label botLabelDetails;
-
-    private Teacher teacher;
-    private Class aClass;
-    private Course course;
-
-    public void setTeacher(Teacher teacher) {
-        this.teacher = teacher;
-
-        topLabelInfo.setText("Teacher:");
-        topLabelDetails.setText(String.format("%s (%s)", teacher.getName(), teacher.getId()));
+    public StringProperty topDetailsProperty() {
+        return topDetails;
     }
 
-    public void setaClass(Class aClass) {
-        this.aClass = aClass;
-
-        topLabelInfo.setText("Class:");
-        topLabelDetails.setText(String.format("%s (%s)", aClass.getName(), aClass.getId()));
+    public StringProperty botDetailsProperty() {
+        return botDetails;
     }
 
-    public void setCourse(Course course) {
-        this.course = course;
-
-        botLabelInfo.setText("Course");
-        botLabelDetails.setText(String.format("%s (%s)", course.getName(), course.getId()));
+    public StringProperty topInfoProperty() {
+        return topInfo;
     }
+
+    public StringProperty botInfoProperty() {
+        return botInfo;
+    }
+
+    @FXML
+    private void initialize() {
+        topDetailsLbl.textProperty().bind(topDetails);
+        botDetailsLbl.textProperty().bind(botDetails);
+        topInfoLbl.textProperty().bind(topInfo);
+        botInfoLbl.textProperty().bind(botInfo);
+    }
+
+    @FXML
+    private Label topDetailsLbl;
+
+    @FXML
+    private Label botDetailsLbl;
+
+    @FXML
+    private Label topInfoLbl;
+
+    @FXML
+    private Label botInfoLbl;
 }

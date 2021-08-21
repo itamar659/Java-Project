@@ -1,6 +1,5 @@
 package components;
 
-import components.application.ApplicationController;
 import components.timeTable.LessonsInfoResourcesConsts;
 
 import components.timeTable.timeTablePanel.TimeTablePanelController;
@@ -23,15 +22,16 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
-        URL url = getClass().getResource("/components/application/App.fxml");
+        //URL url = LessonsInfoResourcesConsts.APP_FXML_RESOURCE;
+        URL url = LessonsInfoResourcesConsts.TIME_TABLE_PANEL_FXML_RESOURCE;
         loader.setLocation(url);
         Parent root = loader.load(url.openStream());
 
-        ApplicationController controller = loader.getController();
-        controller.setPrimaryStage(primaryStage);
+        //ApplicationController controller = loader.getController();
+        //controller.setPrimaryStage(primaryStage);
 
-        //TimeTablePanelController controller1 = loader.getController();
-        //controller1.setTimeTable(createList());
+        TimeTablePanelController controller1 = loader.getController();
+        controller1.setTimeTableSolution(createList());
 
 
         Scene scene = new Scene(root);
