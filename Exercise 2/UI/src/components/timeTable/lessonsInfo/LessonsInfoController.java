@@ -77,22 +77,22 @@ public class LessonsInfoController {
             LessonInfoController controller = loader.getController();
 
             if (displayTeachers) {
-                controller.topDetailsProperty().bind(Bindings.format("Teacher:"));
-            } else {
                 controller.topDetailsProperty().bind(Bindings.format("Class:"));
+            } else {
+                controller.topDetailsProperty().bind(Bindings.format("Teacher:"));
             }
 
             controller.topInfoProperty().bind(new StringBinding() {
                 {
-                    super.bind(lessonsComboBox.selectionModelProperty());
+                    super.bind(lessonsComboBox.getSelectionModel().selectedItemProperty());
                 }
 
                 @Override
                 protected String computeValue() {
                     if (displayTeachers) {
-                        return lessonsComboBox.getSelectionModel().getSelectedItem().getTeacher().getName();
-                    } else {
                         return lessonsComboBox.getSelectionModel().getSelectedItem().getaClass().getName();
+                    } else {
+                        return lessonsComboBox.getSelectionModel().getSelectedItem().getTeacher().getName();
                     }
                 }
             });
@@ -101,7 +101,7 @@ public class LessonsInfoController {
 
             controller.botInfoProperty().bind(new StringBinding() {
                 {
-                    super.bind(lessonsComboBox.selectionModelProperty());
+                    super.bind(lessonsComboBox.getSelectionModel().selectedItemProperty());
                 }
 
                 @Override

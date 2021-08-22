@@ -156,11 +156,12 @@ public class Engine implements Serializable {
 
     public void startAlgorithm() {
         this.state = State.RUNNING;
-        if (multiThreaded) {
-            new Thread(this.evoEngine::runAlgorithm, "Evolution Algorithm thread").start();
-        } else {
-            this.evoEngine.runAlgorithm();
-        }
+        this.evoEngine.runAlgorithm();
+//        if (multiThreaded) {
+//            new Thread(this.evoEngine::runAlgorithm, "Evolution Algorithm thread").start();
+//        } else {
+//            this.evoEngine.runAlgorithm();
+//        }
     }
 
     public void stopAlgorithm() {
