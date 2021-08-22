@@ -13,16 +13,16 @@ public class UIAdapter {
 
     private Task<Boolean> currentRunningTask;
 
-    private Engine theEngine;
+    private EngineModule engineModule;
     public evoEngineSettingsWrapper evoEngineSettings;
 
-    public UIAdapter(Engine theEngine) {
-        this.theEngine = theEngine;
-        this.evoEngineSettings = theEngine.getEvoEngineSettings();
+    public UIAdapter(EngineModule engineModule) {
+        this.engineModule = engineModule;
+        this.evoEngineSettings = engineModule.getTheEngine().getEvoEngineSettings();
     }
 
     public void loadFile(String filePath, EventHandler<WorkerStateEvent> onSucceeded, EventHandler<WorkerStateEvent> onFailed) {
-        currentRunningTask = new LoadFileTask(theEngine, new File(filePath));
+        currentRunningTask = new LoadFileTask(engineModule.getTheEngine(), new File(filePath));
 
         currentRunningTask.setOnFailed(onFailed);
         currentRunningTask.setOnSucceeded(onSucceeded);

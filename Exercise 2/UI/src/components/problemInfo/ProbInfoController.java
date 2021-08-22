@@ -1,5 +1,6 @@
 package components.problemInfo;
 
+import components.application.EngineModule;
 import components.application.ProblemModule;
 import components.problemInfo.accordionItem.AccordionItemController;
 import components.problemInfo.ruleAccordionItem.RuleAccordionItemController;
@@ -11,7 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
-import logic.evoAlgorithm.TimeTableProblem;
+import logic.configurable.Configuration;
 import logic.evoEngineSettingsWrapper;
 import logic.timeTable.Class;
 import logic.timeTable.Course;
@@ -40,23 +41,47 @@ public class ProbInfoController {
 
     @FXML private Accordion accordionTeachers;
     @FXML private Accordion accordionMutations;
+    @FXML private Accordion accordionRules;
     @FXML private Accordion accordionClasses;
     @FXML private Accordion accordionCourses;
 
 
     private final ProblemModule problemModule;
+    private EngineModule engineModule;
+
 
     public ProbInfoController() {
         problemModule = new ProblemModule();
     }
 
+    public void setEngineModule(EngineModule engineModule){
+        this.engineModule = engineModule;
+    }
+
     public void setProblem(evoEngineSettingsWrapper evoEngineSettings) {
         problemModule.setTheProblem(evoEngineSettings.getProblem(), evoEngineSettings);
 
-         fillAccordion(accordionTeachers,
-                  problemModule.teachersProperty(),
-                 "Teaches:",
-                 this::getTeacherTeachesList);
+
+        fillSystemInfoTab();
+
+
+        fillMutationTab();
+
+
+        // TODO: Be able to know if the rule have properties to modifies
+        fillRuleAccordion();
+    }
+
+    private void fillMutationTab() {
+
+
+    }
+
+    private void fillSystemInfoTab(){
+        fillAccordion(accordionTeachers,
+                problemModule.teachersProperty(),
+                "Teaches:",
+                this::getTeacherTeachesList);
 
         fillAccordion(accordionClasses,
                 problemModule.classesProperty(),
@@ -68,34 +93,29 @@ public class ProbInfoController {
                 problemModule.coursesProperty(),
                 "",
                 null);
-
-
-
-        // TODO: Be able to know if the rule have properties to modifies
-        //fillRuleAccordion();
     }
 
-//    private void fillRuleAccordion() {
-//        rulesAccordion.getPanes().clear();
-//
-//        problemModule.rulesProperty().forEach((rule) -> {
-//            FXMLLoader loader = new FXMLLoader();
-//            loader.setLocation(getClass().getResource("/components/problemInfo/ruleAccordionItem/RuleAccordionItem.fxml"));
-//
-//            try {
-//                TitledPane node = loader.load();
-//
-//                RuleAccordionItemController controller = loader.getController();
-//                controller.setName(rule.getId());
-//                controller.setType(rule.getType().name());
-//
-//                rulesAccordion.getPanes().add(node);
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        });
-//    }
+    private void fillRuleAccordion() {
+        accordionRules.getPanes().clear();
+
+        problemModule.rulesProperty().forEach((rule) -> {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/components/problemInfo/ruleAccordionItem/RuleAccordionItem.fxml"));
+
+            try {
+                TitledPane node = loader.load();
+
+                RuleAccordionItemController controller = loader.getController();
+                controller.setName(rule.getId());
+                controller.setType(rule.getType().name());
+
+                accordionRules.getPanes().add(node);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
 
     @FXML
@@ -107,7 +127,6 @@ public class ProbInfoController {
         teachersCountLbl.textProperty().bind(Bindings.format("%d", problemModule.teachersProperty().sizeProperty()));
         classesCountLbl.textProperty().bind(Bindings.format("%d", problemModule.classesProperty().sizeProperty()));
         coursesCountLbl.textProperty().bind(Bindings.format("%d", problemModule.coursesProperty().sizeProperty()));
-
 
         //labelCrossoverName.textProperty().bind(Bindings.format("%d", problemModule.crossoverProperty()));
         //labelCrossoverCP.textProperty().bind(Bindings.format("%d", problemModule.crossoverProperty()));
@@ -142,6 +161,14 @@ public class ProbInfoController {
                 e.printStackTrace();
             }
         }
+    }
+
+
+    private ObservableList<String> getConfigurationList(Configuration configuration){
+        List<String> keyAndValuePairs = new ArrayList<>();
+
+        configuration.getProxy().getParameter()
+
     }
 
     private ObservableList<String> getTeacherTeachesList(Teacher teacher) {

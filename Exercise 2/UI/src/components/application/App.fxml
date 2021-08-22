@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<<<<<<< Updated upstream
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.291" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.application.ApplicationController">
    <top>
       <Label text="Evolutinary Engine" BorderPane.alignment="CENTER">
@@ -21,6 +22,13 @@
       <VBox BorderPane.alignment="CENTER">
          <children>
             <HBox>
+=======
+<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.291" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.application.ApplicationController">
+   <content>
+      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+         <top>
+            <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+>>>>>>> Stashed changes
                <children>
                   <Button mnemonicParsing="false" onAction="#openButtonClicked" prefHeight="25.0" prefWidth="160.0" text="Open File">
                      <font>

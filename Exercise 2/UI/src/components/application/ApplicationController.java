@@ -20,8 +20,10 @@ import java.io.IOException;
 public class ApplicationController {
 
     private Stage primaryStage;
+
     private final UIAdapter adapter;
-    private final Engine theEngine;
+
+    private final EngineModule engineModule;
 
     private ProbInfoController probInfoController;
     private CenterHolderController centerHolderController;
@@ -38,10 +40,8 @@ public class ApplicationController {
     }
 
     public ApplicationController() {
-        theEngine = new Engine();
-        adapter = new UIAdapter(theEngine);
-        probInfoController = new ProbInfoController();
-        centerHolderController = new CenterHolderController();
+        engineModule = new EngineModule();
+        adapter = new UIAdapter(engineModule);
     }
 
     @FXML
@@ -92,8 +92,14 @@ public class ApplicationController {
                     try {
                         Node node = loader.load();
                         probInfoController = loader.getController();
+<<<<<<< Updated upstream
                         probInfoController.setProblem(theEngine.getEvoEngineSettings());
                         mainHolder.setLeft(node);
+=======
+                        probInfoController.setEngineModule(engineModule);
+                        probInfoController.setProblem(engineModule.getTheEngine().getEvoEngineSettings());
+                        stackPaneLeft.getChildren().add(node);
+>>>>>>> Stashed changes
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

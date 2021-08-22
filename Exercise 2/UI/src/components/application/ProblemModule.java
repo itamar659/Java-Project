@@ -31,7 +31,6 @@ public class ProblemModule {
     private final StringProperty selection = new SimpleStringProperty();
     private final IntegerProperty population = new SimpleIntegerProperty(0);
 
-
     // Information about the rules
     private final ListProperty<Rule<TimeTable>> rules = new SimpleListProperty<>();
     private final IntegerProperty hardRuleWeight = new SimpleIntegerProperty();
