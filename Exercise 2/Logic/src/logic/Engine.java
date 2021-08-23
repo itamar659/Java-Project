@@ -9,6 +9,8 @@ import logic.schema.exceptions.XMLExtractException;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalTime;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -16,7 +18,7 @@ import java.util.function.Supplier;
 public class Engine implements Serializable {
 
     public enum StopCondition {
-        MAX_GENERATIONS, REQUESTED_FITNESS;
+        MAX_GENERATIONS, REQUESTED_FITNESS, BY_TIME;
     }
 
     public enum State {
@@ -26,7 +28,9 @@ public class Engine implements Serializable {
     private boolean multiThreaded;
     private boolean isFileLoaded;
     private State state;
-    private StopCondition stopCondition;
+
+    private long periodTimeConditionInSeconds;
+    private Instant startRunTime;
 
     private int stopConditionMaxGenerations;
     private float stopConditionMaxFitness;
@@ -103,29 +107,33 @@ public class Engine implements Serializable {
         return evoEngine.getHistoryGeneration2Fitness();
     }
 
-    public void setStopCondition(StopCondition stopCondition) {
-        this.stopCondition = stopCondition;
+    public Instant getStartRunTime() {
+        return startRunTime;
+    }
 
+    public void addStopCondition(StopCondition stopCondition) {
         if (this.state != State.RUNNING) {
             switch (stopCondition) {
                 case MAX_GENERATIONS:
-                    evoEngine.setStopCondition((Supplier<Boolean> & Serializable)() -> evoEngine.getCurrentGeneration() >= this.stopConditionMaxGenerations);
+                    evoEngine.addStopCondition(StopCondition.MAX_GENERATIONS.name(), (Supplier<Boolean> & Serializable)() -> evoEngine.getCurrentGeneration() >= this.stopConditionMaxGenerations);
                     break;
                 case REQUESTED_FITNESS:
-                    evoEngine.setStopCondition((Supplier<Boolean> & Serializable)() -> getBestResult().getFitness() >= stopConditionMaxFitness);
+                    evoEngine.addStopCondition(StopCondition.REQUESTED_FITNESS.name(), (Supplier<Boolean> & Serializable)() -> getBestResult().getFitness() >= stopConditionMaxFitness);
+                    break;
+                case BY_TIME:
+                    evoEngine.addStopCondition(StopCondition.BY_TIME.name(), (Supplier<Boolean> & Serializable)() -> Instant.now().isAfter(startRunTime.plusSeconds(periodTimeConditionInSeconds)));
                     break;
             }
         }
     }
 
-    public StopCondition getStopCondition() {
-        return stopCondition;
+    public void removeStopCondition(StopCondition stopCondition) {
+        evoEngine.removeStopCondition(stopCondition.name());
     }
 
     public Engine() {
         this.multiThreaded = false;
         this.state = State.IDLE;
-        this.stopCondition = StopCondition.MAX_GENERATIONS;
         this.evoEngine = new TimeTableEvolutionEngine();
         this.evoEngine.addFinishRunListener(this::algorithmFinished);
         this.evoEngineSettings = new evoEngineSettingsWrapper((TimeTableEvolutionEngine) this.evoEngine);
@@ -156,6 +164,7 @@ public class Engine implements Serializable {
 
     public void startAlgorithm() {
         this.state = State.RUNNING;
+        startRunTime = Instant.now();
         this.evoEngine.runAlgorithm();
 //        if (multiThreaded) {
 //            new Thread(this.evoEngine::runAlgorithm, "Evolution Algorithm thread").start();

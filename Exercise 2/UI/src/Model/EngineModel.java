@@ -1,10 +1,8 @@
 package Model;
 
-import engine.base.Crossover;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import logic.Engine;
-import logic.evoAlgorithm.crossovers.AspectOriented;
 import logic.evoEngineSettingsWrapper;
 import logic.schema.exceptions.XMLExtractException;
 import logic.timeTable.TimeTable;
@@ -19,6 +17,7 @@ public class EngineModel {
     // Model Properties
     private final ObjectProperty<TimeTable> bestSolution = new SimpleObjectProperty<>();
     private final BooleanProperty isWorking = new SimpleBooleanProperty(false);
+    private final BooleanProperty isPaused = new SimpleBooleanProperty(false);
     private final BooleanProperty isFileLoaded = new SimpleBooleanProperty(false);
 
 
@@ -29,6 +28,10 @@ public class EngineModel {
 
     public BooleanProperty isWorkingProperty() {
         return isWorking;
+    }
+
+    public BooleanProperty isPausedProperty() {
+        return isPaused;
     }
 
     public BooleanProperty isFileLoadedProperty() {
@@ -74,6 +77,7 @@ public class EngineModel {
 
     public void startAlgorithm() {
         setIsWorking(true);
+        setIsPaused(false);
         theEngine.setUpdateGenerationInterval(5);
         theEngine.startAlgorithm();
     }
@@ -82,16 +86,18 @@ public class EngineModel {
         theEngine.stopAlgorithm();
         onGenerationEnd();
         setIsWorking(false);
+        setIsPaused(false);
     }
 
     public void pauseAlgorithm() {
         theEngine.pauseAlgorithm();
         onGenerationEnd();
         setIsWorking(false);
+        setIsPaused(true);
     }
 
     public void setStopCondition(Engine.StopCondition stopCondition) {
-        theEngine.setStopCondition(stopCondition);
+        theEngine.addStopCondition(stopCondition);
     }
 
     public void setMaxGenerationsCondition(int maxGenerationsCondition) {
@@ -104,5 +110,9 @@ public class EngineModel {
 
     private void setIsWorking(boolean isWorking) {
         Platform.runLater(() ->this.isWorking.set(isWorking));
+    }
+
+    private void setIsPaused(boolean isPaused) {
+        Platform.runLater(() -> this.isPaused.set(isPaused));
     }
 }

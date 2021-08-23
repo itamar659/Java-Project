@@ -16,6 +16,9 @@ public class StartStopPanelController {
 
     public void setUiAdapter(UIAdapter uiAdapter) {
         this.uiAdapter = uiAdapter;
+
+        isRunning.bind(uiAdapter.getTheEngine().isWorkingProperty());
+        isPaused.bind(uiAdapter.getTheEngine().isPausedProperty());
     }
 
     @FXML
@@ -26,29 +29,23 @@ public class StartStopPanelController {
 
     @FXML
     private void initialize() {
-        isPaused.addListener((observable, oldValue, newValue) ->
-                buttonStartPause.setText(newValue ? "Start" : "Pause"));
+        isRunning.addListener((observable, oldValue, newValue) ->
+                buttonStartPause.setText(!newValue ? "Start" : "Pause"));
 
-        buttonStop.disableProperty().bind(isRunning.not());
+        buttonStop.disableProperty().bind((isPaused.or(isRunning).not()));
     }
 
     @FXML
     void buttonStartPause_Clicked(ActionEvent event) {
-        isRunning.set(true);
-
-        if (isPaused.get()) {
+        if (!isRunning.get() || isPaused.get()) {
             uiAdapter.startAlgorithm();
         } else {
             uiAdapter.pauseAlgorithm();
         }
-
-        isPaused.set(!isPaused.get());
     }
 
     @FXML
     void buttonStop_Clicked(ActionEvent event) {
-        isRunning.set(false);
-
         uiAdapter.stopAlgorithm();
     }
 
