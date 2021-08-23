@@ -1,8 +1,10 @@
 package engine.base;
 
+import engine.configurable.Configurable;
+
 import java.io.Serializable;
 
-public interface Crossover<T> extends Serializable {
+public interface Crossover<T> extends Serializable, Configurable {
 
     int getCuttingPoints();
 

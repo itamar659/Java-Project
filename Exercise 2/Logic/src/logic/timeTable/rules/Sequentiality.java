@@ -1,8 +1,8 @@
 package logic.timeTable.rules;
 
-import logic.configurable.Configurable;
-import logic.configurable.Configuration;
-import logic.configurable.ReadOnlyConfiguration;
+import engine.configurable.Configurable;
+import engine.configurable.Configuration;
+import engine.configurable.ReadOnlyConfiguration;
 import logic.evoAlgorithm.TimeTableProblem;
 import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rule;
@@ -32,6 +32,11 @@ public class Sequentiality extends Rule<TimeTable> implements Configurable {
         }
 
         configuration.setParameter(parameterName, value);
+    }
+
+    @Override
+    public String getConfigurableName() {
+        return "Sequentiality";
     }
 
     @Override

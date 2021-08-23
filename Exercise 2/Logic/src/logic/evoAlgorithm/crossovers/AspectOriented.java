@@ -1,9 +1,9 @@
 package logic.evoAlgorithm.crossovers;
 
 import engine.base.*;
-import logic.configurable.Configurable;
-import logic.configurable.Configuration;
-import logic.configurable.ReadOnlyConfiguration;
+import engine.configurable.Configurable;
+import engine.configurable.Configuration;
+import engine.configurable.ReadOnlyConfiguration;
 import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
 
@@ -39,6 +39,11 @@ public class AspectOriented implements Crossover<TimeTable>, Configurable {
     }
 
     @Override
+    public String getConfigurableName() {
+        return "Aspect Oriented";
+    }
+
+    @Override
     public int getCuttingPoints() {
         return cuttingPoints;
     }
@@ -46,10 +51,12 @@ public class AspectOriented implements Crossover<TimeTable>, Configurable {
     @Override
     public void setCuttingPoints(int cuttingPoints) {
         this.cuttingPoints = cuttingPoints;
+        this.configuration.setParameter("Cutting Points", ""+cuttingPoints);
     }
 
     public AspectOriented() {
         this.configuration = new Configuration(
+                new AbstractMap.SimpleEntry<>("Cutting Points", this.cuttingPoints + ""),
                 new AbstractMap.SimpleEntry<>(PARAMETER_ORIENTATION, Orientation.CLASS.name())
         );
     }

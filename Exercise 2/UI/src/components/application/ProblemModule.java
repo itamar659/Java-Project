@@ -18,6 +18,7 @@ import java.sql.Time;
 public class ProblemModule {
 
     private TimeTableProblem theProblem;
+    private evoEngineSettingsWrapper engineWrapper;
 
     // General information about the problem
     private final ListProperty<Teacher> teachers = new SimpleListProperty<>();
@@ -38,6 +39,7 @@ public class ProblemModule {
 
     public void setTheProblem(TimeTableProblem theProblem, evoEngineSettingsWrapper settingsWrapper) {
         this.theProblem = theProblem;
+        this.engineWrapper = settingsWrapper;
 
         teachers.set(FXCollections.observableArrayList(theProblem.getTeachers()));
         classes.set(FXCollections.observableArrayList(theProblem.getClasses()));
@@ -73,17 +75,15 @@ public class ProblemModule {
         return hours;
     }
 
-    public ListProperty<Rule<TimeTable>> rulesProperty() {
-        return rules;
-    }
+    public ListProperty<Rule<TimeTable>> rulesProperty() { return rules; }
 
     public IntegerProperty hardRuleWeightProperty() {
         return hardRuleWeight;
     }
 
-    public  StringProperty crossoverProperty() { return crossover;}
+    public StringProperty crossoverProperty() { return crossover;}
 
-    public  StringProperty selectionProperty() { return selection;}
+    public StringProperty selectionProperty() { return selection;}
 
     public IntegerProperty populationProperty() { return population; }
 }

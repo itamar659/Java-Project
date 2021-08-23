@@ -1,4 +1,4 @@
-package logic.configurable;
+package engine.configurable;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,6 +8,8 @@ public class Configuration {
 
     private final Map<String, String> parameters = new HashMap<>();
     private final ReadOnlyConfiguration readOnlyConfiguration;
+
+    public Map<String,String> getParameters() { return this.parameters; }
 
     @SafeVarargs
     public Configuration(Map.Entry<String, String>... params) {

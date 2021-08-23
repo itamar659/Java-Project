@@ -47,7 +47,7 @@ public class UIAdapter {
     }
 
     public void pauseAlgorithm() {
-        theEngine.stopAlgorithm(); // Create pause method
+        theEngine.stopAlgorithm(); //TODO: Create pause method
     }
 
     public void stopAlgorithm() {

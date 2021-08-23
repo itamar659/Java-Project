@@ -1,4 +1,6 @@
-package logic.configurable;
+package engine.configurable;
+
+import java.util.Map;
 
 // A class to hide the setter for parameters value.
 // Only instances of Configurable would be able to set the parameters.
@@ -17,4 +19,7 @@ public class ReadOnlyConfiguration {
     public String getParameter(String paramName) {
         return configuration.getParameter(paramName);
     }
+
+    public Map<String,String> getParameters() { return configuration.getParameters(); }
+
 }

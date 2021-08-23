@@ -1,11 +1,14 @@
 package logic.evoAlgorithm.crossovers;
 
+import engine.configurable.Configuration;
+import engine.configurable.ReadOnlyConfiguration;
 import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
 import engine.base.Crossover;
 import engine.base.Population;
 import engine.base.Solution;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -15,6 +18,7 @@ public class DayTimeOriented implements Crossover<TimeTable> {
 
     private static final Random rand = new Random();
 
+    private final Configuration configuration;
     private int cuttingPoints;
 
     @Override
@@ -26,6 +30,7 @@ public class DayTimeOriented implements Crossover<TimeTable> {
     public void setCuttingPoints(int cuttingPoints) {
         // Can be bigger from the population. it'll cut every single block
         this.cuttingPoints = cuttingPoints;
+        this.configuration.setParameter("Cutting Points", ""+cuttingPoints);
     }
 
     // Very generic method (but may not answer every crossover)
@@ -54,6 +59,29 @@ public class DayTimeOriented implements Crossover<TimeTable> {
         }
 
         return newPopulation;
+    }
+
+
+    //TODO
+    @Override
+    public ReadOnlyConfiguration getConfiguration() {
+        return configuration.getProxy();
+    }
+
+    public DayTimeOriented() {
+        this.configuration = new Configuration(
+                new AbstractMap.SimpleEntry<>("Cutting Points", "" + this.cuttingPoints)
+        );
+    }
+
+    @Override
+    public void setParameter(String parameterName, String value) {
+
+    }
+
+    @Override
+    public String getConfigurableName() {
+        return "DayTime Oriented";
     }
 
     private static class Parents {

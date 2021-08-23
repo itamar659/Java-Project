@@ -1,14 +1,14 @@
 package logic.evoAlgorithm.selections;
 
 import engine.base.*;
-import logic.configurable.Configurable;
-import logic.configurable.Configuration;
-import logic.configurable.ReadOnlyConfiguration;
+import engine.configurable.Configurable;
+import engine.configurable.Configuration;
+import engine.configurable.ReadOnlyConfiguration;
 import logic.timeTable.TimeTable;
 
 import java.util.AbstractMap;
 
-public class Truncation implements Selection<TimeTable>, Configurable {
+public class Truncation implements Selection<TimeTable>{
 
     private static final String PARAMETER_TOP_PERCENT = "TopPercent";
 
@@ -28,6 +28,11 @@ public class Truncation implements Selection<TimeTable>, Configurable {
         }
 
         configuration.setParameter(parameterName, value);
+    }
+
+    @Override
+    public String getConfigurableName() {
+        return "Truncation";
     }
 
     public Truncation() {
