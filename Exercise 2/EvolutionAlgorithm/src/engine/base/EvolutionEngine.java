@@ -20,7 +20,7 @@ public abstract class EvolutionEngine<T> implements Serializable {
     private int currentGeneration;
     private Map<String, Supplier<Boolean>> stopConditions;
     private Solution<T> bestSolution;
-    private Map<Integer, Float> historyGeneration2Fitness;
+    private Map<Integer, Solution<T>> historyGeneration2Fitness;
 
     protected boolean isRunning;
     protected boolean isPaused;
@@ -84,8 +84,8 @@ public abstract class EvolutionEngine<T> implements Serializable {
         return currentGeneration;
     }
 
-    public synchronized Map<Integer, Float> getHistoryGeneration2Fitness() {
-        return (Map<Integer, Float>) ((TreeMap<Integer, Float>)historyGeneration2Fitness).clone();
+    public synchronized Map<Integer, Solution<T>> getHistoryGeneration2Fitness() {
+        return (Map<Integer, Solution<T>>) ((TreeMap<Integer, Solution<T>>)historyGeneration2Fitness).clone();
     }
 
     public void setUpdateGenerationInterval(int updateGenerationInterval) {
@@ -148,8 +148,8 @@ public abstract class EvolutionEngine<T> implements Serializable {
         this.population = null;
     }
 
-    private synchronized void updateHistoryGeneration2Fitness(Integer gen, Float fitness) {
-        historyGeneration2Fitness.put(gen, fitness);
+    private synchronized void updateHistoryGeneration2Fitness(Integer gen, Solution<T> solution) {
+        historyGeneration2Fitness.put(gen, solution);
     }
 
     public void runAlgorithm() {
@@ -171,7 +171,7 @@ public abstract class EvolutionEngine<T> implements Serializable {
 
             // Call listeners
             if (currentGeneration % updateGenerationInterval == 0) {
-                updateHistoryGeneration2Fitness(currentGeneration, population.getBestSolutionFitness().getFitness());
+                updateHistoryGeneration2Fitness(currentGeneration, population.getBestSolutionFitness());
                 onEndOfGeneration();
             }
 
@@ -205,7 +205,7 @@ public abstract class EvolutionEngine<T> implements Serializable {
         }
 
         setBestSolution(population.getBestSolutionFitness());
-        updateHistoryGeneration2Fitness(currentGeneration, population.getBestSolutionFitness().getFitness());
+        updateHistoryGeneration2Fitness(currentGeneration, population.getBestSolutionFitness());
         isRunning = false;
 
         onFinish();

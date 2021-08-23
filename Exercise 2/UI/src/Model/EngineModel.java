@@ -47,7 +47,7 @@ public class EngineModel {
     }
 
     private void onGenerationEnd () {
-        bestSolution.set(theEngine.getBestResult());
+        Platform.runLater(() -> bestSolution.set(theEngine.getBestResult()));
     }
 
     public void validateXMLFile(File xmlFilePath) throws JAXBException, XMLExtractException {

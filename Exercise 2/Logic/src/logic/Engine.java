@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 
 // Wrapper with more functionality to EvolutionEngine
@@ -103,8 +104,8 @@ public class Engine implements Serializable {
         return (TimeTable) evoEngine.getBestSolution();
     }
 
-    public Map<Integer, Float> getHistoryGeneration2Fitness() {
-        return evoEngine.getHistoryGeneration2Fitness();
+    public Map<Integer, TimeTable> getHistoryGeneration2Fitness() {
+        return (Map<Integer, TimeTable>) ((TreeMap)evoEngine.getHistoryGeneration2Fitness());
     }
 
     public Instant getStartRunTime() {

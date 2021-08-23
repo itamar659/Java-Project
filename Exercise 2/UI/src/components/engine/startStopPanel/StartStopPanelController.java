@@ -30,7 +30,9 @@ public class StartStopPanelController {
     @FXML
     private void initialize() {
         isRunning.addListener((observable, oldValue, newValue) ->
-                buttonStartPause.setText(!newValue ? "Start" : "Pause"));
+                    buttonStartPause.setText(isPaused.get() ? "Resume" : (!newValue ? "Start" : "Pause")));
+        isPaused.addListener((observable, oldValue, newValue) ->
+                    buttonStartPause.setText(isRunning.get() ? "Pause" : (newValue ? "Resume" : "Start")));
 
         buttonStop.disableProperty().bind((isPaused.or(isRunning).not()));
     }
