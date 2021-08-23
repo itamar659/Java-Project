@@ -15,11 +15,28 @@ import java.net.URL;
 
 public class CenterHolderController {
 
-    private UIAdapter uiAdapter;
+    @FXML
+    private ProgressBar progressBarTask1;
 
-    @FXML private Label labelPrecents;
-    @FXML private ProgressBar progressBarTask;
-    @FXML private StackPane stackPaneCenter;
+    @FXML
+    private Label labelTask1Percentage;
+
+    @FXML
+    private ProgressBar progressBarTask2;
+
+    @FXML
+    private ProgressBar progressBarTask3;
+
+    @FXML
+    private Label labelTask2Percentage;
+
+    @FXML
+    private Label labelTask3Percentage;
+
+    @FXML
+    private StackPane stackPaneCenter;
+
+    private UIAdapter uiAdapter;
 
     private TimeTablePanelController timeTablePanelController;
 

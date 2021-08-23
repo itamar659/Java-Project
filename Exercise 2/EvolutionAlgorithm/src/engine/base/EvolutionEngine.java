@@ -18,9 +18,9 @@ public abstract class EvolutionEngine<T> implements Serializable {
     protected int elitism;
 
     private int currentGeneration;
-    private Supplier<Boolean> stopCondition;
+    private Map<String, Supplier<Boolean>> stopConditions;
     private Solution<T> bestSolution;
-    private Map<Integer, Float> historyGeneration2Fitness;
+    private Map<Integer, Solution<T>> historyGeneration2Fitness;
 
     protected boolean isRunning;
     protected boolean isPaused;
@@ -84,16 +84,24 @@ public abstract class EvolutionEngine<T> implements Serializable {
         return currentGeneration;
     }
 
-    public synchronized Map<Integer, Float> getHistoryGeneration2Fitness() {
-        return (Map<Integer, Float>) ((TreeMap<Integer, Float>)historyGeneration2Fitness).clone();
+    public synchronized Map<Integer, Solution<T>> getHistoryGeneration2Fitness() {
+        return (Map<Integer, Solution<T>>) ((TreeMap<Integer, Solution<T>>)historyGeneration2Fitness).clone();
     }
 
     public void setUpdateGenerationInterval(int updateGenerationInterval) {
         this.updateGenerationInterval = updateGenerationInterval;
     }
 
-    public void setStopCondition(Supplier<Boolean> stopCondition) {
-        this.stopCondition = stopCondition;
+    public void addStopCondition(String id, Supplier<Boolean> stopCondition) {
+        this.stopConditions.put(id, stopCondition);
+    }
+
+    public void removeStopCondition(String id) {
+        if (!this.stopConditions.containsKey(id)) {
+            throw new IllegalArgumentException("Cannot remove an id that not in the stop conditions map");
+        }
+
+        this.stopConditions.remove(id);
     }
 
     public synchronized Solution<T> getBestSolution() {
@@ -132,15 +140,16 @@ public abstract class EvolutionEngine<T> implements Serializable {
         this.updateGenerationInterval = 100;
         this.generationEndListeners = new Listeners();
         this.finishRunListeners = new Listeners();
+        this.stopConditions = new HashMap<>();
     }
 
     public void clearHistory() {
-        this.historyGeneration2Fitness = new TreeMap<>();
+        this.historyGeneration2Fitness.clear();
         this.population = null;
     }
 
-    private synchronized void updateHistoryGeneration2Fitness(Integer gen, Float fitness) {
-        historyGeneration2Fitness.put(gen, fitness);
+    private synchronized void updateHistoryGeneration2Fitness(Integer gen, Solution<T> solution) {
+        historyGeneration2Fitness.put(gen, solution);
     }
 
     public void runAlgorithm() {
@@ -151,13 +160,18 @@ public abstract class EvolutionEngine<T> implements Serializable {
             setBestSolution(population.getBestSolutionFitness());
         }
 
-        for (; isRunning && isPaused && !stopCondition.get(); currentGeneration++) {
+        isPaused = false;
+        boolean[] shouldStop = {false};
+        stopConditions.values().forEach(condition -> {
+            shouldStop[0] = true;
+        });
+        for (; isRunning && !isPaused && !shouldStop[0]; currentGeneration++) {
 
             setBestSolution(population.getBestSolutionFitness());
 
             // Call listeners
             if (currentGeneration % updateGenerationInterval == 0) {
-                updateHistoryGeneration2Fitness(currentGeneration, population.getBestSolutionFitness().getFitness());
+                updateHistoryGeneration2Fitness(currentGeneration, population.getBestSolutionFitness());
                 onEndOfGeneration();
             }
 
@@ -183,11 +197,16 @@ public abstract class EvolutionEngine<T> implements Serializable {
 
             // Step 4.1 - Add the elite population
             population = population.mergePopulations(elitePop);
+
+            // Check conditions
+            stopConditions.values().forEach(condition -> {
+                shouldStop[0] = true;
+            });
         }
 
         setBestSolution(population.getBestSolutionFitness());
-        updateHistoryGeneration2Fitness(currentGeneration, population.getBestSolutionFitness().getFitness());
-        stopAlgorithm();
+        updateHistoryGeneration2Fitness(currentGeneration, population.getBestSolutionFitness());
+        isRunning = false;
 
         onFinish();
     }

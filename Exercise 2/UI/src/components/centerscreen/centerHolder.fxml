@@ -11,33 +11,64 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.291" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.centerscreen.CenterHolderController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.281" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.centerscreen.CenterHolderController">
    <bottom>
       <VBox BorderPane.alignment="CENTER">
          <children>
             <Separator />
-            <GridPane>
+            <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                <columnConstraints>
-                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity" />
-                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity" />
+                  <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity" />
+                  <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity" />
                   <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="82.0" text="Task Progress:" textAlignment="CENTER">
+                  <Label alignment="CENTER" contentDisplay="CENTER" text="Task 1 Progress:" textAlignment="CENTER">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </Label>
-                  <ProgressBar fx:id="progressBarTask" maxWidth="1.7976931348623157E308" progress="0.0" GridPane.columnIndex="2">
+                  <ProgressBar fx:id="progressBarTask1" maxWidth="1.7976931348623157E308" progress="0.0" GridPane.columnIndex="2">
                      <padding>
                         <Insets left="10.0" right="10.0" />
                      </padding>
                   </ProgressBar>
-                  <Label fx:id="labelPrecents" alignment="CENTER" contentDisplay="CENTER" text="[holder]" textAlignment="CENTER" GridPane.columnIndex="1">
+                  <Label fx:id="labelTask1Percentage" alignment="CENTER" contentDisplay="CENTER" text="[holder]" textAlignment="CENTER" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <ProgressBar fx:id="progressBarTask2" maxWidth="1.7976931348623157E308" progress="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </ProgressBar>
+                  <ProgressBar fx:id="progressBarTask3" maxWidth="1.7976931348623157E308" progress="0.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </ProgressBar>
+                  <Label fx:id="labelTask2Percentage" alignment="CENTER" contentDisplay="CENTER" text="[holder]" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="labelTask3Percentage" alignment="CENTER" contentDisplay="CENTER" text="[holder]" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label alignment="CENTER" contentDisplay="CENTER" text="Task 2 Progress:" textAlignment="CENTER" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label alignment="CENTER" contentDisplay="CENTER" text="Task 3 Progress:" textAlignment="CENTER" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
