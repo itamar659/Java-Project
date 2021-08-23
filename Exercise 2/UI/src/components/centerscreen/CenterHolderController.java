@@ -25,8 +25,6 @@ public class CenterHolderController {
 
     @FXML
     private void initialize() {
-        timeTablePanelController = new TimeTablePanelController();
-
         FXMLLoader loader = new FXMLLoader();
         URL url = LessonsInfoResourcesConsts.TIME_TABLE_PANEL_FXML_RESOURCE;
         loader.setLocation(url);

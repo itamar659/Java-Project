@@ -168,6 +168,10 @@ public class Engine implements Serializable {
         this.evoEngine.stopAlgorithm();
     }
 
+    public void pauseAlgorithm() {
+        this.evoEngine.pauseAlgorithm();
+    }
+
     private void algorithmFinished() {
         this.state = State.COMPLETED;
     }

@@ -1,9 +1,10 @@
 package Model;
 
+import engine.base.Crossover;
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import logic.Engine;
+import logic.evoAlgorithm.crossovers.AspectOriented;
 import logic.evoEngineSettingsWrapper;
 import logic.schema.exceptions.XMLExtractException;
 import logic.timeTable.TimeTable;
@@ -17,6 +18,8 @@ public class EngineModel {
 
     // Model Properties
     private final ObjectProperty<TimeTable> bestSolution = new SimpleObjectProperty<>();
+    private final BooleanProperty isWorking = new SimpleBooleanProperty(false);
+    private final BooleanProperty isFileLoaded = new SimpleBooleanProperty(false);
 
 
     // Properties Getters
@@ -24,14 +27,20 @@ public class EngineModel {
         return bestSolution;
     }
 
-    public Engine getTheEngine() {
-        return theEngine;
+    public BooleanProperty isWorkingProperty() {
+        return isWorking;
     }
 
+    public BooleanProperty isFileLoadedProperty() {
+        return isFileLoaded;
+    }
+
+    // Default Constructor
     public EngineModel() {
         theEngine = new Engine();
         theEngine.addFinishRunListener( () -> Platform.runLater(this::onGenerationEnd));
         theEngine.addGenerationEndListener(() -> Platform.runLater(this::onGenerationEnd));
+
     }
 
     private void onGenerationEnd () {
@@ -39,11 +48,20 @@ public class EngineModel {
     }
 
     public void validateXMLFile(File xmlFilePath) throws JAXBException, XMLExtractException {
-        theEngine.validateXMLFile(xmlFilePath);
+        setIsWorking(true);
+        try {
+            theEngine.validateXMLFile(xmlFilePath);
+        }
+        finally {
+            setIsWorking(false);
+        }
     }
 
     public void updateEvoEngine() {
+        setIsWorking(true);
         theEngine.updateEvoEngine();
+        Platform.runLater(() -> bestSolution.set(null));
+        setIsWorking(false);
     }
 
     public void addGenerationEndListener(Runnable onGeneration) {
@@ -55,8 +73,7 @@ public class EngineModel {
     }
 
     public void startAlgorithm() {
-        theEngine.setStopCondition(Engine.StopCondition.MAX_GENERATIONS);
-        theEngine.setMaxGenerationsCondition(1000);
+        setIsWorking(true);
         theEngine.setUpdateGenerationInterval(5);
         theEngine.startAlgorithm();
     }
@@ -64,9 +81,28 @@ public class EngineModel {
     public void stopAlgorithm() {
         theEngine.stopAlgorithm();
         onGenerationEnd();
+        setIsWorking(false);
+    }
+
+    public void pauseAlgorithm() {
+        theEngine.pauseAlgorithm();
+        onGenerationEnd();
+        setIsWorking(false);
+    }
+
+    public void setStopCondition(Engine.StopCondition stopCondition) {
+        theEngine.setStopCondition(stopCondition);
+    }
+
+    public void setMaxGenerationsCondition(int maxGenerationsCondition) {
+        theEngine.setMaxGenerationsCondition(maxGenerationsCondition);
     }
 
     public evoEngineSettingsWrapper getEvoEngineSettings() {
         return theEngine.getEvoEngineSettings();
+    }
+
+    private void setIsWorking(boolean isWorking) {
+        Platform.runLater(() ->this.isWorking.set(isWorking));
     }
 }

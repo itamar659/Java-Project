@@ -24,7 +24,7 @@
                   </Label>
                   <HBox>
                      <children>
-                        <Button fx:id="buttonOpenFile" mnemonicParsing="false" onAction="#openButtonClicked" prefHeight="25.0" prefWidth="160.0" text="Open File">
+                        <Button fx:id="buttonOpenFile" mnemonicParsing="false" onAction="#buttonOpenFile_Clicked" prefHeight="25.0" prefWidth="160.0" text="Open File">
                            <font>
                               <Font name="Century Gothic" size="14.0" />
                            </font>

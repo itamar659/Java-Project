@@ -22,7 +22,8 @@ public abstract class EvolutionEngine<T> implements Serializable {
     private Solution<T> bestSolution;
     private Map<Integer, Float> historyGeneration2Fitness;
 
-    private boolean isRunning;
+    protected boolean isRunning;
+    protected boolean isPaused;
     private int updateGenerationInterval;
     private final Listeners generationEndListeners;
     private final Listeners finishRunListeners;
@@ -144,10 +145,13 @@ public abstract class EvolutionEngine<T> implements Serializable {
 
     public void runAlgorithm() {
         this.isRunning = true;
-        this.historyGeneration2Fitness.clear();
-        setBestSolution(population.getBestSolutionFitness());
+        if (!isPaused) {
+            this.currentGeneration = 0;
+            this.historyGeneration2Fitness.clear();
+            setBestSolution(population.getBestSolutionFitness());
+        }
 
-        for (currentGeneration = 0; isRunning && !stopCondition.get(); currentGeneration++) {
+        for (; isRunning && isPaused && !stopCondition.get(); currentGeneration++) {
 
             setBestSolution(population.getBestSolutionFitness());
 
@@ -183,10 +187,18 @@ public abstract class EvolutionEngine<T> implements Serializable {
 
         setBestSolution(population.getBestSolutionFitness());
         updateHistoryGeneration2Fitness(currentGeneration, population.getBestSolutionFitness().getFitness());
+        stopAlgorithm();
+
         onFinish();
     }
 
     public void stopAlgorithm() {
+        isPaused = false;
+        isRunning = false;
+    }
+
+    public void pauseAlgorithm() {
+        isPaused = true;
         isRunning = false;
     }
 
