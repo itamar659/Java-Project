@@ -24,24 +24,29 @@ public class RawInfoController {
     private void initialize() {
 
         timeTableSolution.addListener((observable, oldValue, newValue) -> {
+            // The first node has the lines highlights
             Node saveGroupForTable = gridLessonsTable.getChildren().get(0);
             gridLessonsTable.getChildren().clear();
             gridLessonsTable.getChildren().add(saveGroupForTable);
 
+            // Add headers
             gridLessonsTable.addRow(0,
                     new Label("Day"), new Label("Hour"), new Label("Class"), new Label("Teacher"), new Label("Course"));
 
+            // Add the body
             int[] rowIdx = {1};
-            timeTableSolution.get().getLessons().forEach(lesson -> {
-                Label day = new Label(Integer.toString(lesson.getDay() + 1));
-                Label hour = new Label(Integer.toString(lesson.getHour() + 1));
-                Label aclass = new Label(String.format("%s (%s)", lesson.getaClass().getName(), lesson.getaClass().getId()));
-                Label teacher = new Label(String.format("%s (%s)", lesson.getTeacher().getName(), lesson.getTeacher().getId()));
-                Label course = new Label(String.format("%s (%s)", lesson.getCourse().getName(), lesson.getCourse().getId()));
+            if (timeTableSolution.get() != null) {
+                timeTableSolution.get().getLessons().forEach(lesson -> {
+                    Label day = new Label(Integer.toString(lesson.getDay() + 1));
+                    Label hour = new Label(Integer.toString(lesson.getHour() + 1));
+                    Label aclass = new Label(String.format("%s (%s)", lesson.getaClass().getName(), lesson.getaClass().getId()));
+                    Label teacher = new Label(String.format("%s (%s)", lesson.getTeacher().getName(), lesson.getTeacher().getId()));
+                    Label course = new Label(String.format("%s (%s)", lesson.getCourse().getName(), lesson.getCourse().getId()));
 
-                gridLessonsTable.addRow(rowIdx[0], day, hour, aclass, teacher, course);
-                rowIdx[0]++;
-            });
+                    gridLessonsTable.addRow(rowIdx[0], day, hour, aclass, teacher, course);
+                    rowIdx[0]++;
+                });
+            }
 
             gridLessonsTable.getChildren().forEach(child -> {
                 if (child instanceof Label) {

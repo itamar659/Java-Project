@@ -13,7 +13,9 @@ public class TimeTableEvolutionEngine extends EvolutionEngine<TimeTable> {
     @Override
     public void runAlgorithm() {
         // Step 1 - initialize the population
-        population = new TimeTablePopulation(populationSize, problem);
+        if (!isPaused) {
+            population = new TimeTablePopulation(populationSize, problem);
+        }
         super.runAlgorithm();
     }
 }

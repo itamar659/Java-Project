@@ -6,6 +6,8 @@ import components.engine.startStopPanel.StartStopPanelController;
 import components.problemInfo.ProbInfoController;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,7 +31,6 @@ public class ApplicationController {
     private CenterHolderController centerHolderController;
     private StartStopPanelController startStopPanelController;
 
-    private final SimpleBooleanProperty isFileLoaded = new SimpleBooleanProperty();
     private final SimpleStringProperty selectedFileProperty = new SimpleStringProperty();
 
     public void setPrimaryStage(Stage primaryStage) {
@@ -55,11 +56,18 @@ public class ApplicationController {
     @FXML
     private void initialize() {
         pathLbl.textProperty().bind(selectedFileProperty);
+        buttonOpenFile.disableProperty().bind(theEngine.isWorkingProperty());
+        selectedFileProperty.addListener((observable, oldValue, newValue) -> {
+            if (!(selectedFileProperty.get() != null && selectedFileProperty.get().equals(""))) {
+                theEngine.isFileLoadedProperty().set(true);
+            }
+
+        });
     }
 
     @FXML
-    private void openButtonClicked(ActionEvent event) {
-        if (isFileLoaded.get()) {
+    private void buttonOpenFile_Clicked(ActionEvent event) {
+        if (theEngine.isFileLoadedProperty().get()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                     "You'll erase your previous information. Are you sure you want to continue?");
             alert.showAndWait();
@@ -85,49 +93,17 @@ public class ApplicationController {
     }
 
     private void processFile(String path) {
-        buttonOpenFile.setDisable(true);
-
         adapter.loadFile(
                 // File path
                 path,
                 // On success
                 event -> {
                     selectedFileProperty.set(path);
-                    isFileLoaded.set(true);
 
                     loadProblemInfo();
                     loadCenterHolder();
                     loadStartStopPanel();
                 });
-    }
-
-    private void loadStartStopPanel() {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/components/engine/startStopPanel/StartStopPanel.fxml")); // TODO: Add to components consts
-        try {
-            Node node = loader.load();
-            startStopPanelController = loader.getController();
-            startStopPanelController.setUiAdapter(adapter);
-            stackPaneRight.getChildren().clear();
-            stackPaneRight.getChildren().add(node);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        buttonOpenFile.setDisable(false);
-    }
-
-    private void loadCenterHolder() {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/components/centerscreen/centerHolder.fxml")); // TODO: Add to components consts
-        try {
-            Node node = loader.load();
-            centerHolderController = loader.getController();
-            centerHolderController.setUiAdapter(adapter);
-            scrollPaneCenter.setContent(node);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        buttonOpenFile.setDisable(false);
     }
 
     private void loadProblemInfo() {
@@ -144,6 +120,33 @@ public class ApplicationController {
         }
     }
 
+    private void loadCenterHolder() {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/components/centerscreen/centerHolder.fxml")); // TODO: Add to components consts
+        try {
+            Node node = loader.load();
+            centerHolderController = loader.getController();
+            centerHolderController.setUiAdapter(adapter);
+            scrollPaneCenter.setContent(node);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadStartStopPanel() { // TODO: This is temporary. Need to cchange start stop panel location
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/components/engine/startStopPanel/StartStopPanel.fxml")); // TODO: Add to components consts
+        try {
+            Node node = loader.load();
+            startStopPanelController = loader.getController();
+            startStopPanelController.setUiAdapter(adapter);
+            stackPaneRight.getChildren().clear();
+            stackPaneRight.getChildren().add(node);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void alertMessageLoadNewFile(Task<Boolean> task) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("Importing file");
@@ -151,7 +154,6 @@ public class ApplicationController {
         task.setOnFailed(event -> {
             event.getSource().getException().printStackTrace();
             alert.setAlertType(Alert.AlertType.ERROR);
-            buttonOpenFile.setDisable(false);
         });
 
         alert.contentTextProperty().bind(task.messageProperty());
