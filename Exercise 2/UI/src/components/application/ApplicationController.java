@@ -2,12 +2,9 @@ package components.application;
 
 import Model.EngineModel;
 import components.centerscreen.CenterHolderController;
-import components.engine.startStopPanel.StartStopPanelController;
+import components.engine.rightPanel.RightPanelController;
 import components.problemInfo.ProbInfoController;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,7 +26,7 @@ public class ApplicationController {
 
     private ProbInfoController probInfoController;
     private CenterHolderController centerHolderController;
-    private StartStopPanelController startStopPanelController;
+    private RightPanelController rightPanelController;
 
     private final SimpleStringProperty selectedFileProperty = new SimpleStringProperty();
 
@@ -102,7 +99,7 @@ public class ApplicationController {
 
                     loadProblemInfo();
                     loadCenterHolder();
-                    loadStartStopPanel();
+                    loadRightPanel();
                 });
     }
 
@@ -133,13 +130,13 @@ public class ApplicationController {
         }
     }
 
-    private void loadStartStopPanel() { // TODO: This is temporary. Need to cchange start stop panel location
+    private void loadRightPanel() { // TODO: This is temporary. Need to change start stop panel location
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/components/engine/startStopPanel/StartStopPanel.fxml")); // TODO: Add to components consts
+        loader.setLocation(getClass().getResource("/components/engine/rightPanel/RightPanel.fxml")); // TODO: Add to components consts
         try {
             Node node = loader.load();
-            startStopPanelController = loader.getController();
-            startStopPanelController.setUiAdapter(adapter);
+            rightPanelController = loader.getController();
+            rightPanelController.setUiAdapter(adapter);
             stackPaneRight.getChildren().clear();
             stackPaneRight.getChildren().add(node);
         } catch (IOException e) {

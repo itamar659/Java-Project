@@ -1,8 +1,8 @@
 package logic.evoAlgorithm.mutations;
 
-import logic.configurable.Configurable;
-import logic.configurable.Configuration;
-import logic.configurable.ReadOnlyConfiguration;
+import engine.configurable.Configurable;
+import engine.configurable.Configuration;
+import engine.configurable.ReadOnlyConfiguration;
 import logic.evoAlgorithm.TimeTableProblem;
 import engine.base.*;
 import logic.timeTable.Lesson;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Flipping extends Mutation<TimeTable> implements Configurable {
+public class Flipping extends Mutation<TimeTable> {
 
     private enum Component {
         S, T, C, H, D;
@@ -41,6 +41,11 @@ public class Flipping extends Mutation<TimeTable> implements Configurable {
         }
 
         configuration.setParameter(parameterName, value);
+    }
+
+    @Override
+    public String getConfigurableName() {
+        return "Filliping";
     }
 
     public Flipping() {

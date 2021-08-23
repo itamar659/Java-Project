@@ -1,6 +1,6 @@
 package logic.schema;
 
-import logic.configurable.Configurable;
+import engine.configurable.Configurable;
 import engine.base.Crossover;
 import engine.base.Mutation;
 import engine.base.Selection;
