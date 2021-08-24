@@ -1,4 +1,4 @@
-package logic.timeTable;
+package engine.base;
 
 public interface HasName {
 

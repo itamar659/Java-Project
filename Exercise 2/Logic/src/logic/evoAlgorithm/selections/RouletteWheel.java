@@ -3,11 +3,8 @@ package logic.evoAlgorithm.selections;
 import engine.base.Population;
 import engine.base.Selection;
 import engine.base.Solution;
-import engine.configurable.Configuration;
-import engine.configurable.ReadOnlyConfiguration;
 import logic.timeTable.TimeTable;
 
-import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -15,7 +12,11 @@ public class RouletteWheel implements Selection<TimeTable> {
 
     private static final Random rand = new Random();
 
-    private final Configuration configuration;
+
+    @Override
+    public String getName() {
+        return "Roulette Wheel";
+    }
 
     @Override
     public Population<TimeTable> select(Population<TimeTable> population, int reduceSize) {
@@ -44,27 +45,6 @@ public class RouletteWheel implements Selection<TimeTable> {
 
         System.out.printf("Roulette Wheel error. Couldn't find the solution at range '%f' of '%f'.%s", selectFitness, rouletteSize);
         return population.getSolutionByIndex(population.getSize());
-    }
-
-    @Override
-    public ReadOnlyConfiguration getConfiguration() {
-        return configuration.getProxy();
-    }
-
-    @Override
-    public void setParameter(String parameterName, String value) {
-        //TODO : talk with itamar on this
-    }
-
-    @Override
-    public String getConfigurableName() {
-        return "RouletteWheel";
-    }
-
-    public RouletteWheel() {
-        configuration = new Configuration(
-                new AbstractMap.SimpleEntry<>("Configuration", "none")
-        );
     }
 
 }

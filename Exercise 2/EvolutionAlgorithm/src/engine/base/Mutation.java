@@ -1,10 +1,8 @@
 package engine.base;
 
-import engine.configurable.Configurable;
-
 import java.io.Serializable;
 
-public abstract class Mutation<T> implements Serializable, Configurable {
+public abstract class Mutation<T> implements Serializable, HasName {
 
     protected double probability;
 

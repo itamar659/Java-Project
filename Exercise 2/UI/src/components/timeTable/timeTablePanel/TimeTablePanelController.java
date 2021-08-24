@@ -15,7 +15,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.AnchorPane;
-import logic.timeTable.HasName;
+import engine.base.HasName;
 import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
 
