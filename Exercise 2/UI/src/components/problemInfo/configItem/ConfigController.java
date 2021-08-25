@@ -17,16 +17,18 @@ public class ConfigController {
 
     @FXML
     private void initialize(){
+        listViewConfig.managedProperty().bind(listViewConfig.visibleProperty());
     }
 
-    public void setCongigName(String name) {
+    public void setConfigName(String name) {
         this.labelConfigName.setText(name);
         this.tilePaneMe.setText(name);
     }
 
     public void setListView(ObservableList<String> lst) {
-        this.listViewConfig.setManaged(true);
         this.listViewConfig.setItems(lst);
     }
+
+    public void setListViewVisible(boolean isVisible) { this.listViewConfig.setVisible(isVisible);}
 
 }

@@ -1,10 +1,8 @@
 package engine.base;
 
-import engine.configurable.Configurable;
-
 import java.io.Serializable;
 
-public interface Selection<T> extends Serializable, Configurable {
+public interface Selection<T> extends Serializable, HasName {
 
     Population<T> select(Population<T> population, int reduceSize);
 }

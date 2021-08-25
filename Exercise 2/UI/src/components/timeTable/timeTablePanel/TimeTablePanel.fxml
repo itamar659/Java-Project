@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.281" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.timeTable.timeTablePanel.TimeTablePanelController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.291" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.timeTable.timeTablePanel.TimeTablePanelController">
    <center>
       <AnchorPane fx:id="paneTimeTable" BorderPane.alignment="CENTER" />
    </center>
@@ -26,7 +26,12 @@
                   </Button>
                   <Button mnemonicParsing="false" onAction="#buttonRaw_Clicked" text="RAW">
                      <HBox.margin>
-                        <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#buttonConfig_Clicked" text="CONFIG">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="20.0" top="5.0" />
                      </HBox.margin>
                   </Button>
                </children>

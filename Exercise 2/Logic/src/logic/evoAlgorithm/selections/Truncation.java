@@ -1,18 +1,23 @@
 package logic.evoAlgorithm.selections;
 
 import engine.base.*;
-import engine.configurable.Configurable;
-import engine.configurable.Configuration;
-import engine.configurable.ReadOnlyConfiguration;
+import logic.evoAlgorithm.configurable.Configurable;
+import logic.evoAlgorithm.configurable.Configuration;
+import logic.evoAlgorithm.configurable.ReadOnlyConfiguration;
 import logic.timeTable.TimeTable;
 
 import java.util.AbstractMap;
 
-public class Truncation implements Selection<TimeTable>{
+public class Truncation implements Selection<TimeTable>, Configurable {
 
     private static final String PARAMETER_TOP_PERCENT = "TopPercent";
 
     private final Configuration configuration;
+
+    @Override
+    public String getName() {
+        return "Truncation";
+    }
 
     @Override
     public ReadOnlyConfiguration getConfiguration() {
@@ -28,11 +33,6 @@ public class Truncation implements Selection<TimeTable>{
         }
 
         configuration.setParameter(parameterName, value);
-    }
-
-    @Override
-    public String getConfigurableName() {
-        return "Truncation";
     }
 
     public Truncation() {

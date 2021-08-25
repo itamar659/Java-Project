@@ -1,5 +1,7 @@
 package logic.timeTable;
 
+import engine.base.HasName;
+
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;

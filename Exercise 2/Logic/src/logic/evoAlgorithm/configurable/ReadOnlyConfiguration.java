@@ -1,4 +1,4 @@
-package engine.configurable;
+package logic.evoAlgorithm.configurable;
 
 import java.util.Map;
 

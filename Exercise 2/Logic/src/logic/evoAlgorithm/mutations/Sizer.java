@@ -1,9 +1,9 @@
 package logic.evoAlgorithm.mutations;
 
 import engine.base.*;
-import engine.configurable.Configurable;
-import engine.configurable.Configuration;
-import engine.configurable.ReadOnlyConfiguration;
+import logic.evoAlgorithm.configurable.Configurable;
+import logic.evoAlgorithm.configurable.Configuration;
+import logic.evoAlgorithm.configurable.ReadOnlyConfiguration;
 import logic.evoAlgorithm.TimeTableProblem;
 import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
@@ -13,12 +13,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Sizer extends Mutation<TimeTable> {
+public class Sizer extends Mutation<TimeTable> implements Configurable {
 
     private static final String PARAMETER_TOTAL_TUPPLES = "TotalTupples";
 
     private static final Random rand = new Random();
     private final Configuration configuration;
+
+    @Override
+    public String getName() {
+        return "Sizer";
+    }
 
     @Override
     public ReadOnlyConfiguration getConfiguration() {
@@ -34,11 +39,6 @@ public class Sizer extends Mutation<TimeTable> {
         }
 
         configuration.setParameter(parameterName, value);
-    }
-
-    @Override
-    public String getConfigurableName() {
-        return "Sizer";
     }
 
     public Sizer() {
@@ -100,4 +100,5 @@ public class Sizer extends Mutation<TimeTable> {
                 ", totalTupples=" + getTotalTupples() +
                 '}';
     }
+
 }

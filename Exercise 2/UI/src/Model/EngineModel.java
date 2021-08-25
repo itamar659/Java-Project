@@ -1,5 +1,6 @@
 package Model;
 
+import engine.base.Crossover;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import logic.Engine;
@@ -16,6 +17,8 @@ public class EngineModel {
 
     // Model Properties
     private final ObjectProperty<TimeTable> bestSolution = new SimpleObjectProperty<>();
+    private final ObjectProperty<Crossover<TimeTable>> crossover = new SimpleObjectProperty<>();
+
     private final BooleanProperty isWorking = new SimpleBooleanProperty(false);
     private final BooleanProperty isPaused = new SimpleBooleanProperty(false);
     private final BooleanProperty isFileLoaded = new SimpleBooleanProperty(false);
@@ -25,6 +28,8 @@ public class EngineModel {
     public ObjectProperty<TimeTable> bestSolutionProperty() {
         return bestSolution;
     }
+
+    public ObjectProperty<Crossover<TimeTable>> crossoverProperty() { return crossover; }
 
     public BooleanProperty isWorkingProperty() {
         return isWorking;
@@ -43,7 +48,8 @@ public class EngineModel {
         theEngine = new Engine();
         theEngine.addFinishRunListener( () -> Platform.runLater(this::onGenerationEnd));
         theEngine.addGenerationEndListener(() -> Platform.runLater(this::onGenerationEnd));
-
+        //TODO: this is new stuff.
+        crossover.set(theEngine.getEvoEngineSettings().getCrossover());
     }
 
     private void onGenerationEnd () {
@@ -114,5 +120,10 @@ public class EngineModel {
 
     private void setIsPaused(boolean isPaused) {
         Platform.runLater(() -> this.isPaused.set(isPaused));
+    }
+
+    public void changeCrossover(String crossoverName) {
+        theEngine.changeCrossover(crossoverName);
+        crossover.set(theEngine.getEvoEngineSettings().getCrossover());
     }
 }
