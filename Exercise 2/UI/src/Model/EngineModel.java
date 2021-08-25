@@ -69,8 +69,13 @@ public class EngineModel {
     public void updateEvoEngine() {
         setIsWorking(true);
         theEngine.updateEvoEngine();
-        Platform.runLater(() -> bestSolution.set(null));
+        Platform.runLater(this::initializeAfterSerialize);
         setIsWorking(false);
+    }
+
+    private void initializeAfterSerialize() {
+        bestSolution.set(null);
+        crossover.set(theEngine.getEvoEngineSettings().getCrossover());
     }
 
     public void addGenerationEndListener(Runnable onGeneration) {

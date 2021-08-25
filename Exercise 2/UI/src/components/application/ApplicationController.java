@@ -55,6 +55,10 @@ public class ApplicationController {
             }
 
         });
+
+        loadProblemInfo();
+        loadCenterHolder();
+        loadRightPanel();
     }
 
     @FXML
@@ -91,10 +95,7 @@ public class ApplicationController {
                 // On success
                 event -> {
                     selectedFileProperty.set(path);
-
                     loadProblemInfo();
-                    loadCenterHolder();
-                    loadRightPanel();
                 });
     }
 
@@ -104,7 +105,7 @@ public class ApplicationController {
         try {
             Node node = loader.load();
             probInfoController = loader.getController();
-            probInfoController.setProblem(theEngine.getEvoEngineSettings());
+            probInfoController.setProblem(adapter.getTheEngine().getEvoEngineSettings());
             stackPaneLeft.getChildren().clear();
             stackPaneLeft.getChildren().add(node);
         } catch (IOException e) {

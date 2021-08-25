@@ -1,6 +1,7 @@
 package components.problemInfo;
 
 import components.application.ProblemModule;
+import components.application.UIAdapter;
 import components.problemInfo.accordionItem.AccordionItemController;
 import components.problemInfo.configItem.ConfigController;
 import components.problemInfo.ruleAccordionItem.RuleAccordionItemController;
@@ -40,8 +41,6 @@ public class ProbInfoController {
     @FXML private Accordion accordionCrossover;
     @FXML private Accordion accordionSelection;
     @FXML private Accordion accordionRules;
-    
-
 
     private final ProblemModule problemModule;
 
@@ -61,6 +60,10 @@ public class ProbInfoController {
     }
 
     public void setProblem(evoEngineSettingsWrapper evoEngineSettings) {
+        if (evoEngineSettings.getProblem() == null) {
+            return;
+        }
+
         problemModule.setTheProblem(evoEngineSettings.getProblem(), evoEngineSettings);
 
         fillSystemInfoTab();
