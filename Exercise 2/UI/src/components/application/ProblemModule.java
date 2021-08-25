@@ -28,8 +28,6 @@ public class ProblemModule {
     private final IntegerProperty hours = new SimpleIntegerProperty(0);
 
     //Daniel Here:
-    private final StringProperty crossover = new SimpleStringProperty();
-    private final StringProperty selection = new SimpleStringProperty();
     private final IntegerProperty population = new SimpleIntegerProperty(0);
 
 
@@ -48,8 +46,6 @@ public class ProblemModule {
         hours.set(theProblem.getHours());
 
         population.set(settingsWrapper.getPopulationSize());
-        crossover.set(settingsWrapper.getCrossover().getClass().getSimpleName());
-        selection.set(settingsWrapper.getSelection().getClass().getSimpleName());
 
         rules.set(FXCollections.observableArrayList(theProblem.getRules().getListOfRules()));
         hardRuleWeight.set(theProblem.getRules().getHardRuleWeight());
@@ -80,10 +76,6 @@ public class ProblemModule {
     public IntegerProperty hardRuleWeightProperty() {
         return hardRuleWeight;
     }
-
-    public StringProperty crossoverProperty() { return crossover;}
-
-    public StringProperty selectionProperty() { return selection;}
 
     public IntegerProperty populationProperty() { return population; }
 }

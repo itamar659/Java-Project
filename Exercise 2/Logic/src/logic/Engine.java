@@ -1,6 +1,8 @@
 package logic;
 
 import logic.evoAlgorithm.TimeTableEvolutionEngine;
+import logic.evoAlgorithm.factory.CrossoverFactory;
+import logic.evoAlgorithm.factory.Factories;
 import logic.timeTable.TimeTable;
 import engine.base.*;
 import logic.schema.TTEvoEngineCreator;
@@ -39,6 +41,7 @@ public class Engine implements Serializable {
     private final EvolutionEngine<TimeTable> evoEngine;
     private final TTEvoEngineCreator TTEvoEngineCreator;
     private final evoEngineSettingsWrapper evoEngineSettings;
+    private final Factories factories;
 
     public evoEngineSettingsWrapper getEvoEngineSettings() {
         return evoEngineSettings;
@@ -139,6 +142,7 @@ public class Engine implements Serializable {
         this.evoEngine.addFinishRunListener(this::algorithmFinished);
         this.evoEngineSettings = new evoEngineSettingsWrapper((TimeTableEvolutionEngine) this.evoEngine);
         this.TTEvoEngineCreator = new TTEvoEngineCreator();
+        this.factories = new Factories();
     }
 
     public void validateXMLFile(File xmlFile) throws JAXBException, XMLExtractException {
@@ -161,6 +165,10 @@ public class Engine implements Serializable {
 
         this.isFileLoaded = true;
         this.state = State.IDLE;
+    }
+
+    public void changeCrossover(String crossoverName){
+        this.evoEngine.setCrossover(factories.getCrossoverFactory().create(crossoverName));
     }
 
     public void startAlgorithm() {

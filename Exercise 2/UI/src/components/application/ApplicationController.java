@@ -39,16 +39,11 @@ public class ApplicationController {
         adapter = new UIAdapter(theEngine, this);
     }
 
-    @FXML
-    private Button buttonOpenFile;
-    @FXML
-    private Label pathLbl;
-    @FXML
-    private StackPane stackPaneLeft;
-    @FXML
-    private StackPane stackPaneRight;
-    @FXML
-    private ScrollPane scrollPaneCenter;
+    @FXML private Button buttonOpenFile;
+    @FXML private Label pathLbl;
+    @FXML private StackPane stackPaneLeft;
+    @FXML private StackPane stackPaneRight;
+    @FXML private ScrollPane scrollPaneCenter;
 
     @FXML
     private void initialize() {

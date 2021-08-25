@@ -51,12 +51,10 @@ public class AspectOriented implements Crossover<TimeTable>, Configurable {
     @Override
     public void setCuttingPoints(int cuttingPoints) {
         this.cuttingPoints = cuttingPoints;
-        this.configuration.setParameter("Cutting Points", ""+cuttingPoints);
     }
 
     public AspectOriented() {
         this.configuration = new Configuration(
-                new AbstractMap.SimpleEntry<>("Cutting Points", this.cuttingPoints + ""),
                 new AbstractMap.SimpleEntry<>(PARAMETER_ORIENTATION, Orientation.CLASS.name())
         );
     }
