@@ -7,8 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<TitledPane fx:id="tilePaneMe" xmlns="http://javafx.com/javafx/8.0.291" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.problemInfo.configItem.ConfigController">
+<TitledPane fx:id="tilePaneMe" xmlns="http://javafx.com/javafx/8.0.281" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.problemInfo.configItem.ConfigController">
    <content>
       <VBox>
          <children>
@@ -26,7 +25,7 @@
                   </Label>
                </children>
             </HBox>
-            <ListView fx:id="listViewConfig" />
+            <ListView fx:id="listViewConfig" minWidth="100.0" prefWidth="100.0" />
          </children>
       </VBox>
    </content>

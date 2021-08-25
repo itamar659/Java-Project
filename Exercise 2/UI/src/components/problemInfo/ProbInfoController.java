@@ -1,11 +1,10 @@
 package components.problemInfo;
 
 import components.application.ProblemModule;
-import components.application.UIAdapter;
 import components.problemInfo.accordionItem.AccordionItemController;
 import components.problemInfo.configItem.ConfigController;
 import components.problemInfo.ruleAccordionItem.RuleAccordionItemController;
-import logic.evoAlgorithm.configurable.Configurable;
+import engine.base.configurable.Configurable;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -59,6 +58,23 @@ public class ProbInfoController {
         coursesCountLbl.textProperty().bind(Bindings.format("%d", problemModule.coursesProperty().sizeProperty()));
     }
 
+    // Actually updates crossover / selection / mutations
+    public void updateEvoSettings(evoEngineSettingsWrapper evoEngineSettings) {
+        if (evoEngineSettings.getProblem() == null) {
+            return;
+        }
+
+        // Clear the accordions
+        this.accordionCrossover.getPanes().clear();
+        this.accordionSelection.getPanes().clear();
+        this.accordionMutations.getPanes().clear();
+
+        // Fill the accordions
+        addToAccordion(evoEngineSettings.getCrossover(), this.accordionCrossover);
+        addToAccordion(evoEngineSettings.getSelection(), this.accordionSelection);
+        evoEngineSettings.getMutations().forEach((mutation -> addToAccordion(mutation, this.accordionMutations)));
+    }
+
     public void setProblem(evoEngineSettingsWrapper evoEngineSettings) {
         if (evoEngineSettings.getProblem() == null) {
             return;
@@ -67,48 +83,39 @@ public class ProbInfoController {
         problemModule.setTheProblem(evoEngineSettings.getProblem(), evoEngineSettings);
 
         fillSystemInfoTab();
-        // TODO: Be able to know if the rule have properties to modifies
         fillRulesTab();
 
-        ifConfigurableThenFill(evoEngineSettings.getCrossover(), this.accordionCrossover);
-
-
-        ifConfigurableThenFill(evoEngineSettings.getSelection(), this.accordionSelection);
-
-
-        evoEngineSettings.getMutations().forEach((mutation -> {
-            ifConfigurableThenFill(mutation, this.accordionMutations);
-        }));
+        updateEvoSettings(evoEngineSettings);
     }
 
-    private <T extends HasName>void ifConfigurableThenFill(T object, Accordion accordion){
+    private <T extends HasName>void addToAccordion(T object, Accordion accordion){
         if(object instanceof Configurable){
             fillConfigurable((Configurable) object, accordion, object.getName());
         }else{
-            configGenerator(object.getName(), accordion, null, false);
+            configGenerator(object.getName(), accordion, null);
         }
     }
 
     private void fillConfigurable(Configurable config, Accordion accordion, String name){
-        List<String> string2stringConfig = new ArrayList<>();
+        List<String> listOfConfigs = new ArrayList<>();
 
         config.getConfiguration().getParameters().forEach((key, value)-> {
-            string2stringConfig.add(String.format("%s : %s", key, value));
+            listOfConfigs.add(String.format("%s : %s", key, value));
         }) ;
 
-        configGenerator(name, accordion, string2stringConfig, true);
+        configGenerator(name, accordion, listOfConfigs);
     }
 
-    private void configGenerator(String name, Accordion accordion, List<String> lst, boolean isConfigurable){
+    private void configGenerator(String name, Accordion accordion, List<String> configs){
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/components/problemInfo/configItem/configItem.fxml"));
+        loader.setLocation(getClass().getResource("/components/problemInfo/configItem/configItem.fxml")); // TODO: Consts...
 
         try{
             TitledPane node = loader.load();
             ConfigController controller = loader.getController();
             controller.setConfigName(name);
-            if(isConfigurable){
-                controller.setListView(FXCollections.observableArrayList(lst));
+            if(configs != null){
+                controller.setListView(FXCollections.observableArrayList(configs));
                 controller.setListViewVisible(true);
             }
             else{
@@ -144,7 +151,7 @@ public class ProbInfoController {
 
         problemModule.rulesProperty().forEach((rule) -> {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/components/problemInfo/ruleAccordionItem/RuleAccordionItem.fxml"));
+            loader.setLocation(getClass().getResource("/components/problemInfo/ruleAccordionItem/RuleAccordionItem.fxml")); // TODO: Add to consts...
 
             try {
                 TitledPane node = loader.load();

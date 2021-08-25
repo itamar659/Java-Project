@@ -1,9 +1,9 @@
 package logic.evoAlgorithm.selections;
 
 import engine.base.*;
-import logic.evoAlgorithm.configurable.Configurable;
-import logic.evoAlgorithm.configurable.Configuration;
-import logic.evoAlgorithm.configurable.ReadOnlyConfiguration;
+import engine.base.configurable.Configurable;
+import engine.base.configurable.Configuration;
+import engine.base.configurable.ReadOnlyConfiguration;
 import logic.timeTable.TimeTable;
 
 import java.util.AbstractMap;

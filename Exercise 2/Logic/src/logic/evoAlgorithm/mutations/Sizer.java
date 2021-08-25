@@ -1,9 +1,9 @@
 package logic.evoAlgorithm.mutations;
 
 import engine.base.*;
-import logic.evoAlgorithm.configurable.Configurable;
-import logic.evoAlgorithm.configurable.Configuration;
-import logic.evoAlgorithm.configurable.ReadOnlyConfiguration;
+import engine.base.configurable.Configurable;
+import engine.base.configurable.Configuration;
+import engine.base.configurable.ReadOnlyConfiguration;
 import logic.evoAlgorithm.TimeTableProblem;
 import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
@@ -13,9 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Sizer extends Mutation<TimeTable> implements Configurable {
+public class Sizer implements Mutation<TimeTable> {
 
     private static final String PARAMETER_TOTAL_TUPPLES = "TotalTupples";
+    private static final String PARAMETER_PROBABILITY = "Probability";
 
     private static final Random rand = new Random();
     private final Configuration configuration;
@@ -34,6 +35,8 @@ public class Sizer extends Mutation<TimeTable> implements Configurable {
     public void setParameter(String parameterName, String value) {
         if (parameterName.equals(PARAMETER_TOTAL_TUPPLES)) {
             Integer.parseInt(value);
+        } else if (parameterName.equals(PARAMETER_PROBABILITY)) {
+            Double.parseDouble(value);
         } else {
             throw new IllegalArgumentException("Not found parameter name in " + this.getClass().getSimpleName());
         }
@@ -43,6 +46,7 @@ public class Sizer extends Mutation<TimeTable> implements Configurable {
 
     public Sizer() {
         configuration = new Configuration(
+                new AbstractMap.SimpleEntry<>(PARAMETER_PROBABILITY, "0"),
                 new AbstractMap.SimpleEntry<>(PARAMETER_TOTAL_TUPPLES, "0")
         );
     }
@@ -52,9 +56,19 @@ public class Sizer extends Mutation<TimeTable> implements Configurable {
     }
 
     @Override
+    public double getProbability() {
+        return Double.parseDouble(configuration.getParameter(PARAMETER_PROBABILITY));
+    }
+
+    @Override
+    public void setProbability(double probability) {
+        setParameter(PARAMETER_PROBABILITY, Double.toString(probability));
+    }
+
+    @Override
     public void mutatePopulation(Population<TimeTable> population, Problem<TimeTable> problem) {
         for (Solution<TimeTable> solution : population.getSolutions()) {
-            if (rand.nextDouble() <= probability) {
+            if (rand.nextDouble() <= getProbability()) {
                 mutate(solution, problem);
             }
         }
@@ -96,7 +110,7 @@ public class Sizer extends Mutation<TimeTable> implements Configurable {
     @Override
     public String toString() {
         return "Sizer{" +
-                "probability=" + probability +
+                "probability=" + getProbability() +
                 ", totalTupples=" + getTotalTupples() +
                 '}';
     }

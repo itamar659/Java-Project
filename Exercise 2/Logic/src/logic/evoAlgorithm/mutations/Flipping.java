@@ -1,8 +1,8 @@
 package logic.evoAlgorithm.mutations;
 
-import logic.evoAlgorithm.configurable.Configurable;
-import logic.evoAlgorithm.configurable.Configuration;
-import logic.evoAlgorithm.configurable.ReadOnlyConfiguration;
+import engine.base.configurable.Configurable;
+import engine.base.configurable.Configuration;
+import engine.base.configurable.ReadOnlyConfiguration;
 import logic.evoAlgorithm.TimeTableProblem;
 import engine.base.*;
 import logic.timeTable.Lesson;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Flipping extends Mutation<TimeTable> implements Configurable {
+public class Flipping implements Mutation<TimeTable> {
 
     @Override
     public String getName() {
@@ -26,6 +26,7 @@ public class Flipping extends Mutation<TimeTable> implements Configurable {
 
     private static final String PARAMETER_COMPONENT = "Component";
     private static final String PARAMETER_MAX_TUPPLES = "MaxTupples";
+    private static final String PARAMETER_PROBABILITY = "Probability"; // TODO: Remove this copy paste configuration shit code
     private static final Random rand = new Random();
 
     private final Configuration configuration;
@@ -41,6 +42,8 @@ public class Flipping extends Mutation<TimeTable> implements Configurable {
             Integer.parseInt(value);
         } else if (parameterName.equals(PARAMETER_COMPONENT)) {
             Component.valueOf(value);
+        } else if (parameterName.equals(PARAMETER_PROBABILITY)) {
+            Double.parseDouble(value);
         } else {
             throw new IllegalArgumentException("Parameter name not found in " + this.getClass().getSimpleName());
         }
@@ -50,8 +53,9 @@ public class Flipping extends Mutation<TimeTable> implements Configurable {
 
     public Flipping() {
         configuration = new Configuration(
-                new AbstractMap.SimpleEntry<>(PARAMETER_COMPONENT, Component.C.name()),
-                new AbstractMap.SimpleEntry<>(PARAMETER_MAX_TUPPLES, "0")
+                new AbstractMap.SimpleEntry<>(PARAMETER_PROBABILITY, "0"),
+                new AbstractMap.SimpleEntry<>(PARAMETER_MAX_TUPPLES, "0"),
+                new AbstractMap.SimpleEntry<>(PARAMETER_COMPONENT, Component.C.name())
         );
     }
 
@@ -64,9 +68,19 @@ public class Flipping extends Mutation<TimeTable> implements Configurable {
     }
 
     @Override
+    public double getProbability() {
+        return Double.parseDouble(configuration.getParameter(PARAMETER_PROBABILITY));
+    }
+
+    @Override
+    public void setProbability(double probability) {
+        setParameter(PARAMETER_PROBABILITY, Double.toString(probability));
+    }
+
+    @Override
     public void mutatePopulation(Population<TimeTable> population, Problem<TimeTable> problem) {
         for (Solution<TimeTable> solution : population.getSolutions()) {
-            if (rand.nextDouble() <= probability) {
+            if (rand.nextDouble() <= getProbability()) {
                 mutate(solution, problem);
             }
         }
@@ -113,7 +127,7 @@ public class Flipping extends Mutation<TimeTable> implements Configurable {
     @Override
     public String toString() {
         return "Flipping{" +
-                "probability=" + probability +
+                "probability=" + getProbability() +
                 ", maxTupples=" + getMaxTupples() +
                 ", component=" + getComponent() +
                 '}';

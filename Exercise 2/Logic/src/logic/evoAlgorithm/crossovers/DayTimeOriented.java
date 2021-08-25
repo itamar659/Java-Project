@@ -1,7 +1,7 @@
 package logic.evoAlgorithm.crossovers;
 
-import logic.evoAlgorithm.configurable.Configuration;
-import logic.evoAlgorithm.configurable.ReadOnlyConfiguration;
+import engine.base.configurable.Configuration;
+import engine.base.configurable.ReadOnlyConfiguration;
 import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
 import engine.base.Crossover;
@@ -18,7 +18,7 @@ public class DayTimeOriented implements Crossover<TimeTable> {
 
     private static final Random rand = new Random();
 
-    private int cuttingPoints;
+    private static final String PARAMETER_CUTTING_POINTS = "CuttingPoints";
 
     @Override
     public String getName() {
@@ -27,13 +27,37 @@ public class DayTimeOriented implements Crossover<TimeTable> {
 
     @Override
     public int getCuttingPoints() {
-        return cuttingPoints;
+        return Integer.parseInt(configuration.getParameter(PARAMETER_CUTTING_POINTS)); // TODO: Remove this copy paste configuration shit code
+    }
+
+    private final Configuration configuration;
+
+    @Override
+    public ReadOnlyConfiguration getConfiguration() {
+        return configuration.getProxy();
+    }
+
+    @Override
+    public void setParameter(String parameterName, String value) {
+        if (parameterName.equals(PARAMETER_CUTTING_POINTS)) {
+            Integer.parseInt(value);
+        } else {
+            throw new IllegalArgumentException("Parameter name not found in " + this.getClass().getSimpleName());
+        }
+
+        configuration.setParameter(parameterName, value);
     }
 
     @Override
     public void setCuttingPoints(int cuttingPoints) {
-        // Can be bigger from the population. it'll cut every single block
-        this.cuttingPoints = cuttingPoints;
+        // TODO: Can be bigger from the population. it'll cut every single block
+        setParameter(PARAMETER_CUTTING_POINTS, Integer.toString(cuttingPoints));
+    }
+
+    public DayTimeOriented() {
+        this.configuration = new Configuration(
+                new AbstractMap.SimpleEntry<>(PARAMETER_CUTTING_POINTS, "0")
+        );
     }
 
     // Very generic method (but may not answer every crossover)
@@ -83,8 +107,8 @@ public class DayTimeOriented implements Crossover<TimeTable> {
         TimeTable child1 = (TimeTable) mother.createChild();
         TimeTable child2 = (TimeTable) mother.createChild();
 
-        int numOfCuts = this.cuttingPoints;
-        if (this.cuttingPoints > parents.father.size()) {
+        int numOfCuts = getCuttingPoints();
+        if (getCuttingPoints() > parents.father.size()) {
             numOfCuts = parents.father.size();
         }
 
@@ -96,7 +120,7 @@ public class DayTimeOriented implements Crossover<TimeTable> {
         int cut_idx = 1;
 
         for (int i = 0; i < parents.father.size(); i++) {
-            if (cut_idx <= this.cuttingPoints && cuts[cut_idx - 1] == i) {
+            if (cut_idx <= getCuttingPoints() && cuts[cut_idx - 1] == i) {
                 cut_idx++;
                 TimeTable temp = child1;
                 child1 = child2;
@@ -170,7 +194,7 @@ public class DayTimeOriented implements Crossover<TimeTable> {
     @Override
     public String toString() {
         return "DayTimeOriented{" +
-                "cutting-points=" + cuttingPoints +
+                "cutting-points=" + getCuttingPoints() +
                 '}';
     }
 }

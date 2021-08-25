@@ -1,4 +1,4 @@
-package logic.evoAlgorithm.configurable;
+package engine.base.configurable;
 
 public interface Configurable {
 

@@ -59,6 +59,10 @@ public class ApplicationController {
         loadProblemInfo();
         loadCenterHolder();
         loadRightPanel();
+
+        adapter.getTheEngine().crossoverProperty().addListener((observable, oldValue, newValue) -> {
+            probInfoController.updateEvoSettings(theEngine.getEvoEngineSettings());
+        });
     }
 
     @FXML

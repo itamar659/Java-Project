@@ -1,18 +1,14 @@
 package engine.base;
 
+import engine.base.configurable.Configurable;
+
 import java.io.Serializable;
 
-public abstract class Mutation<T> implements Serializable, HasName {
+public interface Mutation<T> extends Serializable, HasName, Configurable {
 
-    protected double probability;
+    double getProbability();
 
-    public double getProbability() {
-        return probability;
-    }
+    void setProbability(double probability);
 
-    public void setProbability(double probability) {
-        this.probability = probability;
-    }
-
-    public abstract void mutatePopulation(Population<T> population, Problem<T> problem);
+    void mutatePopulation(Population<T> population, Problem<T> problem);
 }

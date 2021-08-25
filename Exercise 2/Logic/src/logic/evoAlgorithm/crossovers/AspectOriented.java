@@ -1,16 +1,16 @@
 package logic.evoAlgorithm.crossovers;
 
 import engine.base.*;
-import logic.evoAlgorithm.configurable.Configurable;
-import logic.evoAlgorithm.configurable.Configuration;
-import logic.evoAlgorithm.configurable.ReadOnlyConfiguration;
+import engine.base.configurable.Configuration;
+import engine.base.configurable.ReadOnlyConfiguration;
+import logic.evoAlgorithm.mutations.Flipping;
 import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
 
 import java.util.*;
 import java.util.stream.IntStream;
 
-public class AspectOriented implements Crossover<TimeTable>, Configurable {
+public class AspectOriented implements Crossover<TimeTable> {
 
     @Override
     public String getName() {
@@ -22,10 +22,10 @@ public class AspectOriented implements Crossover<TimeTable>, Configurable {
     }
 
     private static final String PARAMETER_ORIENTATION = "Orientation";
+    private static final String PARAMETER_CUTTING_POINTS = "CuttingPoints";
     private static final Random rand = new Random();
 
     private final Configuration configuration;
-    private int cuttingPoints;
 
     @Override
     public ReadOnlyConfiguration getConfiguration() {
@@ -36,6 +36,8 @@ public class AspectOriented implements Crossover<TimeTable>, Configurable {
     public void setParameter(String parameterName, String value) {
         if (parameterName.equals(PARAMETER_ORIENTATION)) {
             Orientation.valueOf(value);
+        } else if (parameterName.equals(PARAMETER_CUTTING_POINTS)) {
+            Integer.parseInt(value);
         } else {
             throw new IllegalArgumentException("Parameter name not found in " + this.getClass().getSimpleName());
         }
@@ -45,16 +47,17 @@ public class AspectOriented implements Crossover<TimeTable>, Configurable {
 
     @Override
     public int getCuttingPoints() {
-        return cuttingPoints;
+        return Integer.parseInt(configuration.getParameter(PARAMETER_CUTTING_POINTS));
     }
 
     @Override
     public void setCuttingPoints(int cuttingPoints) {
-        this.cuttingPoints = cuttingPoints;
+        setParameter(PARAMETER_CUTTING_POINTS, Integer.toString(cuttingPoints));
     }
 
     public AspectOriented() {
         this.configuration = new Configuration(
+                new AbstractMap.SimpleEntry<>(PARAMETER_CUTTING_POINTS, "0"),
                 new AbstractMap.SimpleEntry<>(PARAMETER_ORIENTATION, Orientation.CLASS.name())
         );
     }
@@ -93,7 +96,7 @@ public class AspectOriented implements Crossover<TimeTable>, Configurable {
     @Override
     public String toString() {
         return "AspectOriented{" +
-                "cuttingPoints=" + cuttingPoints +
+                "cuttingPoints=" + getCuttingPoints() +
                 ", orientation=" + getOrientation() +
                 '}';
     }
@@ -240,8 +243,8 @@ public class AspectOriented implements Crossover<TimeTable>, Configurable {
         Solution<TimeTable> c1 = child1;
         Solution<TimeTable> c2 = child2;
 
-        int numOfCuts = this.cuttingPoints;
-        if (this.cuttingPoints > p1.size()) {
+        int numOfCuts = getCuttingPoints();
+        if (getCuttingPoints() > p1.size()) {
             numOfCuts = p1.size();
         }
 
@@ -253,7 +256,7 @@ public class AspectOriented implements Crossover<TimeTable>, Configurable {
         int cut_idx = 1;
 
         for (int i = 0; i < p1.size(); i++) {
-            if (cut_idx <= this.cuttingPoints && cuts[cut_idx - 1] == i) {
+            if (cut_idx <= getCuttingPoints() && cuts[cut_idx - 1] == i) {
                 cut_idx++;
                 Solution<TimeTable> temp = c1;
                 c1 = c2;
