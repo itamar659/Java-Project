@@ -41,7 +41,6 @@ public class Truncation implements Selection<TimeTable>, Configurable {
         );
     }
 
-
     public int getTopPercent() {
         return Integer.parseInt(configuration.getParameter(PARAMETER_TOP_PERCENT));
     }

@@ -12,7 +12,6 @@ public class RouletteWheel implements Selection<TimeTable> {
 
     private static final Random rand = new Random();
 
-
     @Override
     public String getName() {
         return "Roulette Wheel";
@@ -43,7 +42,7 @@ public class RouletteWheel implements Selection<TimeTable> {
             }
         }
 
-        System.out.printf("Roulette Wheel error. Couldn't find the solution at range '%f' of '%f'.%s", selectFitness, rouletteSize);
+        System.out.printf("Roulette Wheel error. Couldn't find the solution at range '%f' of '%f'.%s%n", selectFitness, rouletteSize);
         return population.getSolutionByIndex(population.getSize());
     }
 

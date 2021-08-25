@@ -123,7 +123,10 @@ public class EngineModel {
     }
 
     public void changeCrossover(String crossoverName) {
-        theEngine.changeCrossover(crossoverName);
-        crossover.set(theEngine.getEvoEngineSettings().getCrossover());
+        if (crossover.get() == null ||
+                !crossover.get().getClass().getSimpleName().equals(crossoverName)) {
+            theEngine.changeCrossover(crossoverName);
+            crossover.set(theEngine.getEvoEngineSettings().getCrossover());
+        }
     }
 }
