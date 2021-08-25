@@ -33,6 +33,7 @@ public class Sizer implements Mutation<TimeTable> {
 
     @Override
     public void setParameter(String parameterName, String value) {
+        // TODO: check if it's valid value in the correct range (Maybe not here but outside of this method?)
         if (parameterName.equals(PARAMETER_TOTAL_TUPPLES)) {
             Integer.parseInt(value);
         } else if (parameterName.equals(PARAMETER_PROBABILITY)) {
