@@ -3,6 +3,7 @@ package Model;
 import engine.Listeners;
 import engine.base.Crossover;
 import engine.base.Selection;
+import engine.base.configurable.Configurable;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import logic.Engine;
@@ -12,10 +13,12 @@ import logic.timeTable.TimeTable;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.io.InvalidObjectException;
 
 public class EngineModel {
 
     private final Engine theEngine;
+    private final Listeners evoSettingsChangeListeners;
 
     // Model Properties
     private final ObjectProperty<TimeTable> bestSolution = new SimpleObjectProperty<>();
@@ -24,13 +27,6 @@ public class EngineModel {
     private final BooleanProperty isWorking = new SimpleBooleanProperty(false);
     private final BooleanProperty isPaused = new SimpleBooleanProperty(false);
     private final BooleanProperty isFileLoaded = new SimpleBooleanProperty(false);
-
-    private final Listeners evoSettingsChangeListeners;
-
-    public void addEvoSettingsChangeListener(Runnable func) {
-        evoSettingsChangeListeners.add(func);
-    }
-
 
     // Properties Getters
     public ObjectProperty<TimeTable> bestSolutionProperty() {
@@ -59,6 +55,10 @@ public class EngineModel {
         theEngine.addFinishRunListener( () -> Platform.runLater(this::onGenerationEnd));
         theEngine.addGenerationEndListener(() -> Platform.runLater(this::onGenerationEnd));
         evoSettingsChangeListeners = new Listeners();
+    }
+
+    public void addEvoSettingsChangeListener(Runnable func) {
+        evoSettingsChangeListeners.add(func);
     }
 
     private void onGenerationEnd () {
@@ -153,6 +153,15 @@ public class EngineModel {
             selection.set(theEngine.getEvoEngineSettings().getSelection());
         }
         onEvoSettingsChange();
+    }
+
+    public void ConfigObject(Object configurable, String paramName, String paramValue) {
+        if (configurable instanceof Configurable) {
+            ((Configurable)configurable).setParameter(paramName, paramValue);
+            onEvoSettingsChange();
+        } else {
+            throw new IllegalArgumentException("Cannot config an instance that's not Configurable.");
+        }
     }
 
     protected void onEvoSettingsChange() {

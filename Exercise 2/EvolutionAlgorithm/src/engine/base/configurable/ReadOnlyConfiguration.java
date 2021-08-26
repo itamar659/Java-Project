@@ -21,5 +21,4 @@ public class ReadOnlyConfiguration {
     }
 
     public Map<String,String> getParameters() { return configuration.getParameters(); }
-
 }

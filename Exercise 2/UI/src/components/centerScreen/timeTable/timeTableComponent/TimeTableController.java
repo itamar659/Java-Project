@@ -77,7 +77,6 @@ public class TimeTableController {
     }
 
     private void setBorderHoursDays() {
-
         for (int day = 0; day < days.get(); day++) {
             StackPane node = new StackPane();
             node.getChildren().add(new Label(String.format("%d", day + 1)));

@@ -45,5 +45,4 @@ public class RouletteWheel implements Selection<TimeTable> {
         System.out.printf("Roulette Wheel error. Couldn't find the solution at range '%f' of '%f'.%s%n", selectFitness, rouletteSize);
         return population.getSolutionByIndex(population.getSize());
     }
-
 }
