@@ -1,4 +1,4 @@
-package components.engine.rightPanel.topRightPanel;
+package components.rightPanel.topRightPanel;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;

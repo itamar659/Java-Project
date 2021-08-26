@@ -1,19 +1,13 @@
-package components.timeTable.timeTableComponent;
+package components.centerScreen.timeTable.timeTableComponent;
 
-import components.timeTable.LessonsInfoResourcesConsts;
-import components.timeTable.lessonInfo.LessonInfoController;
-import components.timeTable.lessonsInfo.LessonsInfoController;
+import components.Resources;
+import components.centerScreen.timeTable.lessonsInfo.LessonsInfoController;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -104,7 +98,7 @@ public class TimeTableController {
             if (!dayHour2Controller.containsKey(time)) {
                 try {
                     FXMLLoader loader = new FXMLLoader();
-                    loader.setLocation(LessonsInfoResourcesConsts.MULTI_LESSONS_TT_FXML_RESOURCE);
+                    loader.setLocation(Resources.MULTI_LESSONS_TT_FXML_RESOURCE);
                     Node lessonInfo = loader.load();
 
                     StackPane node = new StackPane();

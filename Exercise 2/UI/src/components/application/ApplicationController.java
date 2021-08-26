@@ -1,8 +1,9 @@
 package components.application;
 
 import Model.EngineModel;
-import components.centerscreen.CenterHolderController;
-import components.engine.rightPanel.RightPanelController;
+import components.Resources;
+import components.centerScreen.CenterHolderController;
+import components.rightPanel.RightPanelController;
 import components.problemInfo.ProbInfoController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
@@ -105,7 +106,7 @@ public class ApplicationController {
 
     private void loadProblemInfo() {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/components/problemInfo/ProbInfo.fxml")); // TODO: Add to components consts
+        loader.setLocation(Resources.PROBLEM_INFO_FXML_RESOURCE);
         try {
             Node node = loader.load();
             probInfoController = loader.getController();
@@ -119,7 +120,7 @@ public class ApplicationController {
 
     private void loadCenterHolder() {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/components/centerscreen/centerHolder.fxml")); // TODO: Add to components consts
+        loader.setLocation(Resources.CENTER_HOLDER_FXML_RESOURCE);
         try {
             Node node = loader.load();
             centerHolderController = loader.getController();
@@ -132,7 +133,7 @@ public class ApplicationController {
 
     private void loadRightPanel() { // TODO: This is temporary. Need to change start stop panel location
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/components/engine/rightPanel/RightPanel.fxml")); // TODO: Add to components consts
+        loader.setLocation(Resources.RIGHT_PANEL_FXML_RESOURCE);
         try {
             Node node = loader.load();
             rightPanelController = loader.getController();

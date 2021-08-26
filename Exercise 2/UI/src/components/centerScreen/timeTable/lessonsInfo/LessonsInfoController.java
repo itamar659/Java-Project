@@ -1,7 +1,7 @@
-package components.timeTable.lessonsInfo;
+package components.centerScreen.timeTable.lessonsInfo;
 
-import components.timeTable.LessonsInfoResourcesConsts;
-import components.timeTable.lessonInfo.LessonInfoController;
+import components.Resources;
+import components.centerScreen.timeTable.lessonInfo.LessonInfoController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ListProperty;
@@ -71,7 +71,7 @@ public class LessonsInfoController {
         // Create a new block and bind the requested lesson
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(LessonsInfoResourcesConsts.SINGLE_LESSON_TT_FXML_RESOURCE);
+            loader.setLocation(Resources.SINGLE_LESSON_TT_FXML_RESOURCE);
             Node lessInfo = loader.load();
 
             LessonInfoController controller = loader.getController();

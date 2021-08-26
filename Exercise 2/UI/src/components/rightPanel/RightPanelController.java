@@ -1,9 +1,8 @@
-package components.engine.rightPanel;
+package components.rightPanel;
 
-import components.MainApplication;
+import components.Resources;
 import components.application.UIAdapter;
-import components.engine.rightPanel.topRightPanel.TopRightContorller;
-import components.timeTable.LessonsInfoResourcesConsts;
+import components.rightPanel.topRightPanel.TopRightContorller;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -39,8 +38,7 @@ public class RightPanelController {
     @FXML
     private void initialize() {
         FXMLLoader loader = new FXMLLoader();
-        URL url = getClass().getResource("/components/engine/rightPanel/topRightPanel/TopRightPanel.fxml");
-        loader.setLocation(url);
+        loader.setLocation(Resources.TOP_RIGHT_PANEL_FXML_RESOURCE);
 
         try {
             Parent root = loader.load();

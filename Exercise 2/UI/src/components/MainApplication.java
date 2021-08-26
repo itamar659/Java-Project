@@ -1,9 +1,7 @@
 package components;
 
 import components.application.ApplicationController;
-import components.timeTable.LessonsInfoResourcesConsts;
 
-import components.timeTable.timeTablePanel.TimeTablePanelController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,7 +21,7 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
-        URL url = LessonsInfoResourcesConsts.APP_FXML_RESOURCE;
+        URL url = Resources.APP_FXML_RESOURCE;
         loader.setLocation(url);
         Parent root = loader.load(url.openStream());
 

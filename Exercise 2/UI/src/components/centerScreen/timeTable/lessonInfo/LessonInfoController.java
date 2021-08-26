@@ -1,4 +1,4 @@
-package components.timeTable.lessonInfo;
+package components.centerScreen.timeTable.lessonInfo;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

@@ -1,4 +1,4 @@
-package components.timeTable.secondCenterScreen.components;
+package components.centerScreen.timeTable.configurations.crossover;
 
 import components.application.UIAdapter;
 import javafx.event.ActionEvent;

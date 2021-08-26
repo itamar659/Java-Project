@@ -1,4 +1,4 @@
-package components.timeTable.rawInfo;
+package components.centerScreen.timeTable.rawInfo;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

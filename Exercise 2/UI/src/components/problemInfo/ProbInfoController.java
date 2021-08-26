@@ -1,5 +1,6 @@
 package components.problemInfo;
 
+import components.Resources;
 import components.application.ProblemModule;
 import components.problemInfo.accordionItem.AccordionItemController;
 import components.problemInfo.configItem.ConfigController;
@@ -108,7 +109,7 @@ public class ProbInfoController {
 
     private void configGenerator(String name, Accordion accordion, List<String> configs){
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/components/problemInfo/configItem/configItem.fxml")); // TODO: Consts...
+        loader.setLocation(Resources.CONFIG_ITEM_FXML_RESOURCE);
 
         try{
             TitledPane node = loader.load();
@@ -151,7 +152,7 @@ public class ProbInfoController {
 
         problemModule.rulesProperty().forEach((rule) -> {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/components/problemInfo/ruleAccordionItem/RuleAccordionItem.fxml")); // TODO: Add to consts...
+            loader.setLocation(Resources.RULE_ACCORDION_ITEM_FXML_RESOURCE);
 
             try {
                 TitledPane node = loader.load();
@@ -176,7 +177,7 @@ public class ProbInfoController {
 
         for (T item : list) {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/components/problemInfo/accordionItem/AccordionItem.fxml"));
+            loader.setLocation(Resources.ACCORDION_ITEM_FXML_RESOURCE);
 
             try {
                 TitledPane node = loader.load();
