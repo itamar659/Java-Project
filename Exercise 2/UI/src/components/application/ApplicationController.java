@@ -61,9 +61,9 @@ public class ApplicationController {
         loadCenterHolder();
         loadRightPanel();
 
-        adapter.getTheEngine().crossoverProperty().addListener((observable, oldValue, newValue) -> {
-            probInfoController.updateEvoSettings(theEngine.getEvoEngineSettings());
-        });
+        adapter.getTheEngine().addEvoSettingsChangeListener(() ->
+            probInfoController.updateEvoSettings(theEngine.getEvoEngineSettings())
+        );
     }
 
     @FXML

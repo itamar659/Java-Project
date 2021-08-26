@@ -1,9 +1,9 @@
-package components.centerScreen.timeTable.timeTablePanel;
+package components.centerScreen.timeTable;
 
 import components.application.UIAdapter;
 import components.Resources;
+import components.centerScreen.timeTable.configurations.ConfigurationsPanelController;
 import components.centerScreen.timeTable.rawInfo.RawInfoController;
-import components.centerScreen.timeTable.configurations.crossover.CrossoverController;
 import components.centerScreen.timeTable.timeTableComponent.TimeTableController;
 import engine.base.Crossover;
 import javafx.beans.binding.StringBinding;
@@ -28,10 +28,8 @@ import java.util.List;
 public class TimeTablePanelController {
 
     private final String[] targetTypes = {"Teachers", "Classes"};
-    private UIAdapter uiAdapter;
 
     private final ObjectProperty<TimeTable> timeTableSolutionProperty = new SimpleObjectProperty<>();
-    private final ObjectProperty<Crossover<TimeTable>> crossoverProperty = new SimpleObjectProperty<>();
 
     private Parent timeTableParent;
     private Parent rawInfoParent;
@@ -39,11 +37,9 @@ public class TimeTablePanelController {
 
     private TimeTableController timeTableController;
     private RawInfoController rawInfoController;
-    private CrossoverController crossoverController;
+    private ConfigurationsPanelController configurationsPanelController;
 
-    public ObjectProperty<Crossover<TimeTable>> crossoverProperty() {
-        return crossoverProperty;
-    }
+    private UIAdapter uiAdapter;
 
     @FXML
     private Label labelTargetType;
@@ -127,20 +123,8 @@ public class TimeTablePanelController {
 
         createRawInfoController();
         createTimeTableController();
-        createCrossoverController();
+        createConfigurationsController();
         paneTimeTable.getChildren().add(rawInfoParent);
-    }
-
-    private void createCrossoverController() {
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Resources.CROSSOVER_CONFIG_FXML_RESOURCE);
-            configParent = loader.load();
-            crossoverController = loader.getController();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     public ObjectProperty<TimeTable> timeTableSolutionProperty() {
@@ -192,10 +176,21 @@ public class TimeTablePanelController {
         }
     }
 
+    private void createConfigurationsController() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Resources.CONFIGURATIONS_PANEL_FXML_RESOURCE);
+            configParent = loader.load();
+            configurationsPanelController = loader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void createRawInfoController() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/components/centerScreen/timeTable/rawInfo/RawInfo.fxml")); // TODO: Add to consts resources
+            loader.setLocation(Resources.RAW_INFO_FXML_RESOURCE);
             rawInfoParent = loader.load();
             rawInfoController = loader.getController();
             rawInfoController.timeTableSolutionProperty().bind(this.timeTableSolutionProperty);
@@ -230,6 +225,6 @@ public class TimeTablePanelController {
 
     public void setUiAdapter(UIAdapter uiAdapter) {
         this.uiAdapter = uiAdapter;
-        crossoverController.setUiAdapter(uiAdapter);
+        configurationsPanelController.setUiAdapter(uiAdapter);
     }
 }

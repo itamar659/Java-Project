@@ -1,6 +1,8 @@
 package Model;
 
+import engine.Listeners;
 import engine.base.Crossover;
+import engine.base.Selection;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import logic.Engine;
@@ -18,10 +20,16 @@ public class EngineModel {
     // Model Properties
     private final ObjectProperty<TimeTable> bestSolution = new SimpleObjectProperty<>();
     private final ObjectProperty<Crossover<TimeTable>> crossover = new SimpleObjectProperty<>();
-
+    private final ObjectProperty<Selection<TimeTable>> selection = new SimpleObjectProperty<>();
     private final BooleanProperty isWorking = new SimpleBooleanProperty(false);
     private final BooleanProperty isPaused = new SimpleBooleanProperty(false);
     private final BooleanProperty isFileLoaded = new SimpleBooleanProperty(false);
+
+    private final Listeners evoSettingsChangeListeners;
+
+    public void addEvoSettingsChangeListener(Runnable func) {
+        evoSettingsChangeListeners.add(func);
+    }
 
 
     // Properties Getters
@@ -30,6 +38,8 @@ public class EngineModel {
     }
 
     public ObjectProperty<Crossover<TimeTable>> crossoverProperty() { return crossover; }
+
+    public ObjectProperty<Selection<TimeTable>> selectionProperty() { return selection; }
 
     public BooleanProperty isWorkingProperty() {
         return isWorking;
@@ -48,8 +58,7 @@ public class EngineModel {
         theEngine = new Engine();
         theEngine.addFinishRunListener( () -> Platform.runLater(this::onGenerationEnd));
         theEngine.addGenerationEndListener(() -> Platform.runLater(this::onGenerationEnd));
-        //TODO: this is new stuff.
-        crossover.set(theEngine.getEvoEngineSettings().getCrossover());
+        evoSettingsChangeListeners = new Listeners();
     }
 
     private void onGenerationEnd () {
@@ -76,6 +85,7 @@ public class EngineModel {
     private void initializeAfterSerialize() {
         bestSolution.set(null);
         crossover.set(theEngine.getEvoEngineSettings().getCrossover());
+        selection.set(theEngine.getEvoEngineSettings().getSelection());
     }
 
     public void addGenerationEndListener(Runnable onGeneration) {
@@ -133,5 +143,19 @@ public class EngineModel {
             theEngine.changeCrossover(crossoverName);
             crossover.set(theEngine.getEvoEngineSettings().getCrossover());
         }
+        onEvoSettingsChange();
+    }
+
+    public void changeSelection(String selectionName) {
+        if (selection.get() == null ||
+                !selection.get().getClass().getSimpleName().equals(selectionName)) {
+            theEngine.changeSelection(selectionName);
+            selection.set(theEngine.getEvoEngineSettings().getSelection());
+        }
+        onEvoSettingsChange();
+    }
+
+    protected void onEvoSettingsChange() {
+        Platform.runLater(evoSettingsChangeListeners::raiseEvent);
     }
 }

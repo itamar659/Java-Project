@@ -171,6 +171,10 @@ public class Engine implements Serializable {
         this.evoEngine.setCrossover(factories.getCrossoverFactory().create(crossoverName));
     }
 
+    public void changeSelection(String selectionName) {
+        this.evoEngine.setSelection(factories.getSelectionFactory().create(selectionName));
+    }
+
     public void startAlgorithm() {
         this.state = State.RUNNING;
         startRunTime = Instant.now();

@@ -9,12 +9,14 @@ import logic.evoAlgorithm.crossovers.SupportedCrossovers;
 import java.util.Arrays;
 
 public class CrossoverController {
-    @FXML private ComboBox<String> comboBoxCrossover;
+
+    @FXML
+    private ComboBox<String> comboBoxCrossover;
 
     private UIAdapter uiAdapter;
 
     @FXML
-    private void initialize(){
+    private void initialize() {
         comboBoxCrossover.getItems().clear();
 
         Arrays.stream(SupportedCrossovers.values()).forEach(supportedCrossover ->
@@ -30,7 +32,7 @@ public class CrossoverController {
     }
 
     @FXML
-    private void comboBoxCrossover_SelectedItem(ActionEvent event){
+    private void comboBoxCrossover_SelectedItem(ActionEvent event) {
         uiAdapter.getTheEngine().changeCrossover(comboBoxCrossover.getSelectionModel().getSelectedItem().replaceAll(" ", ""));
     }
 }

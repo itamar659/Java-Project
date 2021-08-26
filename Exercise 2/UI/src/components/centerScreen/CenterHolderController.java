@@ -2,7 +2,7 @@ package components.centerScreen;
 
 import components.application.UIAdapter;
 import components.Resources;
-import components.centerScreen.timeTable.timeTablePanel.TimeTablePanelController;
+import components.centerScreen.timeTable.TimeTablePanelController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -43,8 +43,7 @@ public class CenterHolderController {
     @FXML
     private void initialize() {
         FXMLLoader loader = new FXMLLoader();
-        URL url = Resources.TIME_TABLE_PANEL_FXML_RESOURCE;
-        loader.setLocation(url);
+        loader.setLocation(Resources.TIME_TABLE_PANEL_FXML_RESOURCE);
 
         try {
             Parent root = loader.load();
@@ -57,7 +56,7 @@ public class CenterHolderController {
 
     public void setUiAdapter(UIAdapter uiAdapter) {
         this.uiAdapter = uiAdapter;
-        timeTablePanelController.timeTableSolutionProperty().bind(uiAdapter.getTheEngine().bestSolutionProperty());
+        this.timeTablePanelController.timeTableSolutionProperty().bind(uiAdapter.getTheEngine().bestSolutionProperty());
         this.timeTablePanelController.setUiAdapter(uiAdapter);
     }
 }

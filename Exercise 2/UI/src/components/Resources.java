@@ -11,15 +11,23 @@ public class Resources {
     private static final String SINGLE_LESSON_DATA_FXML_RESOURCE_IDENTIFIER = BASE_CENTER + "/timeTable/lessonInfo/LessonInfo.fxml";
     private static final String MULTI_LESSONS_DATA_FXML_RESOURCE_IDENTIFIER = BASE_CENTER + "/timeTable/lessonsInfo/LessonsInfo.fxml";
     private static final String GRID_TABLE_FXML_RESOURCE_IDENTIFIER = BASE_CENTER + "/timeTable/timeTableComponent/TimeTableComponent.fxml";
-    private static final String TIME_TABLE_PANEL_FXML_RESOURCE_IDENTIFIER = BASE_CENTER + "/timeTable/timeTablePanel/TimeTablePanel.fxml";
-    private static final String CROSSOVER_CONFIG_FXML_RESOURCE_IDENTIFIER = BASE_CENTER + "/timeTable/configurations/crossover/CrossoverController.fxml";
+    private static final String RAW_INFO_FXML_RESOURCE_IDENTIFIER = BASE_CENTER + "/timeTable/rawInfo/RawInfo.fxml";
+    private static final String TIME_TABLE_PANEL_FXML_RESOURCE_IDENTIFIER = BASE_CENTER + "/timeTable/TimeTablePanel.fxml";
+
+    private static final String CROSSOVER_CONFIG_FXML_RESOURCE_IDENTIFIER = BASE_CENTER + "/timeTable/configurations/crossover/Crossover.fxml";
+    private static final String SELECTION_CONFIG_FXML_RESOURCE_IDENTIFIER = BASE_CENTER + "/timeTable/configurations/selection/Selection.fxml";
+    private static final String CONFIGURATIONS_PANEL_FXML_RESOURCE_IDENTIFIER = BASE_CENTER + "/timeTable/configurations/ConfigurationsPanel.fxml";
 
     public static final URL CENTER_HOLDER_FXML_RESOURCE = MainApplication.class.getResource(CENTER_HOLDER_FXML_RESOURCE_IDENTIFIER);
     public static final URL SINGLE_LESSON_TT_FXML_RESOURCE = MainApplication.class.getResource(SINGLE_LESSON_DATA_FXML_RESOURCE_IDENTIFIER);
     public static final URL MULTI_LESSONS_TT_FXML_RESOURCE = MainApplication.class.getResource(MULTI_LESSONS_DATA_FXML_RESOURCE_IDENTIFIER);
     public static final URL GRID_TABLE_FXML_RESOURCE = MainApplication.class.getResource(GRID_TABLE_FXML_RESOURCE_IDENTIFIER);
+    public static final URL RAW_INFO_FXML_RESOURCE = MainApplication.class.getResource(RAW_INFO_FXML_RESOURCE_IDENTIFIER);
     public static final URL TIME_TABLE_PANEL_FXML_RESOURCE = MainApplication.class.getResource(TIME_TABLE_PANEL_FXML_RESOURCE_IDENTIFIER);
+
     public static final URL CROSSOVER_CONFIG_FXML_RESOURCE = MainApplication.class.getResource(CROSSOVER_CONFIG_FXML_RESOURCE_IDENTIFIER);
+    public static final URL SELECTION_CONFIG_FXML_RESOURCE = MainApplication.class.getResource(SELECTION_CONFIG_FXML_RESOURCE_IDENTIFIER);
+    public static final URL CONFIGURATIONS_PANEL_FXML_RESOURCE = MainApplication.class.getResource(CONFIGURATIONS_PANEL_FXML_RESOURCE_IDENTIFIER);
 
 
     // Left panel resources (general information)

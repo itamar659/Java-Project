@@ -139,7 +139,6 @@ public class ProbInfoController {
                 "Studies:",
                 this::getClassStudiesList);
 
-        // TODO: Create custom course titledPane (accordion item)
         fillAccordion(accordionCourses,
                 problemModule.coursesProperty(),
                 "",
