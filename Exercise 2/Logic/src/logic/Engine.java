@@ -1,7 +1,9 @@
 package logic;
 
+import engine.base.stopConditions.MaxGenerationsStopCondition;
+import engine.base.stopConditions.MaxFitnessStopCondition;
+import engine.base.stopConditions.TimeStopCondition;
 import logic.evoAlgorithm.TimeTableEvolutionEngine;
-import logic.evoAlgorithm.factory.CrossoverFactory;
 import logic.evoAlgorithm.factory.Factories;
 import logic.timeTable.TimeTable;
 import engine.base.*;
@@ -12,7 +14,6 @@ import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalTime;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Supplier;
@@ -28,15 +29,14 @@ public class Engine implements Serializable {
         IDLE, RUNNING, COMPLETED;
     }
 
+
     private boolean multiThreaded;
     private boolean isFileLoaded;
     private State state;
 
-    private long periodTimeConditionInSeconds;
-    private Instant startRunTime;
-
-    private int stopConditionMaxGenerations;
-    private float stopConditionMaxFitness;
+    private final MaxGenerationsStopCondition<TimeTable> maxGenerationsStopCondition;
+    private final MaxFitnessStopCondition<TimeTable> maxFitnessStopCondition;
+    private final TimeStopCondition timeStopCondition;
 
     private final EvolutionEngine<TimeTable> evoEngine;
     private final TTEvoEngineCreator TTEvoEngineCreator;
@@ -47,6 +47,7 @@ public class Engine implements Serializable {
         return evoEngineSettings;
     }
 
+    // === Regular Getters ===
     public boolean isMultiThreaded() {
         return multiThreaded;
     }
@@ -63,6 +64,7 @@ public class Engine implements Serializable {
         return state;
     }
 
+    // === Listeners ===
     public void addGenerationEndListener(Runnable action) {
         evoEngine.addGenerationEndListener(action);
     }
@@ -79,22 +81,32 @@ public class Engine implements Serializable {
         evoEngine.removeFinishRunListener(action);
     }
 
+    // === Stop Conditions ===
     public  int getMaxGenerationsCondition() {
-        return this.stopConditionMaxGenerations;
+        return maxGenerationsStopCondition.getMaxGenerations();
     }
 
     public void setMaxGenerationsCondition(int stopConditionMaxGenerations) {
-        this.stopConditionMaxGenerations = stopConditionMaxGenerations;
+        maxGenerationsStopCondition.setMaxGenerations(stopConditionMaxGenerations);
     }
 
     public float getMaxFitnessCondition() {
-        return stopConditionMaxFitness;
+        return maxFitnessStopCondition.getRequiredFitness();
     }
 
     public void setMaxFitnessCondition(float stopConditionMaxFitness) {
-        this.stopConditionMaxFitness = stopConditionMaxFitness;
+        maxFitnessStopCondition.setRequiredFitness(stopConditionMaxFitness);
     }
 
+    public long getTimeToStopCondition() {
+        return timeStopCondition.getPeriodOfTime();
+    }
+
+    public void setTimeStopCondition(long periodInSeconds) {
+        timeStopCondition.setPeriodOfTime(periodInSeconds);
+    }
+
+    // === Informative ===
     public  int getCurrentGeneration() {
         return evoEngine.getCurrentGeneration();
     }
@@ -111,21 +123,17 @@ public class Engine implements Serializable {
         return (Map<Integer, TimeTable>) ((TreeMap)evoEngine.getHistoryGeneration2Fitness());
     }
 
-    public Instant getStartRunTime() {
-        return startRunTime;
-    }
-
     public void addStopCondition(StopCondition stopCondition) {
         if (this.state != State.RUNNING) {
             switch (stopCondition) {
                 case MAX_GENERATIONS:
-                    evoEngine.addStopCondition(StopCondition.MAX_GENERATIONS.name(), (Supplier<Boolean> & Serializable)() -> evoEngine.getCurrentGeneration() >= this.stopConditionMaxGenerations);
+                    evoEngine.addStopCondition(StopCondition.MAX_GENERATIONS.name(), maxGenerationsStopCondition);
                     break;
                 case REQUESTED_FITNESS:
-                    evoEngine.addStopCondition(StopCondition.REQUESTED_FITNESS.name(), (Supplier<Boolean> & Serializable)() -> getBestResult().getFitness() >= stopConditionMaxFitness);
+                    evoEngine.addStopCondition(StopCondition.REQUESTED_FITNESS.name(), maxFitnessStopCondition);
                     break;
                 case BY_TIME:
-                    evoEngine.addStopCondition(StopCondition.BY_TIME.name(), (Supplier<Boolean> & Serializable)() -> Instant.now().isAfter(startRunTime.plusSeconds(periodTimeConditionInSeconds)));
+                    evoEngine.addStopCondition(StopCondition.BY_TIME.name(), timeStopCondition);
                     break;
             }
         }
@@ -143,6 +151,11 @@ public class Engine implements Serializable {
         this.evoEngineSettings = new evoEngineSettingsWrapper((TimeTableEvolutionEngine) this.evoEngine);
         this.TTEvoEngineCreator = new TTEvoEngineCreator();
         this.factories = new Factories();
+
+
+        maxGenerationsStopCondition = new MaxGenerationsStopCondition<>(evoEngine);
+        maxFitnessStopCondition = new MaxFitnessStopCondition<>(evoEngine);
+        timeStopCondition = new TimeStopCondition();
     }
 
     public void validateXMLFile(File xmlFile) throws JAXBException, XMLExtractException {
@@ -155,9 +168,10 @@ public class Engine implements Serializable {
             return;
         }
 
-        // Update the engine
+        // Update the engine - Move to TTEvoEngineCreator method.
         this.evoEngine.clearHistory();
         this.evoEngine.setPopulationSize(evolutionEngine.getPopulationSize());
+        this.evoEngine.setElitism(evolutionEngine.getElitism());
         this.evoEngine.setSelection(evolutionEngine.getSelection());
         this.evoEngine.setCrossover(evolutionEngine.getCrossover());
         this.evoEngine.setMutations(evolutionEngine.getMutations());
@@ -177,13 +191,8 @@ public class Engine implements Serializable {
 
     public void startAlgorithm() {
         this.state = State.RUNNING;
-        startRunTime = Instant.now();
+        timeStopCondition.reset();
         this.evoEngine.runAlgorithm();
-//        if (multiThreaded) {
-//            new Thread(this.evoEngine::runAlgorithm, "Evolution Algorithm thread").start();
-//        } else {
-//            this.evoEngine.runAlgorithm();
-//        }
     }
 
     public void stopAlgorithm() {
@@ -192,6 +201,12 @@ public class Engine implements Serializable {
 
     public void pauseAlgorithm() {
         this.evoEngine.pauseAlgorithm();
+        timeStopCondition.pause();
+    }
+
+    public void resumeAlgorithm() {
+        this.state = State.RUNNING;
+        this.evoEngine.runAlgorithm();
     }
 
     private void algorithmFinished() {

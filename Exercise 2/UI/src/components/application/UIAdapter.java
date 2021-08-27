@@ -39,7 +39,7 @@ public class UIAdapter {
     }
 
     public void startAlgorithm() {
-        currentRunningTask = new StartAlgorithm(theEngine);
+        currentRunningTask = new StartAlgorithm(theEngine, false);
 
         // TODO: Bind the UI Components
 
@@ -52,5 +52,11 @@ public class UIAdapter {
 
     public void stopAlgorithm() {
         theEngine.stopAlgorithm();
+    }
+
+    public void resumeAlgorithm() {
+        currentRunningTask = new StartAlgorithm(theEngine, true);
+
+        new Thread(currentRunningTask, "Running Algorithm Thread").start();
     }
 }

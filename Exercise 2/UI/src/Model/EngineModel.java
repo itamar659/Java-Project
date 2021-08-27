@@ -28,6 +28,11 @@ public class EngineModel {
     private final BooleanProperty isPaused = new SimpleBooleanProperty(false);
     private final BooleanProperty isFileLoaded = new SimpleBooleanProperty(false);
 
+    // TODO: 3 methods to update those properties for each stop condition.
+    private final IntegerProperty MaxGenerationsCondition = new SimpleIntegerProperty(0);
+    private final FloatProperty MaxFitnessCondition = new SimpleFloatProperty(0);
+    private final FloatProperty TimeCondition = new SimpleFloatProperty(0);
+
     // Properties Getters
     public ObjectProperty<TimeTable> bestSolutionProperty() {
         return bestSolution;
@@ -49,11 +54,25 @@ public class EngineModel {
         return isFileLoaded;
     }
 
+    public IntegerProperty maxGenerationsConditionProperty() {
+        return MaxGenerationsCondition;
+    }
+
+    public FloatProperty maxFitnessConditionProperty() {
+        return MaxFitnessCondition;
+    }
+
+    public FloatProperty timeConditionProperty() {
+        return TimeCondition;
+    }
+
+
     // Default Constructor
     public EngineModel() {
         theEngine = new Engine();
-        theEngine.addFinishRunListener( () -> Platform.runLater(this::onGenerationEnd));
-        theEngine.addGenerationEndListener(() -> Platform.runLater(this::onGenerationEnd));
+        theEngine.addFinishRunListener(this::onGenerationEnd);
+        theEngine.addFinishRunListener(this::onFinish);
+        theEngine.addGenerationEndListener(this::onGenerationEnd);
         evoSettingsChangeListeners = new Listeners();
     }
 
@@ -63,6 +82,11 @@ public class EngineModel {
 
     private void onGenerationEnd () {
         Platform.runLater(() -> bestSolution.set(theEngine.getBestResult()));
+    }
+
+    private void onFinish() {
+        setIsWorking(false);
+        setIsPaused(false);
     }
 
     public void validateXMLFile(File xmlFilePath) throws JAXBException, XMLExtractException {
@@ -108,6 +132,12 @@ public class EngineModel {
         onGenerationEnd();
         setIsWorking(false);
         setIsPaused(false);
+    }
+
+    public void resumeAlgorithm() {
+        setIsWorking(true);
+        setIsPaused(false);
+        theEngine.resumeAlgorithm();
     }
 
     public void pauseAlgorithm() {
