@@ -21,6 +21,7 @@ public class MaxGenerationsStopCondition<T> implements StopCondition {
 
     @Override
     public boolean shouldStop() {
+        System.out.printf("Generation: %s / %s%n", evolutionEngine.getCurrentGeneration(), maxGenerations);
         return evolutionEngine.getCurrentGeneration() >= maxGenerations;
     }
 }

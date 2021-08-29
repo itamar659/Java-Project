@@ -124,6 +124,8 @@ public class EngineModel {
         setIsWorking(true);
         setIsPaused(false);
         theEngine.setUpdateGenerationInterval(5);
+        theEngine.addStopCondition(Engine.StopCondition.MAX_GENERATIONS);
+        theEngine.setMaxGenerationsCondition(100);
         theEngine.startAlgorithm();
     }
 
