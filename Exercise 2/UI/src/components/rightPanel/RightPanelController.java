@@ -33,6 +33,8 @@ public class RightPanelController {
 
         isRunning.bind(uiAdapter.getTheEngine().isWorkingProperty());
         isPaused.bind(uiAdapter.getTheEngine().isPausedProperty());
+
+        buttonStartPause.disableProperty().bind(uiAdapter.getTheEngine().isFileLoadedProperty().not());
     }
 
     @FXML
@@ -53,7 +55,7 @@ public class RightPanelController {
         isPaused.addListener((observable, oldValue, newValue) ->
                     buttonStartPause.setText(isRunning.get() ? "Pause" : (newValue ? "Resume" : "Start")));
 
-        buttonStop.disableProperty().bind((isPaused.or(isRunning).not()));
+        buttonStop.disableProperty().bind(buttonStartPause.disableProperty().or(isPaused.or(isRunning).not()));
     }
 
     @FXML

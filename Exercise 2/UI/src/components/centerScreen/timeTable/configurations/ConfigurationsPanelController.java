@@ -5,6 +5,8 @@ import components.application.UIAdapter;
 import components.centerScreen.timeTable.configurations.crossover.CrossoverController;
 import components.centerScreen.timeTable.configurations.mutations.MutationsController;
 import components.centerScreen.timeTable.configurations.selection.SelectionController;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -39,6 +41,8 @@ public class ConfigurationsPanelController {
         uiAdapter.getTheEngine().elitismProperty().addListener((observable, oldValue, newValue) -> {
             textFieldElitism.setText(newValue.toString());
         });
+
+        flowPaneConfigurations.visibleProperty().bind(uiAdapter.getTheEngine().isWorkingProperty().not());
     }
 
     @FXML

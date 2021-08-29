@@ -205,10 +205,12 @@ public abstract class EvolutionEngine<T> implements Serializable {
         }
 
         setBestSolution(population.getBestSolutionFitness());
-        updateHistoryGeneration2Fitness(currentGeneration, population.getBestSolutionFitness());
         isRunning = false;
 
-        onFinish();
+        if (!isPaused) {
+            onFinish();
+            updateHistoryGeneration2Fitness(currentGeneration, population.getBestSolutionFitness());
+        }
     }
 
     public synchronized void stopAlgorithm() {
