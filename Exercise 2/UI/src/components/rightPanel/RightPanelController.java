@@ -16,17 +16,19 @@ import java.io.IOException;
 import java.net.URL;
 
 public class RightPanelController {
-    @FXML private Button buttonStartPause;
-    @FXML private Button buttonStop;
-    @FXML private StackPane stackPaneTop;
 
+    @FXML
+    private Button buttonStartPause;
+    @FXML
+    private Button buttonStop;
+    @FXML
+    private StackPane stackPaneTop;
 
     private UIAdapter uiAdapter;
     private TopRightContorller topRightContorller;
 
     private final BooleanProperty isPaused = new SimpleBooleanProperty(true);
     private final BooleanProperty isRunning = new SimpleBooleanProperty(false);
-
 
     public void setUiAdapter(UIAdapter uiAdapter) {
         this.uiAdapter = uiAdapter;
@@ -51,9 +53,9 @@ public class RightPanelController {
         }
 
         isRunning.addListener((observable, oldValue, newValue) ->
-                    buttonStartPause.setText(isPaused.get() ? "Resume" : (!newValue ? "Start" : "Pause")));
+                buttonStartPause.setText(isPaused.get() ? "Resume" : (!newValue ? "Start" : "Pause")));
         isPaused.addListener((observable, oldValue, newValue) ->
-                    buttonStartPause.setText(isRunning.get() ? "Pause" : (newValue ? "Resume" : "Start")));
+                buttonStartPause.setText(isRunning.get() ? "Pause" : (newValue ? "Resume" : "Start")));
 
         buttonStop.disableProperty().bind(buttonStartPause.disableProperty().or(isPaused.or(isRunning).not()));
     }
@@ -71,5 +73,4 @@ public class RightPanelController {
     void buttonStop_Clicked(ActionEvent event) {
         uiAdapter.stopAlgorithm();
     }
-
 }

@@ -7,7 +7,7 @@ public class Resources {
     // Center panel resources (time table)
     private static final String BASE_CENTER = "/components/centerScreen";
 
-    private static final String CENTER_HOLDER_FXML_RESOURCE_IDENTIFIER = BASE_CENTER + "/centerHolder.fxml";
+    private static final String CENTER_HOLDER_FXML_RESOURCE_IDENTIFIER = BASE_CENTER + "/CenterHolder.fxml";
     private static final String SINGLE_LESSON_DATA_FXML_RESOURCE_IDENTIFIER = BASE_CENTER + "/timeTable/lessonInfo/LessonInfo.fxml";
     private static final String MULTI_LESSONS_DATA_FXML_RESOURCE_IDENTIFIER = BASE_CENTER + "/timeTable/lessonsInfo/LessonsInfo.fxml";
     private static final String GRID_TABLE_FXML_RESOURCE_IDENTIFIER = BASE_CENTER + "/timeTable/timeTableComponent/TimeTableComponent.fxml";
@@ -36,9 +36,9 @@ public class Resources {
     private static final String BASE_LEFT = "/components/problemInfo";
 
     private static final String PROBLEM_INFO_FXML_RESOURCE_IDENTIFIER = BASE_LEFT + "/ProbInfo.fxml";
-    private static final String ACCORDION_ITEM_FXML_RESOURCE_IDENTIFIER = BASE_LEFT + "/accordionItem/accordionItem.fxml";
-    private static final String RULE_ACCORDION_ITEM_FXML_RESOURCE_IDENTIFIER = BASE_LEFT + "/ruleAccordionItem/ruleAccordionItem.fxml";
-    private static final String CONFIG_RULE_ITEM_FXML_RESOURCE_IDENTIFIER = BASE_LEFT + "/configItem/configItem.fxml";
+    private static final String ACCORDION_ITEM_FXML_RESOURCE_IDENTIFIER = BASE_LEFT + "/accordionItem/AccordionItem.fxml";
+    private static final String RULE_ACCORDION_ITEM_FXML_RESOURCE_IDENTIFIER = BASE_LEFT + "/ruleAccordionItem/RuleAccordionItem.fxml";
+    private static final String CONFIG_RULE_ITEM_FXML_RESOURCE_IDENTIFIER = BASE_LEFT + "/configItem/ConfigItem.fxml";
 
     public static final URL PROBLEM_INFO_FXML_RESOURCE = MainApplication.class.getResource(PROBLEM_INFO_FXML_RESOURCE_IDENTIFIER);
     public static final URL ACCORDION_ITEM_FXML_RESOURCE = MainApplication.class.getResource(ACCORDION_ITEM_FXML_RESOURCE_IDENTIFIER);
