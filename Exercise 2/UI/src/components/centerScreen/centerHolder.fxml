@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -16,9 +18,10 @@
       <VBox BorderPane.alignment="CENTER">
          <children>
             <Separator />
-            <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+            <GridPane hgap="2.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="5.0">
                <columnConstraints>
                   <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity" />
+                  <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity" />
                   <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
                </columnConstraints>
@@ -28,52 +31,58 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" text="Task 1 Progress:" textAlignment="CENTER">
-                     <GridPane.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </GridPane.margin>
-                  </Label>
-                  <ProgressBar fx:id="progressBarTask1" maxWidth="1.7976931348623157E308" progress="0.0" GridPane.columnIndex="2">
+                  <ProgressBar fx:id="progressBarMaxGenerations" maxWidth="1.7976931348623157E308" progress="0.0" GridPane.columnIndex="3">
                      <padding>
                         <Insets left="10.0" right="10.0" />
                      </padding>
                   </ProgressBar>
-                  <Label fx:id="labelTask1Percentage" alignment="CENTER" contentDisplay="CENTER" text="[holder]" textAlignment="CENTER" GridPane.columnIndex="1">
+                  <Label fx:id="labelMaxGenerationsPercentage" alignment="CENTER" contentDisplay="CENTER" text="[holder]" textAlignment="CENTER" GridPane.columnIndex="2">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </Label>
-                  <ProgressBar fx:id="progressBarTask2" maxWidth="1.7976931348623157E308" progress="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <ProgressBar fx:id="progressBarMaxFitness" maxWidth="1.7976931348623157E308" progress="0.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
                      <padding>
                         <Insets left="10.0" right="10.0" />
                      </padding>
                   </ProgressBar>
-                  <ProgressBar fx:id="progressBarTask3" maxWidth="1.7976931348623157E308" progress="0.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                  <ProgressBar fx:id="progressBarMaxTime" maxWidth="1.7976931348623157E308" progress="0.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
                      <padding>
                         <Insets left="10.0" right="10.0" />
                      </padding>
                   </ProgressBar>
-                  <Label fx:id="labelTask2Percentage" alignment="CENTER" contentDisplay="CENTER" text="[holder]" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Label fx:id="labelFitnessPercentage" alignment="CENTER" contentDisplay="CENTER" text="[holder]" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label fx:id="labelTask3Percentage" alignment="CENTER" contentDisplay="CENTER" text="[holder]" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <Label fx:id="labelMaxTimePercentage" alignment="CENTER" contentDisplay="CENTER" text="[holder]" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label alignment="CENTER" contentDisplay="CENTER" text="Task 2 Progress:" textAlignment="CENTER" GridPane.rowIndex="1">
+                  <CheckBox fx:id="checkBoxMaxGenerations" mnemonicParsing="false" text="Max Generations" />
+                  <TextField GridPane.columnIndex="1">
                      <GridPane.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        <Insets left="10.0" right="10.0" />
                      </GridPane.margin>
-                  </Label>
-                  <Label alignment="CENTER" contentDisplay="CENTER" text="Task 3 Progress:" textAlignment="CENTER" GridPane.rowIndex="2">
+                  </TextField>
+                  <CheckBox fx:id="checkBoxMaxFitness" layoutX="10.0" layoutY="17.0" mnemonicParsing="false" text="Max Fitness" GridPane.rowIndex="1" />
+                  <CheckBox fx:id="checkBoxMaxTime" layoutX="10.0" layoutY="52.0" mnemonicParsing="false" text="Max Time" GridPane.rowIndex="2" />
+                  <TextField layoutX="133.0" layoutY="13.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        <Insets left="10.0" right="10.0" />
                      </GridPane.margin>
-                  </Label>
+                  </TextField>
+                  <TextField layoutX="123.0" layoutY="48.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </GridPane.margin>
+                  </TextField>
                </children>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
             </GridPane>
          </children>
       </VBox>

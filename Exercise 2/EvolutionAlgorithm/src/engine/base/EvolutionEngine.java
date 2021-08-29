@@ -1,6 +1,7 @@
 package engine.base;
 
 import engine.Listeners;
+import engine.base.stopConditions.StopCondition;
 
 import java.io.Serializable;
 import java.util.*;
@@ -18,7 +19,7 @@ public abstract class EvolutionEngine<T> implements Serializable {
     protected int elitism;
 
     private int currentGeneration;
-    private Map<String, Supplier<Boolean>> stopConditions;
+    private Map<String, StopCondition> stopConditions;
     private Solution<T> bestSolution;
     private Map<Integer, Solution<T>> historyGeneration2Fitness;
 
@@ -92,7 +93,7 @@ public abstract class EvolutionEngine<T> implements Serializable {
         this.updateGenerationInterval = updateGenerationInterval;
     }
 
-    public void addStopCondition(String id, Supplier<Boolean> stopCondition) {
+    public void addStopCondition(String id, StopCondition stopCondition) {
         this.stopConditions.put(id, stopCondition);
     }
 
@@ -157,13 +158,12 @@ public abstract class EvolutionEngine<T> implements Serializable {
         if (!isPaused) {
             this.currentGeneration = 0;
             this.historyGeneration2Fitness.clear();
-            setBestSolution(population.getBestSolutionFitness());
         }
 
         isPaused = false;
-        boolean[] shouldStop = {false};
+        boolean[] shouldStop = {stopConditions.values().size() == 0};
         stopConditions.values().forEach(condition -> {
-            shouldStop[0] = true;
+            if (condition.shouldStop()) shouldStop[0] = true;
         });
         for (; isRunning && !isPaused && !shouldStop[0]; currentGeneration++) {
 
@@ -200,7 +200,7 @@ public abstract class EvolutionEngine<T> implements Serializable {
 
             // Check conditions
             stopConditions.values().forEach(condition -> {
-                shouldStop[0] = true;
+                if (condition.shouldStop()) shouldStop[0] = true;
             });
         }
 
@@ -211,12 +211,12 @@ public abstract class EvolutionEngine<T> implements Serializable {
         onFinish();
     }
 
-    public void stopAlgorithm() {
+    public synchronized void stopAlgorithm() {
         isPaused = false;
         isRunning = false;
     }
 
-    public void pauseAlgorithm() {
+    public synchronized void pauseAlgorithm() {
         isPaused = true;
         isRunning = false;
     }

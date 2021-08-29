@@ -40,6 +40,8 @@ public class evoEngineSettingsWrapper implements Serializable {
         return TTEAlgorithm.getPopulationSize();
     }
 
+    public int getElitism() {return TTEAlgorithm.getElitism(); }
+
     public int getDays() {
         return TTEAlgorithm.getProblem().getDays();
     }

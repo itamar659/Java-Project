@@ -2,10 +2,13 @@ package Model;
 
 import engine.Listeners;
 import engine.base.Crossover;
+import engine.base.Mutation;
 import engine.base.Selection;
 import engine.base.configurable.Configurable;
 import javafx.application.Platform;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import logic.Engine;
 import logic.evoEngineSettingsWrapper;
 import logic.schema.exceptions.XMLExtractException;
@@ -24,18 +27,37 @@ public class EngineModel {
     private final ObjectProperty<TimeTable> bestSolution = new SimpleObjectProperty<>();
     private final ObjectProperty<Crossover<TimeTable>> crossover = new SimpleObjectProperty<>();
     private final ObjectProperty<Selection<TimeTable>> selection = new SimpleObjectProperty<>();
+    private final ListProperty<Mutation<TimeTable>> mutations = new SimpleListProperty<>();
+    private final IntegerProperty elitism = new SimpleIntegerProperty(0);
     private final BooleanProperty isWorking = new SimpleBooleanProperty(false);
     private final BooleanProperty isPaused = new SimpleBooleanProperty(false);
     private final BooleanProperty isFileLoaded = new SimpleBooleanProperty(false);
+
+    // TODO: 3 methods to update those properties for each stop condition.
+    private final IntegerProperty MaxGenerationsCondition = new SimpleIntegerProperty(0);
+    private final FloatProperty MaxFitnessCondition = new SimpleFloatProperty(0);
+    private final FloatProperty TimeCondition = new SimpleFloatProperty(0);
 
     // Properties Getters
     public ObjectProperty<TimeTable> bestSolutionProperty() {
         return bestSolution;
     }
 
-    public ObjectProperty<Crossover<TimeTable>> crossoverProperty() { return crossover; }
+    public ObjectProperty<Crossover<TimeTable>> crossoverProperty() {
+        return crossover;
+    }
 
-    public ObjectProperty<Selection<TimeTable>> selectionProperty() { return selection; }
+    public ObjectProperty<Selection<TimeTable>> selectionProperty() {
+        return selection;
+    }
+
+    public ListProperty<Mutation<TimeTable>> mutationsProperty() {
+        return mutations;
+    }
+
+    public IntegerProperty elitismProperty() {
+        return elitism;
+    }
 
     public BooleanProperty isWorkingProperty() {
         return isWorking;
@@ -49,12 +71,31 @@ public class EngineModel {
         return isFileLoaded;
     }
 
+    // TODO: 3 methods to update those properties for each stop condition.
+    public IntegerProperty maxGenerationsConditionProperty() {
+        return MaxGenerationsCondition;
+    }
+
+    public FloatProperty maxFitnessConditionProperty() {
+        return MaxFitnessCondition;
+    }
+
+    public FloatProperty timeConditionProperty() {
+        return TimeCondition;
+    }
+
+
     // Default Constructor
     public EngineModel() {
         theEngine = new Engine();
-        theEngine.addFinishRunListener( () -> Platform.runLater(this::onGenerationEnd));
-        theEngine.addGenerationEndListener(() -> Platform.runLater(this::onGenerationEnd));
+        theEngine.addFinishRunListener(this::onGenerationEnd);
+        theEngine.addFinishRunListener(this::onFinish);
+        theEngine.addGenerationEndListener(this::onGenerationEnd);
         evoSettingsChangeListeners = new Listeners();
+
+        elitism.addListener((observable, oldValue, newValue) -> {
+            theEngine.setElitism(newValue.intValue());
+        });
     }
 
     public void addEvoSettingsChangeListener(Runnable func) {
@@ -63,6 +104,11 @@ public class EngineModel {
 
     private void onGenerationEnd () {
         Platform.runLater(() -> bestSolution.set(theEngine.getBestResult()));
+    }
+
+    private void onFinish() {
+        setIsWorking(false);
+        setIsPaused(false);
     }
 
     public void validateXMLFile(File xmlFilePath) throws JAXBException, XMLExtractException {
@@ -86,6 +132,9 @@ public class EngineModel {
         bestSolution.set(null);
         crossover.set(theEngine.getEvoEngineSettings().getCrossover());
         selection.set(theEngine.getEvoEngineSettings().getSelection());
+        mutations.clear();
+        mutations.set(FXCollections.observableArrayList(theEngine.getEvoEngineSettings().getMutations()));
+        elitism.set(theEngine.getEvoEngineSettings().getElitism());
     }
 
     public void addGenerationEndListener(Runnable onGeneration) {
@@ -100,6 +149,8 @@ public class EngineModel {
         setIsWorking(true);
         setIsPaused(false);
         theEngine.setUpdateGenerationInterval(5);
+        theEngine.addStopCondition(Engine.StopCondition.MAX_GENERATIONS);
+        theEngine.setMaxGenerationsCondition(100);
         theEngine.startAlgorithm();
     }
 
@@ -108,6 +159,12 @@ public class EngineModel {
         onGenerationEnd();
         setIsWorking(false);
         setIsPaused(false);
+    }
+
+    public void resumeAlgorithm() {
+        setIsWorking(true);
+        setIsPaused(false);
+        theEngine.resumeAlgorithm();
     }
 
     public void pauseAlgorithm() {

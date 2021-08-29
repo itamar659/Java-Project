@@ -6,6 +6,7 @@ import components.centerScreen.timeTable.TimeTablePanelController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.StackPane;
@@ -16,22 +17,31 @@ import java.net.URL;
 public class CenterHolderController {
 
     @FXML
-    private ProgressBar progressBarTask1;
+    private ProgressBar progressBarMaxGenerations;
 
     @FXML
-    private Label labelTask1Percentage;
+    private Label labelMaxGenerationsPercentage;
 
     @FXML
-    private ProgressBar progressBarTask2;
+    private ProgressBar progressBarMaxFitness;
 
     @FXML
-    private ProgressBar progressBarTask3;
+    private ProgressBar progressBarMaxTime;
 
     @FXML
-    private Label labelTask2Percentage;
+    private Label labelFitnessPercentage;
 
     @FXML
-    private Label labelTask3Percentage;
+    private Label labelMaxTimePercentage;
+
+    @FXML
+    private CheckBox checkBoxMaxGenerations;
+
+    @FXML
+    private CheckBox checkBoxMaxFitness;
+
+    @FXML
+    private CheckBox checkBoxMaxTime;
 
     @FXML
     private StackPane stackPaneCenter;

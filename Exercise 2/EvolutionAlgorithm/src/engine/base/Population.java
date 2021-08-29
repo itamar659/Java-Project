@@ -45,8 +45,8 @@ public abstract class Population<T> implements Serializable {
         for (int i = 0; i < p1.getSize(); i++) {
             merged.setSolutionByIndex(i, p1.getSolutionByIndex(i));
         }
-        for (int i = p1.getSize(); i < p1.getSize() + this.getSize(); i++) {
-            merged.setSolutionByIndex(i, this.getSolutionByIndex(i));
+        for (int i = 0; i < this.getSize(); i++) {
+            merged.setSolutionByIndex(i + p1.getSize(), this.getSolutionByIndex(i));
         }
 
         return merged;
