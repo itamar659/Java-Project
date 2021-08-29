@@ -13,10 +13,8 @@ import logic.schema.exceptions.XMLExtractException;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.function.Supplier;
 
 // Wrapper with more functionality to EvolutionEngine
 public class Engine implements Serializable {

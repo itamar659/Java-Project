@@ -2,10 +2,13 @@ package Model;
 
 import engine.Listeners;
 import engine.base.Crossover;
+import engine.base.Mutation;
 import engine.base.Selection;
 import engine.base.configurable.Configurable;
 import javafx.application.Platform;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import logic.Engine;
 import logic.evoEngineSettingsWrapper;
 import logic.schema.exceptions.XMLExtractException;
@@ -24,6 +27,7 @@ public class EngineModel {
     private final ObjectProperty<TimeTable> bestSolution = new SimpleObjectProperty<>();
     private final ObjectProperty<Crossover<TimeTable>> crossover = new SimpleObjectProperty<>();
     private final ObjectProperty<Selection<TimeTable>> selection = new SimpleObjectProperty<>();
+    private final ListProperty<Mutation<TimeTable>> mutations = new SimpleListProperty<>();
     private final IntegerProperty elitism = new SimpleIntegerProperty(0);
     private final BooleanProperty isWorking = new SimpleBooleanProperty(false);
     private final BooleanProperty isPaused = new SimpleBooleanProperty(false);
@@ -45,6 +49,10 @@ public class EngineModel {
 
     public ObjectProperty<Selection<TimeTable>> selectionProperty() {
         return selection;
+    }
+
+    public ListProperty<Mutation<TimeTable>> mutationsProperty() {
+        return mutations;
     }
 
     public IntegerProperty elitismProperty() {
@@ -124,6 +132,8 @@ public class EngineModel {
         bestSolution.set(null);
         crossover.set(theEngine.getEvoEngineSettings().getCrossover());
         selection.set(theEngine.getEvoEngineSettings().getSelection());
+        mutations.clear();
+        mutations.set(FXCollections.observableArrayList(theEngine.getEvoEngineSettings().getMutations()));
         elitism.set(theEngine.getEvoEngineSettings().getElitism());
     }
 
