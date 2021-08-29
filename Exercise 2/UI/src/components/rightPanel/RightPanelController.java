@@ -62,8 +62,10 @@ public class RightPanelController {
 
     @FXML
     void buttonStartPause_Clicked(ActionEvent event) {
-        if (!isRunning.get() || isPaused.get()) {
+        if (!isRunning.get() && !isPaused.get()) {
             uiAdapter.startAlgorithm();
+        } else if (!isRunning.get() || isPaused.get()) {
+            uiAdapter.resumeAlgorithm();
         } else {
             uiAdapter.pauseAlgorithm();
         }
