@@ -143,6 +143,10 @@ public class Engine implements Serializable {
         evoEngine.removeStopCondition(stopCondition.name());
     }
 
+    public void setElitism(int elitism) {
+        evoEngine.setElitism(elitism);
+    }
+
     public Engine() {
         this.multiThreaded = false;
         this.state = State.IDLE;

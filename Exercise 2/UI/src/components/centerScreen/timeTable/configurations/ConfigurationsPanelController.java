@@ -7,6 +7,7 @@ import components.centerScreen.timeTable.configurations.selection.SelectionContr
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 
 import java.io.IOException;
@@ -22,12 +23,18 @@ public class ConfigurationsPanelController {
     private Parent selectionParent;
 
     @FXML
+    private TextField textFieldElitism;
+
+    @FXML
     private FlowPane flowPaneConfigurations;
 
     public void setUiAdapter(UIAdapter uiAdapter) {
         this.uiAdapter = uiAdapter;
         crossoverController.setUiAdapter(uiAdapter);
         selectionController.setUiAdapter(uiAdapter);
+        uiAdapter.getTheEngine().elitismProperty().addListener((observable, oldValue, newValue) -> {
+            textFieldElitism.setText(newValue.toString());
+        });
     }
 
     @FXML
@@ -37,6 +44,15 @@ public class ConfigurationsPanelController {
 
         flowPaneConfigurations.getChildren().add(crossoverParent);
         flowPaneConfigurations.getChildren().add(selectionParent);
+
+        textFieldElitism.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                uiAdapter.getTheEngine().elitismProperty().set(Integer.parseInt(newValue));
+            } catch (Exception e) {
+                uiAdapter.getTheEngine().elitismProperty().set(0);
+                textFieldElitism.setText(Integer.toString(uiAdapter.getTheEngine().elitismProperty().get()));
+            }
+        });
     }
 
     private void createCrossoverController() {

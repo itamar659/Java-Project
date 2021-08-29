@@ -24,6 +24,7 @@ public class EngineModel {
     private final ObjectProperty<TimeTable> bestSolution = new SimpleObjectProperty<>();
     private final ObjectProperty<Crossover<TimeTable>> crossover = new SimpleObjectProperty<>();
     private final ObjectProperty<Selection<TimeTable>> selection = new SimpleObjectProperty<>();
+    private final IntegerProperty elitism = new SimpleIntegerProperty(0);
     private final BooleanProperty isWorking = new SimpleBooleanProperty(false);
     private final BooleanProperty isPaused = new SimpleBooleanProperty(false);
     private final BooleanProperty isFileLoaded = new SimpleBooleanProperty(false);
@@ -38,9 +39,17 @@ public class EngineModel {
         return bestSolution;
     }
 
-    public ObjectProperty<Crossover<TimeTable>> crossoverProperty() { return crossover; }
+    public ObjectProperty<Crossover<TimeTable>> crossoverProperty() {
+        return crossover;
+    }
 
-    public ObjectProperty<Selection<TimeTable>> selectionProperty() { return selection; }
+    public ObjectProperty<Selection<TimeTable>> selectionProperty() {
+        return selection;
+    }
+
+    public IntegerProperty elitismProperty() {
+        return elitism;
+    }
 
     public BooleanProperty isWorkingProperty() {
         return isWorking;
@@ -54,6 +63,7 @@ public class EngineModel {
         return isFileLoaded;
     }
 
+    // TODO: 3 methods to update those properties for each stop condition.
     public IntegerProperty maxGenerationsConditionProperty() {
         return MaxGenerationsCondition;
     }
@@ -74,6 +84,10 @@ public class EngineModel {
         theEngine.addFinishRunListener(this::onFinish);
         theEngine.addGenerationEndListener(this::onGenerationEnd);
         evoSettingsChangeListeners = new Listeners();
+
+        elitism.addListener((observable, oldValue, newValue) -> {
+            theEngine.setElitism(newValue.intValue());
+        });
     }
 
     public void addEvoSettingsChangeListener(Runnable func) {
@@ -110,6 +124,7 @@ public class EngineModel {
         bestSolution.set(null);
         crossover.set(theEngine.getEvoEngineSettings().getCrossover());
         selection.set(theEngine.getEvoEngineSettings().getSelection());
+        elitism.set(theEngine.getEvoEngineSettings().getElitism());
     }
 
     public void addGenerationEndListener(Runnable onGeneration) {
