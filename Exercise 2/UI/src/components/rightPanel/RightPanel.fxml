@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.291" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.rightPanel.RightPanelController">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.281" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.rightPanel.RightPanelController">
    <bottom>
       <VBox alignment="CENTER" BorderPane.alignment="CENTER">
          <children>
