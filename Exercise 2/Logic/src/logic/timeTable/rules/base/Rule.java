@@ -35,11 +35,11 @@ public abstract class Rule<T> implements HasId, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Rule<?> rule = (Rule<?>) o;
-        return type == rule.type;
+        return getId().equals(rule.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type);
+        return Objects.hash(getId());
     }
 }
