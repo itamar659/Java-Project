@@ -33,7 +33,6 @@ public class EngineModel {
     private final BooleanProperty isPaused = new SimpleBooleanProperty(false);
     private final BooleanProperty isFileLoaded = new SimpleBooleanProperty(false);
 
-    // TODO: 3 methods to update those properties for each stop condition.
     private final IntegerProperty maxGenerationsCondition = new SimpleIntegerProperty(0);
     private final FloatProperty maxFitnessCondition = new SimpleFloatProperty(0);
     private final FloatProperty timeCondition = new SimpleFloatProperty(0);
@@ -71,7 +70,6 @@ public class EngineModel {
         return isFileLoaded;
     }
 
-    // TODO: 3 methods to update those properties for each stop condition.
     public IntegerProperty maxGenerationsConditionProperty() {
         return maxGenerationsCondition;
     }
@@ -112,7 +110,7 @@ public class EngineModel {
         evoSettingsChangeListeners.add(func);
     }
 
-    private void onGenerationEnd () {
+    private void onGenerationEnd() {
         Platform.runLater(() -> bestSolution.set(theEngine.getBestResult()));
     }
 

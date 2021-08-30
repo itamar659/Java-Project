@@ -2,7 +2,7 @@ package components.rightPanel;
 
 import components.Resources;
 import components.application.UIAdapter;
-import components.rightPanel.topRightPanel.TopRightContorller;
+import components.rightPanel.topRightPanel.TopRightController;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -13,7 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
-import java.net.URL;
 
 public class RightPanelController {
 
@@ -25,13 +24,14 @@ public class RightPanelController {
     private StackPane stackPaneTop;
 
     private UIAdapter uiAdapter;
-    private TopRightContorller topRightContorller;
+    private TopRightController topRightController;
 
     private final BooleanProperty isPaused = new SimpleBooleanProperty(true);
     private final BooleanProperty isRunning = new SimpleBooleanProperty(false);
 
     public void setUiAdapter(UIAdapter uiAdapter) {
         this.uiAdapter = uiAdapter;
+        topRightController.setUiAdapter(uiAdapter);
 
         isRunning.bind(uiAdapter.getTheEngine().isWorkingProperty());
         isPaused.bind(uiAdapter.getTheEngine().isPausedProperty());
@@ -46,7 +46,7 @@ public class RightPanelController {
 
         try {
             Parent root = loader.load();
-            this.topRightContorller = loader.getController();
+            this.topRightController = loader.getController();
             stackPaneTop.getChildren().add(root);
         } catch (IOException e) {
             e.printStackTrace();
