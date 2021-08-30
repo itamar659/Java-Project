@@ -37,6 +37,10 @@ public class EngineModel {
     private final FloatProperty maxFitnessCondition = new SimpleFloatProperty(0);
     private final FloatProperty timeCondition = new SimpleFloatProperty(0);
 
+    private final FloatProperty maxGenerationProgress = new SimpleFloatProperty(0);
+    private final FloatProperty maxFitnessProgress = new SimpleFloatProperty(0);
+    private final FloatProperty timeProgress = new SimpleFloatProperty(0);
+
     // Properties Getters
     public ObjectProperty<TimeTable> bestSolutionProperty() {
         return bestSolution;
@@ -82,6 +86,20 @@ public class EngineModel {
         return timeCondition;
     }
 
+    // TODO: Be able to set the generation interval
+    //  After that need to change onGenerationEnd listener to a new one that raise every generation and not gen interval.
+
+    public FloatProperty maxGenerationProgressProperty() {
+        return maxGenerationProgress;
+    }
+
+    public FloatProperty maxFitnessProgressProperty() {
+        return maxFitnessProgress;
+    }
+
+    public FloatProperty timeProgressProperty() {
+        return timeProgress;
+    }
 
     // Default Constructor
     public EngineModel() {
@@ -111,7 +129,14 @@ public class EngineModel {
     }
 
     private void onGenerationEnd() {
-        Platform.runLater(() -> bestSolution.set(theEngine.getBestResult()));
+        Platform.runLater(() -> {
+            // Update the best solution
+            bestSolution.set(theEngine.getBestResult());
+            // Update progress bars
+            maxGenerationProgress.set(theEngine.getStopCondition(Engine.StopCondition.MAX_GENERATIONS).getProgress());
+            maxFitnessProgress.set(theEngine.getStopCondition(Engine.StopCondition.REQUESTED_FITNESS).getProgress());
+            timeProgress.set(theEngine.getStopCondition(Engine.StopCondition.BY_TIME).getProgress());
+        });
     }
 
     private void onFinish() {

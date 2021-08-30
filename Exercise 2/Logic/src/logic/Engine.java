@@ -2,6 +2,7 @@ package logic;
 
 import engine.base.stopConditions.MaxGenerationsStopCondition;
 import engine.base.stopConditions.MaxFitnessStopCondition;
+import engine.base.stopConditions.StopCondition;
 import engine.base.stopConditions.TimeStopCondition;
 import logic.evoAlgorithm.TimeTableEvolutionEngine;
 import logic.evoAlgorithm.factory.Factories;
@@ -137,6 +138,19 @@ public class Engine implements Serializable {
         }
     }
 
+    public engine.base.stopConditions.StopCondition getStopCondition(StopCondition stopCondition) {
+        switch (stopCondition) {
+            case MAX_GENERATIONS:
+                return maxGenerationsStopCondition;
+            case REQUESTED_FITNESS:
+                return maxFitnessStopCondition;
+            case BY_TIME:
+                return timeStopCondition;
+        }
+
+        return null;
+    }
+
     public void removeStopCondition(StopCondition stopCondition) {
         evoEngine.removeStopCondition(stopCondition.name());
     }
@@ -203,11 +217,11 @@ public class Engine implements Serializable {
 
     public void pauseAlgorithm() {
         this.evoEngine.pauseAlgorithm();
-        timeStopCondition.pause();
     }
 
     public void resumeAlgorithm() {
         this.state = State.RUNNING;
+        timeStopCondition.pause();
         this.evoEngine.runAlgorithm();
     }
 

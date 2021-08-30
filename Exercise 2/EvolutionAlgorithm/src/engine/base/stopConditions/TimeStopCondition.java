@@ -31,6 +31,14 @@ public class TimeStopCondition implements StopCondition {
         return totalTime >= periodOfTime;
     }
 
+    @Override
+    public float getProgress() {
+        if (periodOfTime > 0) {
+            return (float) totalTime / periodOfTime;
+        }
+        return 0;
+    }
+
     public void reset() {
         totalTime = 0;
     }
