@@ -7,8 +7,9 @@ import engine.base.Selection;
 import engine.base.configurable.Configurable;
 import javafx.application.Platform;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import logic.Engine;
 import logic.evoEngineSettingsWrapper;
 import logic.schema.exceptions.XMLExtractException;
@@ -16,7 +17,6 @@ import logic.timeTable.TimeTable;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
-import java.io.InvalidObjectException;
 
 public class EngineModel {
 
@@ -33,10 +33,9 @@ public class EngineModel {
     private final BooleanProperty isPaused = new SimpleBooleanProperty(false);
     private final BooleanProperty isFileLoaded = new SimpleBooleanProperty(false);
 
-    // TODO: 3 methods to update those properties for each stop condition.
-    private final IntegerProperty MaxGenerationsCondition = new SimpleIntegerProperty(0);
-    private final FloatProperty MaxFitnessCondition = new SimpleFloatProperty(0);
-    private final FloatProperty TimeCondition = new SimpleFloatProperty(0);
+    private final IntegerProperty maxGenerationsCondition = new SimpleIntegerProperty(0);
+    private final FloatProperty maxFitnessCondition = new SimpleFloatProperty(0);
+    private final FloatProperty timeCondition = new SimpleFloatProperty(0);
 
     // Properties Getters
     public ObjectProperty<TimeTable> bestSolutionProperty() {
@@ -71,17 +70,16 @@ public class EngineModel {
         return isFileLoaded;
     }
 
-    // TODO: 3 methods to update those properties for each stop condition.
     public IntegerProperty maxGenerationsConditionProperty() {
-        return MaxGenerationsCondition;
+        return maxGenerationsCondition;
     }
 
     public FloatProperty maxFitnessConditionProperty() {
-        return MaxFitnessCondition;
+        return maxFitnessCondition;
     }
 
     public FloatProperty timeConditionProperty() {
-        return TimeCondition;
+        return timeCondition;
     }
 
 
@@ -93,16 +91,26 @@ public class EngineModel {
         theEngine.addGenerationEndListener(this::onGenerationEnd);
         evoSettingsChangeListeners = new Listeners();
 
-        elitism.addListener((observable, oldValue, newValue) -> {
-            theEngine.setElitism(newValue.intValue());
-        });
+        elitism.addListener((observable, oldValue, newValue) ->
+            theEngine.setElitism(newValue.intValue())
+        );
+
+        maxGenerationsCondition.addListener((observable, oldValue, newValue) ->
+            theEngine.setMaxGenerationsCondition(newValue.intValue())
+        );
+        maxFitnessCondition.addListener((observable, oldValue, newValue) ->
+                theEngine.setMaxFitnessCondition(newValue.floatValue())
+        );
+        timeCondition.addListener((observable, oldValue, newValue) ->
+                theEngine.setTimeStopCondition(newValue.longValue())
+        );
     }
 
     public void addEvoSettingsChangeListener(Runnable func) {
         evoSettingsChangeListeners.add(func);
     }
 
-    private void onGenerationEnd () {
+    private void onGenerationEnd() {
         Platform.runLater(() -> bestSolution.set(theEngine.getBestResult()));
     }
 
@@ -149,8 +157,6 @@ public class EngineModel {
         setIsWorking(true);
         setIsPaused(false);
         theEngine.setUpdateGenerationInterval(5);
-        theEngine.addStopCondition(Engine.StopCondition.MAX_GENERATIONS);
-        theEngine.setMaxGenerationsCondition(100);
         theEngine.startAlgorithm();
     }
 
@@ -174,8 +180,12 @@ public class EngineModel {
         setIsPaused(true);
     }
 
-    public void setStopCondition(Engine.StopCondition stopCondition) {
-        theEngine.addStopCondition(stopCondition);
+    public void enableDisableStopCondition(Engine.StopCondition stopCondition, boolean isEnabled) {
+        if (isEnabled) {
+            theEngine.addStopCondition(stopCondition);
+        } else {
+            theEngine.removeStopCondition(stopCondition);
+        }
     }
 
     public void setMaxGenerationsCondition(int maxGenerationsCondition) {

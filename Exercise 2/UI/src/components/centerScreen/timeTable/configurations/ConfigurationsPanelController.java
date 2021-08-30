@@ -39,6 +39,8 @@ public class ConfigurationsPanelController {
         uiAdapter.getTheEngine().elitismProperty().addListener((observable, oldValue, newValue) -> {
             textFieldElitism.setText(newValue.toString());
         });
+
+        flowPaneConfigurations.visibleProperty().bind(uiAdapter.getTheEngine().isWorkingProperty().not());
     }
 
     @FXML
