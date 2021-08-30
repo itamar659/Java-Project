@@ -20,6 +20,7 @@ public class StartAlgorithm extends Task<Boolean> {
         } else {
             this.theEngine.resumeAlgorithm();
         }
+
         return true;
     }
 }

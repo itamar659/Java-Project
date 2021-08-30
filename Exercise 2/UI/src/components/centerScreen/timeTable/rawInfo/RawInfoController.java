@@ -7,7 +7,11 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RawInfoController {
 
@@ -36,7 +40,7 @@ public class RawInfoController {
             // Add the body
             int[] rowIdx = {1};
             if (timeTableSolution.get() != null) {
-                timeTableSolution.get().getLessons().forEach(lesson -> {
+                new ArrayList<>(timeTableSolution.get().getLessons()).forEach(lesson -> {
                     Label day = new Label(Integer.toString(lesson.getDay() + 1));
                     Label hour = new Label(Integer.toString(lesson.getHour() + 1));
                     Label aclass = new Label(String.format("%s (%s)", lesson.getaClass().getName(), lesson.getaClass().getId()));

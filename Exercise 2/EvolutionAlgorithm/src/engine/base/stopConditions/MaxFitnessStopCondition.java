@@ -21,6 +21,17 @@ public class MaxFitnessStopCondition<T> implements StopCondition {
 
     @Override
     public boolean shouldStop() {
-        return evolutionEngine.getBestSolution().getFitness() >= requiredFitness;
+        if (evolutionEngine.getBestSolution() != null) {
+            return evolutionEngine.getBestSolution().getFitness() >= requiredFitness;
+        }
+        return false;
+    }
+
+    @Override
+    public float getProgress() {
+        if (requiredFitness > 0 && evolutionEngine.getBestSolution() != null) {
+            return evolutionEngine.getBestSolution().getFitness() / requiredFitness;
+        }
+        return 0;
     }
 }

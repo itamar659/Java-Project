@@ -81,7 +81,16 @@ public class CenterHolderController {
         this.timeTablePanelController.timeTableSolutionProperty().bind(uiAdapter.getTheEngine().bestSolutionProperty());
         this.timeTablePanelController.setUiAdapter(uiAdapter);
 
-        // Bind the CheckBoxes:
+        checkBoxMaxGenerations.disableProperty().bind(uiAdapter.getTheEngine().isWorkingProperty());
+        checkBoxMaxFitness.disableProperty().bind(checkBoxMaxGenerations.disableProperty());
+        checkBoxMaxTime.disableProperty().bind(checkBoxMaxGenerations.disableProperty());
+
+        bindCheckBoxes();
+        bindTextFields();
+        bindProgress();
+    }
+
+    private void bindCheckBoxes() {
         checkBoxMaxGenerations.selectedProperty().addListener((observable, oldValue, newValue) ->
                 uiAdapter.getTheEngine().enableDisableStopCondition(Engine.StopCondition.MAX_GENERATIONS, newValue)
         );
@@ -91,8 +100,9 @@ public class CenterHolderController {
         checkBoxMaxTime.selectedProperty().addListener((observable, oldValue, newValue) ->
                 uiAdapter.getTheEngine().enableDisableStopCondition(Engine.StopCondition.BY_TIME, newValue)
         );
+    }
 
-        // Bind the TextFields:
+    private void bindTextFields() {
         textFieldMaxGenerations.textProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 uiAdapter.getTheEngine().maxGenerationsConditionProperty().set(Integer.parseInt(newValue));
@@ -117,5 +127,16 @@ public class CenterHolderController {
                 textFieldMaxGenerations.setText(Integer.toString(20));
             }
         });
+    }
+
+    private void bindProgress() {
+        // TODO: Add % character. (can see in the final example Aviad showed us)
+        labelMaxGenerationsPercentage.textProperty().bind(uiAdapter.getTheEngine().maxGenerationProgressProperty().multiply(100).asString());
+        labelFitnessPercentage.textProperty().bind(uiAdapter.getTheEngine().maxFitnessProgressProperty().multiply(100).asString());
+        labelMaxTimePercentage.textProperty().bind(uiAdapter.getTheEngine().timeProgressProperty().multiply(100).asString());
+
+        progressBarMaxGenerations.progressProperty().bind(uiAdapter.getTheEngine().maxGenerationProgressProperty());
+        progressBarMaxFitness.progressProperty().bind(uiAdapter.getTheEngine().maxFitnessProgressProperty());
+        progressBarMaxTime.progressProperty().bind(uiAdapter.getTheEngine().timeProgressProperty());
     }
 }
