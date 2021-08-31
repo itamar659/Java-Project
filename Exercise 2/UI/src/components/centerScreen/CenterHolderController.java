@@ -116,7 +116,7 @@ public class CenterHolderController {
                 uiAdapter.getTheEngine().maxFitnessConditionProperty().set(Float.parseFloat(newValue));
             } catch (Exception e) {
                 uiAdapter.getTheEngine().maxFitnessConditionProperty().set(80f);
-                textFieldMaxGenerations.setText(Integer.toString(80));
+                textFieldMaxFitness.setText(Integer.toString(80));
             }
         });
         textFieldMaxTime.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -124,16 +124,16 @@ public class CenterHolderController {
                 uiAdapter.getTheEngine().timeConditionProperty().set(Integer.parseInt(newValue));
             } catch (Exception e) {
                 uiAdapter.getTheEngine().timeConditionProperty().set(20);
-                textFieldMaxGenerations.setText(Integer.toString(20));
+                textFieldMaxTime.setText(Integer.toString(20));
             }
         });
     }
 
     private void bindProgress() {
-        // TODO: Add % character. (can see in the final example Aviad showed us)
-        labelMaxGenerationsPercentage.textProperty().bind(uiAdapter.getTheEngine().maxGenerationProgressProperty().multiply(100).asString());
-        labelFitnessPercentage.textProperty().bind(uiAdapter.getTheEngine().maxFitnessProgressProperty().multiply(100).asString());
-        labelMaxTimePercentage.textProperty().bind(uiAdapter.getTheEngine().timeProgressProperty().multiply(100).asString());
+        final String PERCENTAGE_FORMAT = "%.2f %%";
+        labelMaxGenerationsPercentage.textProperty().bind(uiAdapter.getTheEngine().maxGenerationProgressProperty().multiply(100).asString(PERCENTAGE_FORMAT));
+        labelFitnessPercentage.textProperty().bind(uiAdapter.getTheEngine().maxFitnessProgressProperty().multiply(100).asString(PERCENTAGE_FORMAT));
+        labelMaxTimePercentage.textProperty().bind(uiAdapter.getTheEngine().timeProgressProperty().multiply(100).asString(PERCENTAGE_FORMAT));
 
         progressBarMaxGenerations.progressProperty().bind(uiAdapter.getTheEngine().maxGenerationProgressProperty());
         progressBarMaxFitness.progressProperty().bind(uiAdapter.getTheEngine().maxFitnessProgressProperty());
