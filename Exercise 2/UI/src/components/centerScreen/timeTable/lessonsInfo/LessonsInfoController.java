@@ -21,8 +21,8 @@ import java.util.ArrayList;
 
 public class LessonsInfoController {
 
-    public static final int MAX_WIDTH = 200;
-    public static final int MAX_HEIGHT = 125;
+    public static final int MAX_WIDTH = 130;
+    public static final int MAX_HEIGHT = 90;
 
 
     private final ListProperty<Lesson> lessons;
