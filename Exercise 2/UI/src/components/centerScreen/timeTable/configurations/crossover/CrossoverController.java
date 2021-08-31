@@ -44,7 +44,7 @@ public class CrossoverController {
         uiAdapter.getTheEngine().changeCrossover(comboBoxCrossover.getSelectionModel().getSelectedItem().replaceAll(" ", ""));
     }
 
-    // TODO: Change the TextField to something else depends on the configuration tpye (i.e. combobox for enum)
+    // TODO: Change the TextField to something else depends on the configuration type (i.e. combobox for enum)
     private void createConfigurationsGrid() {
         gridPaneConfig.getChildren().clear();
         gridPaneConfig.getRowConstraints().clear();
