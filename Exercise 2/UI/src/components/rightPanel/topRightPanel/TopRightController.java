@@ -81,8 +81,6 @@ public class TopRightController {
         });
 
         uiAdapter.getTheEngine().historySolutionsProperty().addListener((observable, oldValue, newValue) -> {
-            buttonNextGen.setDisable(true);
-            buttonPrevGen.setDisable(true);
             comboBoxSolutionGenerations.getItems().clear();
             comboBoxSolutionGenerations.setItems(
                     FXCollections.observableArrayList(uiAdapter.getTheEngine().historySolutionsProperty().get().entrySet())
