@@ -1,7 +1,7 @@
 package logic.evoAlgorithm.selections;
 
 public enum SupportedSelections {
-    RouletteWheel("Roulette Wheel"), Truncation("Truncation");
+    RouletteWheel("Roulette Wheel"), Truncation("Truncation"), Tournament("Tournament");
 
     private final String name;
     public String getName() {
