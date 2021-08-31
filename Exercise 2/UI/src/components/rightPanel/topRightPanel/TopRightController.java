@@ -5,11 +5,12 @@ import engine.base.Solution;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -30,9 +31,28 @@ public class TopRightController {
     private GridPane gridPaneInformation;
 
     @FXML
+    private Button buttonPrevGen;
+
+    @FXML
+    private Button buttonNextGen;
+
+    @FXML
     private void initialize() {
         comboBoxSolutionGenerations.setCellFactory(lv -> new SolutionCell());
         comboBoxSolutionGenerations.setButtonCell(new SolutionCell());
+
+        comboBoxSolutionGenerations.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            buttonNextGen.setDisable(false);
+            buttonPrevGen.setDisable(false);
+
+            if (newValue.intValue() == uiAdapter.getTheEngine().historySolutionsProperty().size() - 1) {
+                buttonNextGen.setDisable(true);
+            }
+            if (newValue.intValue() <= 0) {
+                buttonPrevGen.setDisable(true);
+            }
+
+        });
     }
 
     @FXML
@@ -43,6 +63,16 @@ public class TopRightController {
         }
     }
 
+    @FXML
+    void buttonNextGen_Clicked(ActionEvent event) {
+        comboBoxSolutionGenerations.getSelectionModel().select(comboBoxSolutionGenerations.getSelectionModel().getSelectedIndex() + 1);
+    }
+
+    @FXML
+    void buttonPrevGen_Clicked(ActionEvent event) {
+        comboBoxSolutionGenerations.getSelectionModel().select(comboBoxSolutionGenerations.getSelectionModel().getSelectedIndex() - 1);
+    }
+
     public void setUiAdapter(UIAdapter uiAdapter) {
         this.uiAdapter = uiAdapter;
 
@@ -51,6 +81,8 @@ public class TopRightController {
         });
 
         uiAdapter.getTheEngine().historySolutionsProperty().addListener((observable, oldValue, newValue) -> {
+            buttonNextGen.setDisable(true);
+            buttonPrevGen.setDisable(true);
             comboBoxSolutionGenerations.getItems().clear();
             comboBoxSolutionGenerations.setItems(
                     FXCollections.observableArrayList(uiAdapter.getTheEngine().historySolutionsProperty().get().entrySet())

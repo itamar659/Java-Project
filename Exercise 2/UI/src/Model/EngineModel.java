@@ -199,6 +199,7 @@ public class EngineModel {
         mutations.clear();
         mutations.set(FXCollections.observableArrayList(theEngine.getEvoEngineSettings().getMutations()));
         elitism.set(theEngine.getEvoEngineSettings().getElitism());
+        historySolutions.set(FXCollections.observableMap(theEngine.getHistoryGeneration2BestSolution()));
     }
 
     public void startAlgorithm() {
