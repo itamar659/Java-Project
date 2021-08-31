@@ -28,8 +28,8 @@
                   <ComboBox fx:id="comboBoxSolutionGenerations" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#comboBoxSolutionGenerations_SelectedIndexChanged" promptText="Select Generation" />
                   <HBox alignment="CENTER" spacing="10.0">
                      <children>
-                        <Button fx:id="buttonPrevGen" disable="true" mnemonicParsing="false" onAction="#buttonPrevGen_Clicked" prefWidth="60.0" text="Prev" />
-                        <Button fx:id="buttonNextGen" disable="true" mnemonicParsing="false" onAction="#buttonNextGen_Clicked" prefWidth="60.0" text="Next" />
+                        <Button fx:id="buttonPrevGen" disable="true" mnemonicParsing="false" onAction="#buttonPrevGen_Clicked" text="Prev" />
+                        <Button fx:id="buttonNextGen" disable="true" mnemonicParsing="false" onAction="#buttonNextGen_Clicked" text="Next" />
                      </children>
                   </HBox>
                </children>
