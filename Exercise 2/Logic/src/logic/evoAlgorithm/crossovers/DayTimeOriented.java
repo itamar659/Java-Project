@@ -39,7 +39,10 @@ public class DayTimeOriented extends BaseCrossover {
     public void setParameter(String parameterName, String value) {
         // TODO: check if it's valid value in the correct range (Maybe not here but outside of this method?)
         if (parameterName.equals(PARAMETER_CUTTING_POINTS)) {
-            Integer.parseInt(value);
+            int i = Integer.parseInt(value);
+             if(i <= 0)
+                 throw new IllegalArgumentException("Invaild Parameter");
+
         } else {
             throw new IllegalArgumentException("Parameter name not found in " + this.getClass().getSimpleName());
         }

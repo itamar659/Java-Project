@@ -37,7 +37,9 @@ public class AspectOriented extends BaseCrossover {
         if (parameterName.equals(PARAMETER_ORIENTATION)) {
             Orientation.valueOf(value);
         } else if (parameterName.equals(PARAMETER_CUTTING_POINTS)) {
-            Integer.parseInt(value);
+            int i = Integer.parseInt(value);
+            if(i <= 0)
+                throw new IllegalArgumentException("invalid parameter");
         } else {
             throw new IllegalArgumentException("Parameter name not found in " + this.getClass().getSimpleName());
         }

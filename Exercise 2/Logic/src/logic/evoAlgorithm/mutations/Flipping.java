@@ -40,11 +40,15 @@ public class Flipping implements Mutation<TimeTable> {
     public void setParameter(String parameterName, String value) {
         // TODO: check if it's valid value in the correct range (Maybe not here but outside of this method?)
         if (parameterName.equals(PARAMETER_MAX_TUPPLES)) {
-            Integer.parseInt(value);
+            int i = Integer.parseInt(value);
+            if(i <= 0)
+                throw new IllegalArgumentException("invalid parameter");
         } else if (parameterName.equals(PARAMETER_COMPONENT)) {
             Component.valueOf(value);
         } else if (parameterName.equals(PARAMETER_PROBABILITY)) {
-            Double.parseDouble(value);
+            double d = Double.parseDouble(value);
+            if(d <= 0 || d > 1.0)
+                throw new IllegalArgumentException("invalid parameter");
         } else {
             throw new IllegalArgumentException("Parameter name not found in " + this.getClass().getSimpleName());
         }

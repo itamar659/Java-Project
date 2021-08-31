@@ -26,9 +26,10 @@ public class Truncation implements Selection<TimeTable>, Configurable {
 
     @Override
     public void setParameter(String parameterName, String value) {
-        // TODO: check if it's valid value in the correct range (Maybe not here but outside of this method?)
         if (parameterName.equals(PARAMETER_TOP_PERCENT)) {
-            Integer.parseInt(value);
+            int i =Integer.parseInt(value);
+            if(i <= 0 || i > 100)
+                throw new IllegalArgumentException("invalid parameter");
         } else {
             throw new IllegalArgumentException("Not found parameter name in" + this.getClass().getSimpleName());
         }
