@@ -44,7 +44,9 @@ public class RightPanelController {
         isPaused.bind(uiAdapter.getTheEngine().isPausedProperty());
         textFieldInterval.disableProperty().bind(isPaused.or(isRunning));
 
-        buttonStartPause.disableProperty().bind(uiAdapter.getTheEngine().isFileLoadedProperty().not());
+        buttonStartPause.disableProperty().bind(
+                (uiAdapter.getTheEngine().hasStopConditionProperty().and(
+                        uiAdapter.getTheEngine().isFileLoadedProperty())).not());
 
         textFieldInterval.textProperty().addListener((observable, oldValue, newValue) -> {
             try {

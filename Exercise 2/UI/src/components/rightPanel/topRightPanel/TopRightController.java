@@ -45,7 +45,8 @@ public class TopRightController {
             buttonNextGen.setDisable(false);
             buttonPrevGen.setDisable(false);
 
-            if (newValue.intValue() == uiAdapter.getTheEngine().historySolutionsProperty().size() - 1) {
+            if (newValue.intValue() == uiAdapter.getTheEngine().historySolutionsProperty().size() - 1 ||
+                    newValue.intValue() == -1) {
                 buttonNextGen.setDisable(true);
             }
             if (newValue.intValue() <= 0) {

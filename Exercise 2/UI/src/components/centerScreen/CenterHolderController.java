@@ -86,6 +86,11 @@ public class CenterHolderController {
         textFieldMaxFitness.disableProperty().bind(checkBoxMaxGenerations.disableProperty());
         textFieldMaxTime.disableProperty().bind(checkBoxMaxGenerations.disableProperty());
 
+        uiAdapter.getTheEngine().hasStopConditionProperty().bind(
+                checkBoxMaxGenerations.selectedProperty().or(
+                        checkBoxMaxFitness.selectedProperty().or(
+                                checkBoxMaxTime.selectedProperty())));
+
         bindCheckBoxes();
         bindTextFields();
         bindProgress();
