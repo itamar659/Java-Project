@@ -34,6 +34,19 @@
                               <Insets left="10.0" />
                            </padding>
                         </HBox>
+                        <HBox layoutX="10.0" layoutY="10.0" spacing="10.0">
+                           <children>
+                              <Label text="Elitism:">
+                                 <font>
+                                    <Font name="Century Gothic" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="labelSysInfoElitism" text="[holder]" />
+                           </children>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </HBox>
                         <HBox spacing="10.0">
                            <children>
                               <Label text="Days:">

@@ -21,6 +21,7 @@ public class ProblemModule {
 
     //Daniel Here:
     private final IntegerProperty population = new SimpleIntegerProperty(0);
+    private final IntegerProperty Elitism = new SimpleIntegerProperty(0);
 
     // Information about the rules
     private final ListProperty<Rule<TimeTable>> rules = new SimpleListProperty<>();
@@ -73,5 +74,9 @@ public class ProblemModule {
 
     public IntegerProperty populationProperty() {
         return population;
+    }
+
+    public IntegerProperty elitismProperty() {
+        return Elitism;
     }
 }
