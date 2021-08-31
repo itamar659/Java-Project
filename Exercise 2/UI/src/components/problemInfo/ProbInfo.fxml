@@ -165,7 +165,24 @@
             <Font name="Century Gothic" size="14.0" />
          </font>
          <content>
-            <Accordion fx:id="accordionRules" />
+            <ScrollPane fitToHeight="true" fitToWidth="true">
+               <content>
+                  <VBox spacing="10.0">
+                     <children>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Label text="Hard rule weight:" />
+                              <Label fx:id="LabelHardRuleWright" text="[HOLDER]" />
+                           </children>
+                           <padding>
+                              <Insets left="10.0" top="5.0" />
+                           </padding>
+                        </HBox>
+                        <Accordion fx:id="accordionRules" />
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
          </content>
       </TitledPane>
    </panes>

@@ -1,4 +1,4 @@
-package components.application;
+package components.problemInfo;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;

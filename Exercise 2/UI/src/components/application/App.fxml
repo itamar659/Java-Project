@@ -64,7 +64,7 @@
          <center>
             <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
                <left>
-                  <StackPane fx:id="stackPaneLeft" style="-fx-background-color: blue;" BorderPane.alignment="CENTER" />
+                  <StackPane fx:id="stackPaneLeft" BorderPane.alignment="CENTER" />
                </left>
                <center>
                   <ScrollPane fx:id="scrollPaneCenter" fitToHeight="true" fitToWidth="true" minHeight="0.0" minWidth="0.0" BorderPane.alignment="CENTER" />
