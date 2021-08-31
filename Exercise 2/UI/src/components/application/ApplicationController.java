@@ -12,10 +12,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import javax.swing.text.html.ImageView;
 import java.io.File;
 import java.io.IOException;
 
@@ -41,10 +43,38 @@ public class ApplicationController {
     }
 
     @FXML private Button buttonOpenFile;
+    @FXML private Button btnMode;
+    @FXML private javafx.scene.image.ImageView imgView;
     @FXML private Label pathLbl;
     @FXML private StackPane stackPaneLeft;
     @FXML private StackPane stackPaneRight;
     @FXML private ScrollPane scrollPaneCenter;
+    @FXML private ScrollPane parent;
+
+    private boolean isLightMode = true;
+    public void changeMode(ActionEvent event){
+        isLightMode = !isLightMode;
+
+        if(isLightMode){
+            setLightMode();
+        }else{
+            setDarkMode();
+        }
+    }
+
+    private void setLightMode() {
+        parent.getStylesheets().remove("styles/DarkMode.css");
+        parent.getStylesheets().add("styles/LightMode.css");
+        Image image = new Image("resources/light_mode.png");
+        imgView.setImage(image);
+    }
+
+    private void setDarkMode() {
+        parent.getStylesheets().remove("styles/LightMode.css");
+        parent.getStylesheets().add("styles/DarkMode.css");
+        Image image = new Image("resources/dark_mode.png");
+        imgView.setImage(image);
+    }
 
     @FXML
     private void initialize() {
