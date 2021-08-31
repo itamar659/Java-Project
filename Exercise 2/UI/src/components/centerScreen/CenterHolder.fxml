@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
@@ -18,6 +21,14 @@
    <bottom>
       <VBox minHeight="-Infinity" BorderPane.alignment="CENTER">
          <children>
+            <LineChart fx:id="lineChartFitness" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="500.0" title="Fitness Progress With Generations">
+              <xAxis>
+                <CategoryAxis side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis side="LEFT" />
+              </yAxis>
+            </LineChart>
             <Separator />
             <GridPane hgap="2.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="5.0">
                <columnConstraints>

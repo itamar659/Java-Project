@@ -177,6 +177,7 @@ public class EngineModel {
     }
 
     private void onFinish() {
+        updateProgressBars();
         setIsWorking(false);
         setIsPaused(false);
     }

@@ -3,19 +3,31 @@ package components.centerScreen;
 import components.application.UIAdapter;
 import components.Resources;
 import components.centerScreen.timeTable.TimeTablePanelController;
+import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
+import javafx.util.Callback;
 import logic.Engine;
+import logic.timeTable.TimeTable;
 
 import java.io.IOException;
 
 public class CenterHolderController {
+
+    @FXML
+    private LineChart<String, Number> lineChartFitness;
 
     @FXML
     private ProgressBar progressBarMaxGenerations;
@@ -90,6 +102,13 @@ public class CenterHolderController {
                 checkBoxMaxGenerations.selectedProperty().or(
                         checkBoxMaxFitness.selectedProperty().or(
                                 checkBoxMaxTime.selectedProperty())));
+
+        uiAdapter.getTheEngine().historySolutionsProperty().addListener((observable, oldValue, newValue) -> {
+            lineChartFitness.getData().clear();
+            XYChart.Series<String, Number> series = new XYChart.Series<>();
+            newValue.forEach((key, value) -> series.getData().add(new XYChart.Data<>(Integer.toString(key), value.getFitness())));
+            lineChartFitness.getData().add(series);
+        });
 
         bindCheckBoxes();
         bindTextFields();
