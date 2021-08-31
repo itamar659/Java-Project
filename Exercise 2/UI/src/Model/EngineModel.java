@@ -35,6 +35,8 @@ public class EngineModel {
     private final BooleanProperty isPaused = new SimpleBooleanProperty(false);
     private final BooleanProperty isFileLoaded = new SimpleBooleanProperty(false);
 
+    private final BooleanProperty hasStopCondition = new SimpleBooleanProperty(false);
+
     private final IntegerProperty maxGenerationsCondition = new SimpleIntegerProperty(0);
     private final FloatProperty maxFitnessCondition = new SimpleFloatProperty(0);
     private final FloatProperty timeCondition = new SimpleFloatProperty(0);
@@ -108,6 +110,10 @@ public class EngineModel {
         return timeProgress;
     }
 
+    public BooleanProperty hasStopConditionProperty() {
+        return hasStopCondition;
+    }
+
     // Default Constructor
     public EngineModel() {
         theEngine = new Engine();
@@ -171,6 +177,7 @@ public class EngineModel {
     }
 
     private void onFinish() {
+        updateProgressBars();
         setIsWorking(false);
         setIsPaused(false);
     }
