@@ -109,9 +109,15 @@ public class EngineModel {
         theEngine.addGenerationEndListener(this::onGenerationEnd);
         evoSettingsChangeListeners = new Listeners();
 
-        elitism.addListener((observable, oldValue, newValue) ->
-            theEngine.setElitism(newValue.intValue())
-        );
+        elitism.addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() > 100) {
+                newValue = 100;
+            } else if (newValue.intValue() < 0) {
+                newValue = 0;
+            }
+            theEngine.setElitism(newValue.intValue());
+            onEvoSettingsChange();
+        });
 
         maxGenerationsCondition.addListener((observable, oldValue, newValue) ->
             theEngine.setMaxGenerationsCondition(newValue.intValue())
@@ -170,14 +176,6 @@ public class EngineModel {
         elitism.set(theEngine.getEvoEngineSettings().getElitism());
     }
 
-    public void addGenerationEndListener(Runnable onGeneration) {
-        theEngine.addGenerationEndListener(onGeneration);
-    }
-
-    public void addFinishRunListener(Runnable onFinish) {
-        theEngine.addFinishRunListener(onFinish);
-    }
-
     public void startAlgorithm() {
         setIsWorking(true);
         setIsPaused(false);
@@ -211,10 +209,6 @@ public class EngineModel {
         } else {
             theEngine.removeStopCondition(stopCondition);
         }
-    }
-
-    public void setMaxGenerationsCondition(int maxGenerationsCondition) {
-        theEngine.setMaxGenerationsCondition(maxGenerationsCondition);
     }
 
     public evoEngineSettingsWrapper getEvoEngineSettings() {

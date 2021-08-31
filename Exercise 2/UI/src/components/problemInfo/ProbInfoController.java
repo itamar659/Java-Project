@@ -26,6 +26,7 @@ import java.util.function.Function;
 
 public class ProbInfoController {
     @FXML private Label labelSysInfoPop;
+    @FXML private Label labelSysInfoElitism;
     @FXML private Label labelSysInfoDays;
     @FXML private Label labelSysInfoHours;
 
@@ -53,6 +54,7 @@ public class ProbInfoController {
         labelSysInfoDays.textProperty().bind(Bindings.format("%d", problemModule.daysProperty()));
         labelSysInfoHours.textProperty().bind(Bindings.format("%d", problemModule.hoursProperty()));
         labelSysInfoPop.textProperty().bind(Bindings.format("%d", problemModule.populationProperty()));
+        labelSysInfoElitism.setText("0");
 
         teachersCountLbl.textProperty().bind(Bindings.format("%d", problemModule.teachersProperty().sizeProperty()));
         classesCountLbl.textProperty().bind(Bindings.format("%d", problemModule.classesProperty().sizeProperty()));
@@ -74,6 +76,7 @@ public class ProbInfoController {
         addToAccordion(evoEngineSettings.getCrossover(), this.accordionCrossover);
         addToAccordion(evoEngineSettings.getSelection(), this.accordionSelection);
         evoEngineSettings.getMutations().forEach((mutation -> addToAccordion(mutation, this.accordionMutations)));
+        labelSysInfoElitism.setText(Integer.toString(evoEngineSettings.getElitism()));
     }
 
     public void setProblem(evoEngineSettingsWrapper evoEngineSettings) {

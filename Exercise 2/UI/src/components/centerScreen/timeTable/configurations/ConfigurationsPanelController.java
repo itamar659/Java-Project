@@ -5,6 +5,7 @@ import components.application.UIAdapter;
 import components.centerScreen.timeTable.configurations.crossover.CrossoverController;
 import components.centerScreen.timeTable.configurations.mutations.MutationsController;
 import components.centerScreen.timeTable.configurations.selection.SelectionController;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -37,7 +38,9 @@ public class ConfigurationsPanelController {
         selectionController.setUiAdapter(uiAdapter);
         mutationsController.setUiAdapter(uiAdapter);
         uiAdapter.getTheEngine().elitismProperty().addListener((observable, oldValue, newValue) -> {
-            textFieldElitism.setText(newValue.toString());
+            if (newValue.intValue() != 0) {
+                textFieldElitism.setText(newValue.toString());
+            }
         });
 
         flowPaneConfigurations.visibleProperty().bind(uiAdapter.getTheEngine().isWorkingProperty().not());
@@ -57,8 +60,8 @@ public class ConfigurationsPanelController {
             try {
                 uiAdapter.getTheEngine().elitismProperty().set(Integer.parseInt(newValue));
             } catch (Exception e) {
+                Platform.runLater(() -> textFieldElitism.setText("0"));
                 uiAdapter.getTheEngine().elitismProperty().set(0);
-                textFieldElitism.setText(Integer.toString(uiAdapter.getTheEngine().elitismProperty().get()));
             }
         });
     }
@@ -74,7 +77,6 @@ public class ConfigurationsPanelController {
         }
     }
 
-    // TODO: Create controllers creator class that send back the controller and the parent in a "simple" complex object
     private void createSelectionController() {
         try {
             FXMLLoader loader = new FXMLLoader();
