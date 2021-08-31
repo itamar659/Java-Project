@@ -42,6 +42,7 @@ public class RightPanelController {
 
         isRunning.bind(uiAdapter.getTheEngine().isWorkingProperty());
         isPaused.bind(uiAdapter.getTheEngine().isPausedProperty());
+        textFieldInterval.disableProperty().bind(isPaused.or(isRunning));
 
         buttonStartPause.disableProperty().bind(uiAdapter.getTheEngine().isFileLoadedProperty().not());
 

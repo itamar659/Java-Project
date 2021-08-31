@@ -85,7 +85,7 @@ public abstract class EvolutionEngine<T> implements Serializable {
         return currentGeneration;
     }
 
-    public synchronized Map<Integer, Solution<T>> getHistoryGeneration2Fitness() {
+    public synchronized Map<Integer, Solution<T>> getHistoryGeneration2BestSolution() {
         return (Map<Integer, Solution<T>>) ((TreeMap<Integer, Solution<T>>)historyGeneration2Fitness).clone();
     }
 

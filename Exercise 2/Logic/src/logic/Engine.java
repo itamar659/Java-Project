@@ -121,8 +121,8 @@ public class Engine implements Serializable {
         return (TimeTable) evoEngine.getBestSolution();
     }
 
-    public Map<Integer, TimeTable> getHistoryGeneration2Fitness() {
-        return (Map<Integer, TimeTable>) ((TreeMap)evoEngine.getHistoryGeneration2Fitness());
+    public Map<Integer, TimeTable> getHistoryGeneration2BestSolution() {
+        return (Map<Integer, TimeTable>) ((TreeMap)evoEngine.getHistoryGeneration2BestSolution());
     }
 
     public void addStopCondition(StopCondition stopCondition) {

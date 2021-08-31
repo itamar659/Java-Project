@@ -3,8 +3,6 @@ package components.centerScreen;
 import components.application.UIAdapter;
 import components.Resources;
 import components.centerScreen.timeTable.TimeTablePanelController;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -78,7 +76,7 @@ public class CenterHolderController {
 
     public void setUiAdapter(UIAdapter uiAdapter) {
         this.uiAdapter = uiAdapter;
-        this.timeTablePanelController.timeTableSolutionProperty().bind(uiAdapter.getTheEngine().bestSolutionProperty());
+        this.timeTablePanelController.timeTableSolutionProperty().bind(uiAdapter.getTheEngine().displaySolutionProperty());
         this.timeTablePanelController.setUiAdapter(uiAdapter);
 
         checkBoxMaxGenerations.disableProperty().bind(uiAdapter.getTheEngine().isWorkingProperty().or(uiAdapter.getTheEngine().isPausedProperty()));

@@ -4,6 +4,7 @@ import engine.Listeners;
 import engine.base.Crossover;
 import engine.base.Mutation;
 import engine.base.Selection;
+import engine.base.Solution;
 import engine.base.configurable.Configurable;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -15,6 +16,7 @@ import logic.timeTable.TimeTable;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.util.Map;
 
 public class EngineModel {
 
@@ -22,12 +24,13 @@ public class EngineModel {
     private final Listeners evoSettingsChangeListeners;
 
     // Model Properties
-    private final ObjectProperty<TimeTable> bestSolution = new SimpleObjectProperty<>();
+    private final MapProperty<Integer, TimeTable> historySolutions = new SimpleMapProperty<>();
+    private final ObjectProperty<TimeTable> displaySolution = new SimpleObjectProperty<>();
     private final ObjectProperty<Crossover<TimeTable>> crossover = new SimpleObjectProperty<>();
     private final ObjectProperty<Selection<TimeTable>> selection = new SimpleObjectProperty<>();
     private final ListProperty<Mutation<TimeTable>> mutations = new SimpleListProperty<>();
     private final IntegerProperty elitism = new SimpleIntegerProperty(0);
-    private final IntegerProperty genInterval = new SimpleIntegerProperty(0);
+    private final IntegerProperty genInterval = new SimpleIntegerProperty(10);
     private final BooleanProperty isWorking = new SimpleBooleanProperty(false);
     private final BooleanProperty isPaused = new SimpleBooleanProperty(false);
     private final BooleanProperty isFileLoaded = new SimpleBooleanProperty(false);
@@ -41,8 +44,12 @@ public class EngineModel {
     private final FloatProperty timeProgress = new SimpleFloatProperty(0);
 
     // Properties Getters
-    public ObjectProperty<TimeTable> bestSolutionProperty() {
-        return bestSolution;
+    public MapProperty<Integer, TimeTable> historySolutionsProperty() {
+        return historySolutions;
+    }
+
+    public ObjectProperty<TimeTable> displaySolutionProperty() { // Can have the best solution or some else solution in the history.
+        return displaySolution;
     }
 
     public ObjectProperty<Crossover<TimeTable>> crossoverProperty() {
@@ -88,9 +95,6 @@ public class EngineModel {
     public FloatProperty timeConditionProperty() {
         return timeCondition;
     }
-
-    // TODO: Be able to set the generation interval
-    //  After that need to change onGenerationEnd listener to a new one that raise every generation and not gen interval.
 
     public FloatProperty maxGenerationProgressProperty() {
         return maxGenerationProgress;
@@ -141,7 +145,8 @@ public class EngineModel {
     private void onGenerationEnd() {
         Platform.runLater(() -> {
             // Update the best solution
-            bestSolution.set(theEngine.getBestResult());
+            displaySolution.set(theEngine.getBestResult());
+            historySolutions.set(FXCollections.observableMap(theEngine.getHistoryGeneration2BestSolution()));
         });
     }
 
@@ -188,13 +193,12 @@ public class EngineModel {
     }
 
     private void initializeAfterSerialize() {
-        bestSolution.set(null);
+        displaySolution.set(null);
         crossover.set(theEngine.getEvoEngineSettings().getCrossover());
         selection.set(theEngine.getEvoEngineSettings().getSelection());
         mutations.clear();
         mutations.set(FXCollections.observableArrayList(theEngine.getEvoEngineSettings().getMutations()));
         elitism.set(theEngine.getEvoEngineSettings().getElitism());
-        genInterval.set(10);
     }
 
     public void startAlgorithm() {
@@ -273,5 +277,9 @@ public class EngineModel {
 
     protected void onEvoSettingsChange() {
         Platform.runLater(evoSettingsChangeListeners::raiseEvent);
+    }
+
+    public void changeDisplaySolution(TimeTable timeTable) {
+        displaySolution.set(timeTable);
     }
 }

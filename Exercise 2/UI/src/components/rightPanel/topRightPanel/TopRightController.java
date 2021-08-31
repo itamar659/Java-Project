@@ -2,27 +2,62 @@ package components.rightPanel.topRightPanel;
 
 import components.application.UIAdapter;
 import engine.base.Solution;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.layout.GridPane;
 import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rules;
+
+import java.util.Map;
 
 public class TopRightController {
 
     private UIAdapter uiAdapter;
 
     @FXML
+    private ComboBox<Map.Entry<Integer, TimeTable>> comboBoxSolutionGenerations;
+
+    @FXML
     private GridPane gridPaneInformation;
+
+    @FXML
+    private void initialize() {
+        comboBoxSolutionGenerations.setCellFactory(lv -> new SolutionCell());
+        comboBoxSolutionGenerations.setButtonCell(new SolutionCell());
+    }
+
+    @FXML
+    void comboBoxSolutionGenerations_SelectedIndexChanged(ActionEvent event) {
+        Map.Entry<Integer, TimeTable> selected = comboBoxSolutionGenerations.getSelectionModel().selectedItemProperty().get();
+        if (selected != null) {
+            uiAdapter.getTheEngine().changeDisplaySolution(selected.getValue());
+        }
+    }
 
     public void setUiAdapter(UIAdapter uiAdapter) {
         this.uiAdapter = uiAdapter;
 
-        uiAdapter.getTheEngine().bestSolutionProperty().addListener((observable, oldValue, newValue) -> {
+        uiAdapter.getTheEngine().displaySolutionProperty().addListener((observable, oldValue, newValue) -> {
             createGridInformation(newValue);
         });
+
+        uiAdapter.getTheEngine().historySolutionsProperty().addListener((observable, oldValue, newValue) -> {
+            comboBoxSolutionGenerations.getItems().clear();
+            comboBoxSolutionGenerations.setItems(
+                    FXCollections.observableArrayList(uiAdapter.getTheEngine().historySolutionsProperty().get().entrySet())
+            );
+        });
+
+        comboBoxSolutionGenerations.disableProperty().bind(uiAdapter.getTheEngine().isWorkingProperty());
     }
 
     private void createGridInformation(Solution<TimeTable> solution) {
@@ -63,5 +98,19 @@ public class TopRightController {
         gridPaneInformation.addRow(rowIdx,
                 new Label(String.format("%s Rules Avg.", type.name())),
                 new Label(String.format("%.2f", solution.getGens().getAvgFitness(type))));
+    }
+
+    private static class SolutionCell extends ListCell<Map.Entry<Integer, TimeTable>> {
+
+        @Override
+        protected void updateItem(Map.Entry<Integer, TimeTable> item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if (empty || item == null) {
+                setText("");
+            } else {
+                setText(String.format("Gen: %d - %.2f", item.getKey(), item.getValue().getFitness()));
+            }
+        }
     }
 }
