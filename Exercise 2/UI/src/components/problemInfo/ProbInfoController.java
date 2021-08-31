@@ -1,12 +1,10 @@
 package components.problemInfo;
 
 import components.Resources;
-import components.application.ProblemModule;
 import components.problemInfo.accordionItem.AccordionItemController;
 import components.problemInfo.configItem.ConfigController;
 import components.problemInfo.ruleAccordionItem.RuleAccordionItemController;
 import engine.base.configurable.Configurable;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -29,6 +27,7 @@ public class ProbInfoController {
     @FXML private Label labelSysInfoElitism;
     @FXML private Label labelSysInfoDays;
     @FXML private Label labelSysInfoHours;
+    @FXML private Label LabelHardRuleWright;
 
     @FXML private Label teachersCountLbl;
     @FXML private Label classesCountLbl;
@@ -51,14 +50,15 @@ public class ProbInfoController {
 
     @FXML
     private void initialize() {
-        labelSysInfoDays.textProperty().bind(Bindings.format("%d", problemModule.daysProperty()));
-        labelSysInfoHours.textProperty().bind(Bindings.format("%d", problemModule.hoursProperty()));
-        labelSysInfoPop.textProperty().bind(Bindings.format("%d", problemModule.populationProperty()));
+        labelSysInfoDays.textProperty().bind(problemModule.daysProperty().asString());
+        labelSysInfoHours.textProperty().bind(problemModule.hoursProperty().asString());
+        labelSysInfoPop.textProperty().bind(problemModule.populationProperty().asString());
+        LabelHardRuleWright.textProperty().bind(problemModule.hardRuleWeightProperty().asString());
         labelSysInfoElitism.setText("0");
 
-        teachersCountLbl.textProperty().bind(Bindings.format("%d", problemModule.teachersProperty().sizeProperty()));
-        classesCountLbl.textProperty().bind(Bindings.format("%d", problemModule.classesProperty().sizeProperty()));
-        coursesCountLbl.textProperty().bind(Bindings.format("%d", problemModule.coursesProperty().sizeProperty()));
+        teachersCountLbl.textProperty().bind(problemModule.teachersProperty().sizeProperty().asString());
+        classesCountLbl.textProperty().bind(problemModule.classesProperty().sizeProperty().asString());
+        coursesCountLbl.textProperty().bind(problemModule.coursesProperty().sizeProperty().asString());
     }
 
     // Actually updates crossover / selection / mutations

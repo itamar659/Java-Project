@@ -4,11 +4,10 @@ import engine.Listeners;
 import engine.base.Crossover;
 import engine.base.Mutation;
 import engine.base.Selection;
+import engine.base.Solution;
 import engine.base.configurable.Configurable;
 import javafx.application.Platform;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import logic.Engine;
 import logic.evoEngineSettingsWrapper;
@@ -17,6 +16,7 @@ import logic.timeTable.TimeTable;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.util.Map;
 
 public class EngineModel {
 
@@ -24,11 +24,13 @@ public class EngineModel {
     private final Listeners evoSettingsChangeListeners;
 
     // Model Properties
-    private final ObjectProperty<TimeTable> bestSolution = new SimpleObjectProperty<>();
+    private final MapProperty<Integer, TimeTable> historySolutions = new SimpleMapProperty<>();
+    private final ObjectProperty<TimeTable> displaySolution = new SimpleObjectProperty<>();
     private final ObjectProperty<Crossover<TimeTable>> crossover = new SimpleObjectProperty<>();
     private final ObjectProperty<Selection<TimeTable>> selection = new SimpleObjectProperty<>();
     private final ListProperty<Mutation<TimeTable>> mutations = new SimpleListProperty<>();
     private final IntegerProperty elitism = new SimpleIntegerProperty(0);
+    private final IntegerProperty genInterval = new SimpleIntegerProperty(10);
     private final BooleanProperty isWorking = new SimpleBooleanProperty(false);
     private final BooleanProperty isPaused = new SimpleBooleanProperty(false);
     private final BooleanProperty isFileLoaded = new SimpleBooleanProperty(false);
@@ -42,8 +44,12 @@ public class EngineModel {
     private final FloatProperty timeProgress = new SimpleFloatProperty(0);
 
     // Properties Getters
-    public ObjectProperty<TimeTable> bestSolutionProperty() {
-        return bestSolution;
+    public MapProperty<Integer, TimeTable> historySolutionsProperty() {
+        return historySolutions;
+    }
+
+    public ObjectProperty<TimeTable> displaySolutionProperty() { // Can have the best solution or some else solution in the history.
+        return displaySolution;
     }
 
     public ObjectProperty<Crossover<TimeTable>> crossoverProperty() {
@@ -60,6 +66,10 @@ public class EngineModel {
 
     public IntegerProperty elitismProperty() {
         return elitism;
+    }
+
+    public IntegerProperty genIntervalProperty() {
+        return genInterval;
     }
 
     public BooleanProperty isWorkingProperty() {
@@ -86,9 +96,6 @@ public class EngineModel {
         return timeCondition;
     }
 
-    // TODO: Be able to set the generation interval
-    //  After that need to change onGenerationEnd listener to a new one that raise every generation and not gen interval.
-
     public FloatProperty maxGenerationProgressProperty() {
         return maxGenerationProgress;
     }
@@ -106,12 +113,13 @@ public class EngineModel {
         theEngine = new Engine();
         theEngine.addFinishRunListener(this::onGenerationEnd);
         theEngine.addFinishRunListener(this::onFinish);
-        theEngine.addGenerationEndListener(this::onGenerationEnd);
+        theEngine.addRequiredIntervalListener(this::onGenerationEnd);
+        theEngine.addOnEveryGenerationEnd(this::updateProgressBars);
         evoSettingsChangeListeners = new Listeners();
 
         elitism.addListener((observable, oldValue, newValue) -> {
-            if (newValue.intValue() > 100) {
-                newValue = 100;
+            if (newValue.intValue() > theEngine.getEvoEngineSettings().getPopulationSize()) {
+                newValue = theEngine.getEvoEngineSettings().getPopulationSize();
             } else if (newValue.intValue() < 0) {
                 newValue = 0;
             }
@@ -137,11 +145,28 @@ public class EngineModel {
     private void onGenerationEnd() {
         Platform.runLater(() -> {
             // Update the best solution
-            bestSolution.set(theEngine.getBestResult());
-            // Update progress bars
-            maxGenerationProgress.set(theEngine.getStopCondition(Engine.StopCondition.MAX_GENERATIONS).getProgress());
-            maxFitnessProgress.set(theEngine.getStopCondition(Engine.StopCondition.REQUESTED_FITNESS).getProgress());
-            timeProgress.set(theEngine.getStopCondition(Engine.StopCondition.BY_TIME).getProgress());
+            displaySolution.set(theEngine.getBestResult());
+            historySolutions.set(FXCollections.observableMap(theEngine.getHistoryGeneration2BestSolution()));
+        });
+    }
+
+    private void updateProgressBars() {
+        Platform.runLater(() -> {
+            if (theEngine.isActiveStopCondition(Engine.StopCondition.MAX_GENERATIONS)) {
+                maxGenerationProgress.set(theEngine.getStopCondition(Engine.StopCondition.MAX_GENERATIONS).getProgress());
+            } else {
+                maxGenerationProgress.set(0);
+            }
+            if (theEngine.isActiveStopCondition(Engine.StopCondition.REQUESTED_FITNESS)) {
+                maxFitnessProgress.set(theEngine.getStopCondition(Engine.StopCondition.REQUESTED_FITNESS).getProgress());
+            } else {
+                maxFitnessProgress.set(0);
+            }
+            if (theEngine.isActiveStopCondition(Engine.StopCondition.BY_TIME)) {
+                timeProgress.set(theEngine.getStopCondition(Engine.StopCondition.BY_TIME).getProgress());
+            } else {
+                timeProgress.set(0);
+            }
         });
     }
 
@@ -168,7 +193,7 @@ public class EngineModel {
     }
 
     private void initializeAfterSerialize() {
-        bestSolution.set(null);
+        displaySolution.set(null);
         crossover.set(theEngine.getEvoEngineSettings().getCrossover());
         selection.set(theEngine.getEvoEngineSettings().getSelection());
         mutations.clear();
@@ -179,7 +204,7 @@ public class EngineModel {
     public void startAlgorithm() {
         setIsWorking(true);
         setIsPaused(false);
-        theEngine.setUpdateGenerationInterval(5);
+        theEngine.setUpdateGenerationInterval(genInterval.get());
         theEngine.startAlgorithm();
     }
 
@@ -252,5 +277,9 @@ public class EngineModel {
 
     protected void onEvoSettingsChange() {
         Platform.runLater(evoSettingsChangeListeners::raiseEvent);
+    }
+
+    public void changeDisplaySolution(TimeTable timeTable) {
+        displaySolution.set(timeTable);
     }
 }

@@ -1,4 +1,4 @@
-package components.tableInfo.mainTableInfo;
+package components.rightPanel.tableInfo.mainTableInfo;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
