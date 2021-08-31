@@ -1,4 +1,4 @@
-package components.tableInfo.teacherInfo;
+package components.rightPanel.tableInfo.classInfo;
 
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -7,23 +7,23 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import logic.timeTable.Class;
 import logic.timeTable.Course;
-import logic.timeTable.Teacher;
 
-public class TeacherInfoController {
+public class ClassInfoController {
 
-    private ListProperty<Course> courses = new SimpleListProperty<>();
+    private final ListProperty<Course> courses = new SimpleListProperty<>();
 
-    private Teacher displayedTeacher;
+    private Class displayedClass;
 
-    public void setDisplayedTeacher(Teacher displayedTeacher) {
-        this.displayedTeacher = displayedTeacher;
-        if (displayedTeacher == null) {
+    public void setDisplayedClass(Class displayedClass) {
+        this.displayedClass = displayedClass;
+        if (displayedClass == null) {
             return;
         }
 
-        this.nameLbl.setText(displayedTeacher.getName());
-        this.idLbl.setText(displayedTeacher.getId());
+        this.nameLbl.setText(displayedClass.getName());
+        this.idLbl.setText(displayedClass.getId());
     }
 
     @FXML
@@ -33,7 +33,7 @@ public class TeacherInfoController {
     private Label idLbl;
 
     @FXML
-    private ListView<Course> teachesViewList;
+    private ListView<Course> studiesViewList;
 
     public void setCourses(ObservableList<Course> courses) {
         this.courses.set(courses);
@@ -41,8 +41,8 @@ public class TeacherInfoController {
 
     @FXML
     private void initialize() {
-        teachesViewList.itemsProperty().bind(this.courses);
-        teachesViewList.setCellFactory(lv -> new ListCell<Course>() {
+        studiesViewList.itemsProperty().bind(this.courses);
+        studiesViewList.setCellFactory(lv -> new ListCell<Course>() {
             @Override
             protected void updateItem(Course item, boolean empty) {
                 super.updateItem(item, empty);

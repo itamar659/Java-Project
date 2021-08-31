@@ -29,6 +29,7 @@ public class EngineModel {
     private final ObjectProperty<Selection<TimeTable>> selection = new SimpleObjectProperty<>();
     private final ListProperty<Mutation<TimeTable>> mutations = new SimpleListProperty<>();
     private final IntegerProperty elitism = new SimpleIntegerProperty(0);
+    private final IntegerProperty genInterval = new SimpleIntegerProperty(0);
     private final BooleanProperty isWorking = new SimpleBooleanProperty(false);
     private final BooleanProperty isPaused = new SimpleBooleanProperty(false);
     private final BooleanProperty isFileLoaded = new SimpleBooleanProperty(false);
@@ -60,6 +61,10 @@ public class EngineModel {
 
     public IntegerProperty elitismProperty() {
         return elitism;
+    }
+
+    public IntegerProperty genIntervalProperty() {
+        return genInterval;
     }
 
     public BooleanProperty isWorkingProperty() {
@@ -110,8 +115,8 @@ public class EngineModel {
         evoSettingsChangeListeners = new Listeners();
 
         elitism.addListener((observable, oldValue, newValue) -> {
-            if (newValue.intValue() > 100) {
-                newValue = 100;
+            if (newValue.intValue() > theEngine.getEvoEngineSettings().getPopulationSize()) {
+                newValue = theEngine.getEvoEngineSettings().getPopulationSize();
             } else if (newValue.intValue() < 0) {
                 newValue = 0;
             }
@@ -174,12 +179,13 @@ public class EngineModel {
         mutations.clear();
         mutations.set(FXCollections.observableArrayList(theEngine.getEvoEngineSettings().getMutations()));
         elitism.set(theEngine.getEvoEngineSettings().getElitism());
+        genInterval.set(10);
     }
 
     public void startAlgorithm() {
         setIsWorking(true);
         setIsPaused(false);
-        theEngine.setUpdateGenerationInterval(5);
+        theEngine.setUpdateGenerationInterval(genInterval.get());
         theEngine.startAlgorithm();
     }
 

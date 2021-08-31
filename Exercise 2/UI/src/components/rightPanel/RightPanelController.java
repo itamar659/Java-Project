@@ -3,6 +3,7 @@ package components.rightPanel;
 import components.Resources;
 import components.application.UIAdapter;
 import components.rightPanel.topRightPanel.TopRightController;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -10,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
@@ -17,9 +19,14 @@ import java.io.IOException;
 public class RightPanelController {
 
     @FXML
+    private TextField textFieldInterval;
+
+    @FXML
     private Button buttonStartPause;
+
     @FXML
     private Button buttonStop;
+
     @FXML
     private StackPane stackPaneTop;
 
@@ -37,6 +44,15 @@ public class RightPanelController {
         isPaused.bind(uiAdapter.getTheEngine().isPausedProperty());
 
         buttonStartPause.disableProperty().bind(uiAdapter.getTheEngine().isFileLoadedProperty().not());
+
+        textFieldInterval.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                uiAdapter.getTheEngine().genIntervalProperty().set(Integer.parseInt(newValue));
+            } catch (Exception e) {
+                Platform.runLater(() -> textFieldInterval.setText("10"));
+                uiAdapter.getTheEngine().genIntervalProperty().set(10);
+            }
+        });
     }
 
     @FXML

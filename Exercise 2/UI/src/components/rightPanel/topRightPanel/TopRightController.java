@@ -26,14 +26,14 @@ public class TopRightController {
     }
 
     private void createGridInformation(Solution<TimeTable> solution) {
-        if (solution == null) {
-            return;
-        }
-
         Node saveGroupForTable = gridPaneInformation.getChildren().get(0);
         gridPaneInformation.getChildren().clear();
         gridPaneInformation.getChildren().add(saveGroupForTable);
         gridPaneInformation.getRowConstraints().clear();
+
+        if (solution == null) {
+            return;
+        }
 
         Label fitnessLabel = new Label("Fitness");
         Label value = new Label(String.format("%.2f", solution.getFitness()));

@@ -5,7 +5,6 @@ import components.problemInfo.accordionItem.AccordionItemController;
 import components.problemInfo.configItem.ConfigController;
 import components.problemInfo.ruleAccordionItem.RuleAccordionItemController;
 import engine.base.configurable.Configurable;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
