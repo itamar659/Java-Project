@@ -7,8 +7,6 @@ import engine.base.Selection;
 import engine.base.configurable.Configurable;
 import javafx.application.Platform;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import logic.Engine;
 import logic.evoEngineSettingsWrapper;
@@ -111,7 +109,8 @@ public class EngineModel {
         theEngine = new Engine();
         theEngine.addFinishRunListener(this::onGenerationEnd);
         theEngine.addFinishRunListener(this::onFinish);
-        theEngine.addGenerationEndListener(this::onGenerationEnd);
+        theEngine.addRequiredIntervalListener(this::onGenerationEnd);
+        theEngine.addOnEveryGenerationEnd(this::updateProgressBars);
         evoSettingsChangeListeners = new Listeners();
 
         elitism.addListener((observable, oldValue, newValue) -> {
@@ -143,10 +142,26 @@ public class EngineModel {
         Platform.runLater(() -> {
             // Update the best solution
             bestSolution.set(theEngine.getBestResult());
-            // Update progress bars
-            maxGenerationProgress.set(theEngine.getStopCondition(Engine.StopCondition.MAX_GENERATIONS).getProgress());
-            maxFitnessProgress.set(theEngine.getStopCondition(Engine.StopCondition.REQUESTED_FITNESS).getProgress());
-            timeProgress.set(theEngine.getStopCondition(Engine.StopCondition.BY_TIME).getProgress());
+        });
+    }
+
+    private void updateProgressBars() {
+        Platform.runLater(() -> {
+            if (theEngine.isActiveStopCondition(Engine.StopCondition.MAX_GENERATIONS)) {
+                maxGenerationProgress.set(theEngine.getStopCondition(Engine.StopCondition.MAX_GENERATIONS).getProgress());
+            } else {
+                maxGenerationProgress.set(0);
+            }
+            if (theEngine.isActiveStopCondition(Engine.StopCondition.REQUESTED_FITNESS)) {
+                maxFitnessProgress.set(theEngine.getStopCondition(Engine.StopCondition.REQUESTED_FITNESS).getProgress());
+            } else {
+                maxFitnessProgress.set(0);
+            }
+            if (theEngine.isActiveStopCondition(Engine.StopCondition.BY_TIME)) {
+                timeProgress.set(theEngine.getStopCondition(Engine.StopCondition.BY_TIME).getProgress());
+            } else {
+                timeProgress.set(0);
+            }
         });
     }
 

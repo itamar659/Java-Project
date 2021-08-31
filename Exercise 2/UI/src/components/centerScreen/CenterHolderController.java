@@ -81,10 +81,10 @@ public class CenterHolderController {
         this.timeTablePanelController.timeTableSolutionProperty().bind(uiAdapter.getTheEngine().bestSolutionProperty());
         this.timeTablePanelController.setUiAdapter(uiAdapter);
 
-        checkBoxMaxGenerations.disableProperty().bind(uiAdapter.getTheEngine().isWorkingProperty());
+        checkBoxMaxGenerations.disableProperty().bind(uiAdapter.getTheEngine().isWorkingProperty().or(uiAdapter.getTheEngine().isPausedProperty()));
         checkBoxMaxFitness.disableProperty().bind(checkBoxMaxGenerations.disableProperty());
         checkBoxMaxTime.disableProperty().bind(checkBoxMaxGenerations.disableProperty());
-        textFieldMaxGenerations.disableProperty().bind(uiAdapter.getTheEngine().isWorkingProperty());
+        textFieldMaxGenerations.disableProperty().bind(checkBoxMaxGenerations.disableProperty());
         textFieldMaxFitness.disableProperty().bind(checkBoxMaxGenerations.disableProperty());
         textFieldMaxTime.disableProperty().bind(checkBoxMaxGenerations.disableProperty());
 

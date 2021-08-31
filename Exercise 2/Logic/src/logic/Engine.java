@@ -2,7 +2,6 @@ package logic;
 
 import engine.base.stopConditions.MaxGenerationsStopCondition;
 import engine.base.stopConditions.MaxFitnessStopCondition;
-import engine.base.stopConditions.StopCondition;
 import engine.base.stopConditions.TimeStopCondition;
 import logic.evoAlgorithm.TimeTableEvolutionEngine;
 import logic.evoAlgorithm.factory.Factories;
@@ -64,12 +63,16 @@ public class Engine implements Serializable {
     }
 
     // === Listeners ===
-    public void addGenerationEndListener(Runnable action) {
-        evoEngine.addGenerationEndListener(action);
+    public void addRequiredIntervalListener(Runnable action) {
+        evoEngine.addRequiredIntervalListener(action);
     }
 
-    public void removeGenerationEndListener(Runnable action) {
-        evoEngine.removeGenerationEndListener(action);
+    public void addOnEveryGenerationEnd(Runnable action) {
+        evoEngine.addOnEveryGenerationEnd(action);
+    }
+
+    public void removeRequiredIntervalListener(Runnable action) {
+        evoEngine.removeRequiredIntervalListener(action);
     }
 
     public void addFinishRunListener(Runnable action) {
@@ -138,6 +141,10 @@ public class Engine implements Serializable {
         }
     }
 
+    public boolean isActiveStopCondition(StopCondition stopCondition) {
+        return evoEngine.getStopConditions().containsKey(stopCondition.name());
+    }
+
     public engine.base.stopConditions.StopCondition getStopCondition(StopCondition stopCondition) {
         switch (stopCondition) {
             case MAX_GENERATIONS:
@@ -152,7 +159,9 @@ public class Engine implements Serializable {
     }
 
     public void removeStopCondition(StopCondition stopCondition) {
-        evoEngine.removeStopCondition(stopCondition.name());
+        if (this.state != State.RUNNING) {
+            evoEngine.removeStopCondition(stopCondition.name());
+        }
     }
 
     public void setElitism(int elitism) {

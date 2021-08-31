@@ -5,7 +5,6 @@ import engine.base.stopConditions.StopCondition;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.function.Supplier;
 
 
 public abstract class EvolutionEngine<T> implements Serializable {
@@ -26,7 +25,8 @@ public abstract class EvolutionEngine<T> implements Serializable {
     protected boolean isRunning;
     protected boolean isPaused;
     private int updateGenerationInterval;
-    private final Listeners generationEndListeners;
+    private final Listeners requiredIntervalListeners;
+    private final Listeners everyGenerationListener;
     private final Listeners finishRunListeners;
 
     public Population<T> getPopulation() {
@@ -93,6 +93,10 @@ public abstract class EvolutionEngine<T> implements Serializable {
         this.updateGenerationInterval = updateGenerationInterval;
     }
 
+    public Map<String, StopCondition> getStopConditions() {
+        return stopConditions;
+    }
+
     public void addStopCondition(String id, StopCondition stopCondition) {
         this.stopConditions.put(id, stopCondition);
     }
@@ -113,12 +117,16 @@ public abstract class EvolutionEngine<T> implements Serializable {
         this.bestSolution = bestSolution;
     }
 
-    public void addGenerationEndListener(Runnable action) {
-        generationEndListeners.add(action);
+    public void addRequiredIntervalListener(Runnable action) {
+        requiredIntervalListeners.add(action);
     }
 
-    public void removeGenerationEndListener(Runnable action) {
-        generationEndListeners.remove(action);
+    public void removeRequiredIntervalListener(Runnable action) {
+        requiredIntervalListeners.remove(action);
+    }
+
+    public void addOnEveryGenerationEnd(Runnable action) {
+        everyGenerationListener.add(action);
     }
 
     public void addFinishRunListener(Runnable action) {
@@ -139,7 +147,8 @@ public abstract class EvolutionEngine<T> implements Serializable {
         this.mutations = new HashSet<>();
         this.historyGeneration2Fitness = new TreeMap<>();
         this.updateGenerationInterval = 100;
-        this.generationEndListeners = new Listeners();
+        this.requiredIntervalListeners = new Listeners();
+        this.everyGenerationListener = new Listeners();
         this.finishRunListeners = new Listeners();
         this.stopConditions = new HashMap<>();
     }
@@ -160,6 +169,8 @@ public abstract class EvolutionEngine<T> implements Serializable {
             this.historyGeneration2Fitness.clear();
         }
 
+        setBestSolution(population.getBestSolutionFitness());
+
         isPaused = false;
         boolean[] shouldStop = {stopConditions.values().size() == 0};
         stopConditions.values().forEach(condition -> {
@@ -172,7 +183,7 @@ public abstract class EvolutionEngine<T> implements Serializable {
             // Call listeners
             if (currentGeneration % updateGenerationInterval == 0) {
                 updateHistoryGeneration2Fitness(currentGeneration, population.getBestSolutionFitness());
-                onEndOfGeneration();
+                onRequiredInterval();
             }
 
             // Step 1 - check if finished
@@ -198,11 +209,14 @@ public abstract class EvolutionEngine<T> implements Serializable {
             // Step 4.1 - Add the elite population
             population = population.mergePopulations(elitePop);
 
+            onEveryGenerationEnd();
+
             // Check conditions
             stopConditions.values().forEach(condition -> {
                 if (condition.shouldStop()) shouldStop[0] = true;
             });
         }
+        currentGeneration--; // Dont count the last generation that not started but stopped at.
 
         setBestSolution(population.getBestSolutionFitness());
         isRunning = false;
@@ -223,8 +237,12 @@ public abstract class EvolutionEngine<T> implements Serializable {
         isRunning = false;
     }
 
-    protected void onEndOfGeneration() {
-        generationEndListeners.raiseEvent();
+    protected void onRequiredInterval() {
+        requiredIntervalListeners.raiseEvent();
+    }
+
+    protected void onEveryGenerationEnd() {
+        everyGenerationListener.raiseEvent();
     }
 
     protected void onFinish() {
