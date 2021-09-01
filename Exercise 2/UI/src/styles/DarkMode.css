@@ -1,10 +1,10 @@
-/*.primary-color{*/
-/*    -fx-background-color: #383838;*/
-/*}*/
+.primary-color{
+    -fx-background-color: #383838;
+}
 
-/*.secondary-color{*/
-/*    -fx-background-color: #282828;*/
-/*}*/
+.secondary-color{
+    -fx-background-color: #282828;
+}
 
 /*GridPane,StackPane,ScrollPane,AncorPane,TitledPane,TextFiled{*/
 /*    -fx-background-color: #282828;*/
@@ -14,9 +14,9 @@
 /*    -fx-background-color: #383838;*/
 /*}*/
 
-/*Label,ComboBox, CheckBox{*/
-/*    -fx-text-fill: white;*/
-/*}*/
+Label,ComboBox, CheckBox{
+    -fx-text-fill: white;
+}
 
 /*CheckBox{*/
 
@@ -53,7 +53,7 @@
 /*}*/
 
 
-.root, .primary-color {
+.root {
     -fx-base: #3f474f;
     -fx-accent: #e7eff7 ;
     -fx-default-button: #7f878f ;
