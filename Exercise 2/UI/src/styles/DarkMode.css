@@ -10,6 +10,8 @@ Label,ComboBox, CheckBox{
     -fx-text-fill: white;
 }
 
+
+
 .root {
     -fx-base: #3f474f;
     -fx-accent: #e7eff7 ;

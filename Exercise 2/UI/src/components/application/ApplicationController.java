@@ -6,7 +6,9 @@ import components.centerScreen.CenterHolderController;
 import components.rightPanel.RightPanelController;
 import components.problemInfo.ProbInfoController;
 import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -37,6 +39,7 @@ public class ApplicationController {
     private RightPanelController rightPanelController;
 
     private final SimpleStringProperty selectedFileProperty = new SimpleStringProperty();
+    private final SimpleBooleanProperty animatedProperty = new SimpleBooleanProperty();
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -51,6 +54,7 @@ public class ApplicationController {
     @FXML private Button btnMode;
     @FXML private javafx.scene.image.ImageView imgView;
     @FXML private Label pathLbl;
+    @FXML private Button buttonAnimation;
     @FXML private StackPane stackPaneLeft;
     @FXML private StackPane stackPaneRight;
     @FXML private ScrollPane scrollPaneCenter;
@@ -61,17 +65,28 @@ public class ApplicationController {
     private boolean isAnimated = false;
     @FXML
     private void labelLogo_onClick(MouseEvent event){
-        if(isAnimated){
+        if(isAnimated || !animatedSupport){
             return;
         }
         isAnimated = true;
-        RotateTransition rt = new RotateTransition(Duration.seconds(5), labelLogo);
+        RotateTransition rt = new RotateTransition(Duration.seconds(1.5), labelLogo);
         rt.setByAngle(360);
         rt.setCycleCount(1);
         rt.setOnFinished(event1 -> isAnimated = false);
         rt.play();
     }
 
+    private boolean animatedSupport = true;
+    @FXML
+    void buttonAnimation_OnClick(ActionEvent event) {
+        animatedSupport = !animatedSupport;
+
+        if(animatedSupport){
+            buttonAnimation.setText("Disable Animations");
+        }else{
+            buttonAnimation.setText("Enable Animations");
+        }
+    }
 
     private boolean isLightMode = true;
     @FXML
@@ -86,14 +101,14 @@ public class ApplicationController {
     }
 
     private void setLightMode() {
-        parent.getStylesheets().remove("styles/DarkMode.css");
+        parent.getStylesheets().clear();
         parent.getStylesheets().add("styles/LightMode.css");
         Image image = new Image("resources/light_mode.png");
         imgView.setImage(image);
     }
 
     private void setDarkMode() {
-        parent.getStylesheets().remove("styles/LightMode.css");
+        parent.getStylesheets().clear();
         parent.getStylesheets().add("styles/DarkMode.css");
         Image image = new Image("resources/dark_mode.png");
         imgView.setImage(image);
@@ -106,8 +121,15 @@ public class ApplicationController {
         selectedFileProperty.addListener((observable, oldValue, newValue) -> {
             if (!(selectedFileProperty.get() != null && selectedFileProperty.get().equals(""))) {
                 theEngine.isFileLoadedProperty().set(true);
-            }
 
+                if(animatedSupport){
+                    FadeTransition ft = new FadeTransition(Duration.seconds(2), pathLbl);
+                    ft.setFromValue(0);
+                    ft.setToValue(1);
+                    ft.setCycleCount(1);
+                    ft.play();
+                }
+            }
         });
 
         loadProblemInfo();
@@ -117,8 +139,6 @@ public class ApplicationController {
         adapter.getTheEngine().addEvoSettingsChangeListener(() ->
             probInfoController.updateEvoSettings(theEngine.getEvoEngineSettings())
         );
-
-
     }
 
     @FXML
