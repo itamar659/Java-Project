@@ -5,14 +5,12 @@ import components.Resources;
 import components.centerScreen.CenterHolderController;
 import components.rightPanel.RightPanelController;
 import components.problemInfo.ProbInfoController;
-import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -24,7 +22,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import javax.swing.text.html.ImageView;
 import java.io.File;
 import java.io.IOException;
 
@@ -40,6 +37,8 @@ public class ApplicationController {
 
     private final SimpleStringProperty selectedFileProperty = new SimpleStringProperty();
     private final SimpleBooleanProperty animatedProperty = new SimpleBooleanProperty();
+
+    private boolean isLightMode = true;
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -88,16 +87,33 @@ public class ApplicationController {
         }
     }
 
-    private boolean isLightMode = true;
+    private enum Modes{
+        Light, Dark, Ugly
+    }
+    private Modes currentMode = Modes.Light;
     @FXML
     public void changeMode(ActionEvent event){
-        isLightMode = !isLightMode;
-
-        if(isLightMode){
-            setLightMode();
-        }else{
-            setDarkMode();
+        switch (currentMode){
+            case Light:
+                setDarkMode();
+                currentMode = Modes.Dark;
+                break;
+            case Dark:
+                setUglyMode();
+                currentMode = Modes.Ugly;
+                break;
+            case Ugly:
+                setLightMode();
+                currentMode = Modes.Light;
+                break;
         }
+    }
+
+    private void setUglyMode() {
+        parent.getStylesheets().clear();
+        parent.getStylesheets().add("styles/UglyMode.css");
+        Image image = new Image("resources/poop.png");
+        imgView.setImage(image);
     }
 
     private void setLightMode() {

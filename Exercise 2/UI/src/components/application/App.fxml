@@ -25,7 +25,7 @@
                      <children>
                         <Pane prefHeight="53.0" prefWidth="0.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <Button fx:id="buttonAnimation" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#buttonAnimation_OnClick" text="Kill Animation" />
+                              <Button fx:id="buttonAnimation" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#buttonAnimation_OnClick" text="Disable Animations" />
                            </children></Pane>
                         <Label fx:id="labelLogo" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#labelLogo_onClick" text="Evolutinary Engine" textAlignment="CENTER">
                            <font>
