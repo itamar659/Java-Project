@@ -7,7 +7,6 @@ import components.rightPanel.RightPanelController;
 import components.problemInfo.ProbInfoController;
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -27,18 +26,23 @@ import java.io.IOException;
 
 public class ApplicationController {
 
+    private enum Modes{
+        Light, Dark, Ugly
+    }
+
     private Stage primaryStage;
     private final UIAdapter adapter;
     private final EngineModel theEngine;
+
+    private Modes currentMode = Modes.Light;
+    private boolean isLogoRunAnimation = false;
+    private boolean animatedSupport = true;
 
     private ProbInfoController probInfoController;
     private CenterHolderController centerHolderController;
     private RightPanelController rightPanelController;
 
     private final SimpleStringProperty selectedFileProperty = new SimpleStringProperty();
-    private final SimpleBooleanProperty animatedProperty = new SimpleBooleanProperty();
-
-    private boolean isLightMode = true;
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -61,21 +65,19 @@ public class ApplicationController {
     @FXML private Label labelLogo;
 
 
-    private boolean isAnimated = false;
     @FXML
     private void labelLogo_onClick(MouseEvent event){
-        if(isAnimated || !animatedSupport){
+        if(isLogoRunAnimation || !animatedSupport){
             return;
         }
-        isAnimated = true;
+        isLogoRunAnimation = true;
         RotateTransition rt = new RotateTransition(Duration.seconds(1.5), labelLogo);
         rt.setByAngle(360);
         rt.setCycleCount(1);
-        rt.setOnFinished(event1 -> isAnimated = false);
+        rt.setOnFinished(event1 -> isLogoRunAnimation = false);
         rt.play();
     }
 
-    private boolean animatedSupport = true;
     @FXML
     void buttonAnimation_OnClick(ActionEvent event) {
         animatedSupport = !animatedSupport;
@@ -87,10 +89,6 @@ public class ApplicationController {
         }
     }
 
-    private enum Modes{
-        Light, Dark, Ugly
-    }
-    private Modes currentMode = Modes.Light;
     @FXML
     public void changeMode(ActionEvent event){
         switch (currentMode){
@@ -133,7 +131,7 @@ public class ApplicationController {
     @FXML
     private void initialize() {
         pathLbl.textProperty().bind(selectedFileProperty);
-        buttonOpenFile.disableProperty().bind(theEngine.isWorkingProperty());
+        buttonOpenFile.disableProperty().bind(theEngine.isWorkingProperty().or(theEngine.isPausedProperty()));
         selectedFileProperty.addListener((observable, oldValue, newValue) -> {
             if (!(selectedFileProperty.get() != null && selectedFileProperty.get().equals(""))) {
                 theEngine.isFileLoadedProperty().set(true);
