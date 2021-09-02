@@ -5,17 +5,22 @@ import components.Resources;
 import components.centerScreen.CenterHolderController;
 import components.rightPanel.RightPanelController;
 import components.problemInfo.ProbInfoController;
+import javafx.animation.Animation;
+import javafx.animation.RotateTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import javax.swing.text.html.ImageView;
 import java.io.File;
@@ -50,8 +55,26 @@ public class ApplicationController {
     @FXML private StackPane stackPaneRight;
     @FXML private ScrollPane scrollPaneCenter;
     @FXML private ScrollPane parent;
+    @FXML private Label labelLogo;
+
+
+    private boolean isAnimated = false;
+    @FXML
+    private void labelLogo_onClick(MouseEvent event){
+        if(isAnimated){
+            return;
+        }
+        isAnimated = true;
+        RotateTransition rt = new RotateTransition(Duration.seconds(5), labelLogo);
+        rt.setByAngle(360);
+        rt.setCycleCount(1);
+        rt.setOnFinished(event1 -> isAnimated = false);
+        rt.play();
+    }
+
 
     private boolean isLightMode = true;
+    @FXML
     public void changeMode(ActionEvent event){
         isLightMode = !isLightMode;
 
@@ -94,6 +117,8 @@ public class ApplicationController {
         adapter.getTheEngine().addEvoSettingsChangeListener(() ->
             probInfoController.updateEvoSettings(theEngine.getEvoEngineSettings())
         );
+
+
     }
 
     @FXML
