@@ -65,8 +65,8 @@ public class MutationsController {
     private void updateValue(Label paramName, TextField paramValue) {
         try {
             uiAdapter.getTheEngine().ConfigObject(comboBoxMutation.getSelectionModel().getSelectedItem(), paramName.getText(), paramValue.getText());
-            paramName.setStyle("-fx-text-fill: BLACK");
-            paramValue.setStyle("-fx-text-fill: BLACK");
+            paramName.setStyle("");
+            paramValue.setStyle("");
         } catch (Exception e) {
             paramName.setStyle("-fx-text-fill: RED");
             paramValue.setStyle("-fx-text-fill: RED");

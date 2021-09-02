@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.291" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.centerScreen.timeTable.lessonsInfo.LessonsInfoController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.281" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.centerScreen.timeTable.lessonsInfo.LessonsInfoController">
    <children>
       <ComboBox fx:id="lessonsComboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
       <AnchorPane fx:id="lessonInfoAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
