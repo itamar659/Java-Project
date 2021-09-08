@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="login/login.css" />
+    <script type="text/javascript" src="helpers/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="helpers/context-path-helper.js"></script>
+    <script type="text/javascript" src="login/login.js"></script>
+    <title>Login</title>
+</head>
+<body>
+<div class="wrapper">
+    <div id="main-container">
+        <label for="login-form" class="form-header">
+            Login
+        </label>
+        <form id="login-form" action="Login" method="post">
+            <br />
+            <input id="user-name-label" type="text" name="username" placeholder="Username" />
+            <br />
+            <div id="error-placeholder"></div>
+            <input type="submit" value="Login" />
+        </form>
+        <div id="form-footer">
+            <a class="underline-hover" href="/index.html">Go Back To Home Page</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

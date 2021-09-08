@@ -1,0 +1,23 @@
+header {
+    background-color: blue;
+}
+
+aside {
+    float: left;
+    width: 30%;
+    max-width: 300px;
+    min-width: 200px;
+    background-color: green;
+}
+
+section {
+    width: 100%;
+    background-color: red;
+    clear: both;
+    content: "";
+    display: table;
+}
+
+footer {
+    background-color: yellow;
+}

@@ -1,0 +1,118 @@
+body {
+    background-color: #56baed;
+    font-family: sans-serif;
+    height: 75vh;
+}
+
+a {
+    color: #92badd;
+    display:inline-block;
+    text-decoration: none;
+    font-weight: 400;
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    min-height: 100%;
+    padding: 20px 0;
+}
+
+#main-container {
+    border-radius: 10px;
+    background: #fff;
+    padding: 30px 0 0 0;
+    width: 90%;
+    max-width: 450px;
+    position: relative;
+    box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+#form-footer {
+    background-color: #f6f6f6;
+    border-top: 1px solid #dce8f1;
+    padding: 25px;
+    text-align: center;
+    border-radius: 0 0 10px 10px;
+}
+
+.form-header {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 24px;
+    padding-bottom: 3px;
+    color: #0d0d0d;
+    border-bottom: 2px solid #5fbae9;
+}
+
+#error-placeholder {
+    color: RED;
+    font-weight: bold;
+    margin: 8px;
+}
+
+input[type=text] {
+    background-color: #f6f6f6;
+    border: none;
+    border-radius: 5px;
+    border-bottom: 2px solid #f6f6f6;
+    color: #0d0d0d;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 0;
+    width: 75%;
+    transition: 0.4s;
+}
+
+input[type=text]:focus {
+    background-color: white;
+    border-bottom: 2px solid #5fbae9;
+    outline: none;
+}
+
+input[type=submit] {
+    background-color: #56baed;
+    border: 2px solid #56baed;
+    color: white;
+    padding: 15px 80px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    text-transform: uppercase;
+    font-size: 13px;
+    box-shadow: 2px 6px 14px 0 rgba(95,186,233,0.4);
+    border-radius: 5px;
+    margin: 10px 20px 40px 20px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid #5AF;
+    transition-duration: 0.15s;
+}
+
+input[type=submit]:active {
+    background-color: #4eb0e2;
+    color: white;
+}
+
+.underline-hover {
+    width: auto;
+    border-bottom: 2px solid #f6f6f6;
+    transition: all 0.2s;
+}
+
+.underline-hover:hover {
+    color: #0d0d0d;
+    border-bottom: 2px solid #56baed;
+}
