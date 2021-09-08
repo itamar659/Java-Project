@@ -25,9 +25,13 @@
             </div>
         </section>
         <section id="bot-header">
-            <label>Upload Problem:</label>
-            <input id="file-input" class="hide-input" type="file" accept="text/xml" />
-            <label for="file-input" class="button">Choose a file</label>
+            <form id="upload-form" action="upload" enctype="multipart/form-data" method="post">
+                <input id="file-input" class="hide-input" type="file" accept="text/xml" />
+                <label>Upload Problem:</label>
+                <label for="file-input" class="button">Choose a file</label>
+                <label class="file-path"></label>
+                <input class="button upload-button" disabled type="submit" value="Upload File" name="upload">
+            </form>
         </section>
     </div>
     <div id="center-container">

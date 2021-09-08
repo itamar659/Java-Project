@@ -57,6 +57,10 @@ table {
     margin-bottom: 5px;
 }
 
+.upload-button {
+    float: right;
+}
+
 #main-top-header {
     display: inline-block;
 }
@@ -171,6 +175,14 @@ table {
     color: white;
 }
 
+.button:disabled {
+    background-color: #d1dfe7;
+    border: 2px solid #d1dfe7;
+    color: white;
+    box-shadow: 0 2px 6px 0 rgba(227, 239, 246, 0.6);
+    cursor: default;
+}
+
 .logout-button {
     font-size: 18px;
     color: #74b3ea;
@@ -198,3 +210,28 @@ table {
 .underline-hover:hover:after{
     width: 100%;
 }
+
+
+
+/*Animations*/
+
+/*@keyframes button-flashes {*/
+/*    0% {*/
+/*        background-color: #56baed;*/
+/*        border: 2px solid #56baed;*/
+/*    }*/
+/*    50% {*/
+/*        background-color: #c8e1ff;*/
+/*        border: 2px solid #c8e1ff;*/
+/*    }*/
+/*    100% {*/
+/*        background-color: #56baed;*/
+/*        border: 2px solid #56baed;*/
+/*    }*/
+/*}*/
+
+/*.highlight {*/
+/*    animation-name: button-flashes;*/
+/*    animation-duration: 5s;*/
+/*    animation-iteration-count: infinite;*/
+/*}*/

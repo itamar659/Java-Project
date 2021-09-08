@@ -6,6 +6,7 @@ $(function () {
     ajaxLoggedInUsername();
     ajaxUsersList();
     setInterval(ajaxUsersList, refreshRate);
+    formUploadFileSetEvents();
 })
 
 function ajaxUsersList() {
@@ -51,7 +52,6 @@ function ajaxLoggedInUsername() {
             });
         },
         error: function(relocation) {
-            console.log(relocation);
             window.location.href = buildUrlWithContextPath(relocation.responseText);
         }
     });
@@ -66,5 +66,53 @@ function logout() {
         error: function() {
             window.location.href = "/";
         }
+    });
+}
+
+function formUploadFileSetEvents() {
+    // $(".upload-button")[0].onclick = function () {
+    //     // this.classList.remove("highlight");
+    //
+    //     // 2 lines of bugs:
+    //     // $("#file-input")[0].value = "";
+    //     // $(".upload-button")[0].disabled = true;
+    //
+    //     // $(".file-path").empty();
+    //
+    //     return false;
+    // };
+
+    $("#file-input")[0].onchange = function () {
+        // $(".upload-button")[0].classList.add("highlight");
+        $(".upload-button")[0].disabled = false;
+        $(".file-path")[0].innerText = "File Name: " + this.files[0].name;
+
+    };
+
+    $("#upload-form").submit(function () {
+
+        var formData = new FormData();
+        var file = $("#file-input")[0].files[0];
+        formData.append("file", file);
+
+        $.ajax({
+            method: 'POST',
+            data: formData,
+            url: this.action,
+            processData: false, // Don't process the files
+            contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+            timeout: 10000,
+            success: function (r) {
+                console.log(r);
+                $("#file-input")[0].value = "";
+                $(".upload-button")[0].disabled = true;
+            },
+            error: function (e) {
+                console.error("Failed to get result from server " + e);
+                $("#file-input")[0].value = "";
+                $(".upload-button")[0].disabled = true;
+            }
+        });
+        return false;
     });
 }
