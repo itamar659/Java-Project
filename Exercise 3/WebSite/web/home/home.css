@@ -16,6 +16,7 @@ td {
 th {
     color: white;
     padding: 5px;
+    padding-bottom: 15px;
     border-bottom: 3px solid #20a6ea;
 }
 
@@ -33,26 +34,14 @@ table {
 #main {
     background-color: white;
     padding: 10px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    margin: 10px 10px 0 10px;
+    border-radius: 10px 10px 0 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
 }
-
-/*aside {*/
-/*    float: left;*/
-/*    width: 30%;*/
-/*    max-width: 300px;*/
-/*    min-width: 200px;*/
-/*    background-color: green;*/
-/*}*/
-
-/*section {*/
-/*    width: 100%;*/
-/*    background-color: white;*/
-/*    clear: both;*/
-/*    content: "";*/
-/*    display: table;*/
-/*}*/
-
 
 /*Top site style: header-container and his children*/
 #header-container {
@@ -117,8 +106,9 @@ table {
     background-color: #17b2f3;
     padding: 5px;
     border-radius: 6px 6px 0 0;
-    box-shadow: 0 0 12px -4px #56baed;
+    box-shadow: 0 4px 16px -4px #56baed;
     border-bottom: 3px solid #20a6ea;
+    text-align: center;
 }
 
 #users-list {
