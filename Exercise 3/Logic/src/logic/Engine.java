@@ -36,7 +36,7 @@ public class Engine implements Serializable {
     private final MaxFitnessStopCondition<TimeTable> maxFitnessStopCondition;
     private final TimeStopCondition timeStopCondition;
 
-    private final EvolutionEngine<TimeTable> evoEngine;
+    private EvolutionEngine<TimeTable> evoEngine;
     private final TTEvoEngineCreator TTEvoEngineCreator;
     private final evoEngineSettingsWrapper evoEngineSettings;
     private final Factories factories;
@@ -171,36 +171,18 @@ public class Engine implements Serializable {
     public Engine() {
         this.multiThreaded = false;
         this.state = State.IDLE;
-        this.evoEngine = new TimeTableEvolutionEngine();
-        this.evoEngine.addFinishRunListener(this::algorithmFinished);
         this.evoEngineSettings = new evoEngineSettingsWrapper((TimeTableEvolutionEngine) this.evoEngine);
         this.TTEvoEngineCreator = new TTEvoEngineCreator();
         this.factories = new Factories();
-
 
         maxGenerationsStopCondition = new MaxGenerationsStopCondition<>(evoEngine);
         maxFitnessStopCondition = new MaxFitnessStopCondition<>(evoEngine);
         timeStopCondition = new TimeStopCondition();
     }
 
-    public void validateXMLFile(File xmlFile) throws JAXBException, XMLExtractException {
-        TTEvoEngineCreator.createFromXMLFile(xmlFile);
-    }
-
-    public void updateEvoEngine() {
-        EvolutionEngine<TimeTable> evolutionEngine = this.TTEvoEngineCreator.getLastCreatedTTEEngine();
-        if (evolutionEngine == null) {
-            return;
-        }
-
-        // Update the engine - Move to TTEvoEngineCreator method.
-        this.evoEngine.clearHistory();
-        this.evoEngine.setPopulationSize(evolutionEngine.getPopulationSize());
-        this.evoEngine.setElitism(evolutionEngine.getElitism());
-        this.evoEngine.setSelection(evolutionEngine.getSelection());
-        this.evoEngine.setCrossover(evolutionEngine.getCrossover());
-        this.evoEngine.setMutations(evolutionEngine.getMutations());
-        this.evoEngine.setProblem(evolutionEngine.getProblem());
+    public void loadTTEEngineFromString(String xmlFileAsString) throws JAXBException, XMLExtractException {
+        this.evoEngine = TTEvoEngineCreator.createFromXMLString(xmlFileAsString);
+        this.evoEngine.addFinishRunListener(this::algorithmFinished);
 
         this.isFileLoaded = true;
         this.state = State.IDLE;

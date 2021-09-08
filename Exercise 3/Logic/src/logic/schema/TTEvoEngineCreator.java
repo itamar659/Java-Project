@@ -21,15 +21,10 @@ import java.util.Set;
 
 public class TTEvoEngineCreator implements Serializable {
 
-    private EvolutionEngine<TimeTable> lastCreatedTTEEngine;
-
-    public EvolutionEngine<TimeTable> getLastCreatedTTEEngine() {
-        return lastCreatedTTEEngine;
-    }
-
-    public void createFromXMLFile(File xmlFile) throws JAXBException, XMLExtractException {
+    public EvolutionEngine<TimeTable> createFromXMLString(String xmlFileAsString) throws JAXBException, XMLExtractException {
         XMLExtractor xmlExtractor = new XMLExtractor();
-        xmlExtractor.initializeJAXB(xmlFile);
+        xmlExtractor.initializeJAXB(xmlFileAsString);
+
 
         // --- Extract Time table problem ---
 
@@ -39,6 +34,7 @@ public class TTEvoEngineCreator implements Serializable {
         List<Teacher> teachers = xmlExtractor.extractTeachers(courses);
         List<Class> classes = xmlExtractor.extractClasses(courses, days * hours);
         Rules<TimeTable> rules = xmlExtractor.extractRules();
+
 
         // Initialize the problem
 
@@ -50,24 +46,27 @@ public class TTEvoEngineCreator implements Serializable {
         problem.setClasses(classes);
         problem.setRules(rules);
 
+
         // --- Extract Evolution Engine Modifications ---
 
-        Selection<TimeTable> selection = xmlExtractor.extractSelectionOperator();
-        Crossover<TimeTable> crossover = xmlExtractor.extractCrossoverOperator();
-        Set<Mutation<TimeTable>> mutations = xmlExtractor.extractMutationsOperator();
-        int populationSize = xmlExtractor.extractPopulationSize();
-        int elitism = xmlExtractor.extractElitism();
+//        Selection<TimeTable> selection = xmlExtractor.extractSelectionOperator();
+//        Crossover<TimeTable> crossover = xmlExtractor.extractCrossoverOperator();
+//        Set<Mutation<TimeTable>> mutations = xmlExtractor.extractMutationsOperator();
+//        int populationSize = xmlExtractor.extractPopulationSize();
+//        int elitism = xmlExtractor.extractElitism();
+
 
         // Initialize the Evolution engine
 
         EvolutionEngine<TimeTable> evoEngine = new TimeTableEvolutionEngine();
-        evoEngine.setSelection(selection);
-        evoEngine.setCrossover(crossover);
-        evoEngine.setMutations(mutations);
-        evoEngine.setElitism(elitism);
-        evoEngine.setPopulationSize(populationSize);
         evoEngine.setProblem(problem);
+//        evoEngine.setSelection(selection);
+//        evoEngine.setCrossover(crossover);
+//        evoEngine.setMutations(mutations);
+//        evoEngine.setElitism(elitism);
+//        evoEngine.setPopulationSize(populationSize);
 
-        lastCreatedTTEEngine = evoEngine;
+
+        return evoEngine;
     }
 }

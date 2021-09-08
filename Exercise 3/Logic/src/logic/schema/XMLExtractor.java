@@ -18,18 +18,19 @@ import logic.timeTable.rules.base.Rules;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.File;
+import java.io.StringReader;
 import java.util.*;
 
 public class XMLExtractor {
 
     private ETTDescriptor ettDescriptor;
 
-    public void initializeJAXB(File xmlFile) throws JAXBException {
+    public void initializeJAXB(String xmlFileAsString) throws JAXBException {
         JAXBContext jaxbContext = JAXBContext.newInstance(ETTDescriptor.class);
-
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        this.ettDescriptor = (ETTDescriptor) jaxbUnmarshaller.unmarshal(xmlFile);
+
+        StringReader reader = new StringReader(xmlFileAsString);
+        this.ettDescriptor = (ETTDescriptor) jaxbUnmarshaller.unmarshal(reader);
     }
 
     public Selection<TimeTable> extractSelectionOperator() throws XMLExtractException {

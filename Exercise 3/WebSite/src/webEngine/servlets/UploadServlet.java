@@ -1,5 +1,10 @@
 package webEngine.servlets;
 
+import com.google.gson.Gson;
+import logic.Engine;
+import logic.schema.exceptions.XMLExtractException;
+import webEngine.utils.ServletUtils;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -7,10 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.util.Collection;
 import java.util.Scanner;
 
 @WebServlet(urlPatterns = {"/upload"})
@@ -19,22 +23,35 @@ public class UploadServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
+        response.setContentType("text/json");
 
-        Collection<Part> parts = request.getParts();
+        String errorMessage = null;
+        boolean isFileCorrupted = false;
 
-        out.println("Total parts : " + parts.size() + "\n");
+        Part theEngineXML = request.getPart("file");
+        String xmlFileAsString = readFromInputStream(theEngineXML.getInputStream());
 
-        StringBuilder fileContent = new StringBuilder();
-
-        for (Part part : parts) {
-            //to write the content of the file to a string
-            fileContent.append("New Part content:").append("\n");
-            fileContent.append(readFromInputStream(part.getInputStream())).append("\n");
+        try {
+            Engine engine = new Engine();
+            engine.loadTTEEngineFromString(xmlFileAsString);
+            ServletUtils.getEngineManager(getServletContext()).addEngine(engine);
+        } catch (JAXBException | XMLExtractException e) {
+            errorMessage = e.getMessage();
+            isFileCorrupted = true;
         }
 
-        out.println(fileContent.toString());
+        Gson gson = new Gson();
+        response.getOutputStream().println(gson.toJson(new JsonObjectToReturn(errorMessage, isFileCorrupted)));
+    }
+
+    private static class JsonObjectToReturn {
+        public String errorMessage;
+        public boolean isFileCorrupted;
+
+        public JsonObjectToReturn(String errorMessage, boolean isFileCorrupted) {
+            this.errorMessage = errorMessage;
+            this.isFileCorrupted = isFileCorrupted;
+        }
     }
 
     private String readFromInputStream(InputStream inputStream) {

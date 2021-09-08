@@ -65,6 +65,8 @@ public class UsersListServlet extends HttpServlet {
         }
     }
 
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Regular doGet and doPost">
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -76,4 +78,6 @@ public class UsersListServlet extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
+
+    // </editor-fold>
 }

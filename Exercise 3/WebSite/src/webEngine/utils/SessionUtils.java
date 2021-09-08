@@ -16,15 +16,15 @@ public final class SessionUtils {
         return sessionAttribute != null ? sessionAttribute.toString() : null;
     }
 
-    public static void startSession(HttpServletRequest request, String username) {
+    public static synchronized void startSession(HttpServletRequest request, String username) {
         request.getSession(true).setAttribute(Constants.USERNAME_PARAMETER, username);
     }
 
-    public static boolean hasSession(HttpServletRequest request) {
+    public static synchronized boolean hasSession(HttpServletRequest request) {
         return request.getSession(false) != null;
     }
 
-    public static void endSession(HttpServletRequest request) {
+    public static synchronized void endSession(HttpServletRequest request) {
         request.getSession().invalidate();
     }
 }
