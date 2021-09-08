@@ -21,10 +21,10 @@ public class UsersListServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("application/json");
 
-        if (!SessionUtils.hasSession(request)) {
-            // Don't allow guests to view the users list - TODO: Maybe allow it and display it in the login/main(index) page.
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        } else {
+//        if (!SessionUtils.hasSession(request)) {
+//            // Don't allow guests to view the users list
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//        } else {
             try (PrintWriter out = response.getWriter()) {
                 Gson gson = new Gson();
                 UserManager userManager = ServletUtils.getUserManager(getServletContext());
@@ -33,7 +33,7 @@ public class UsersListServlet extends HttpServlet {
                 out.println(json);
                 out.flush();
             }
-        }
+//        }
     }
 
     @Override

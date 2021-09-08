@@ -1,4 +1,18 @@
+var USER_LIST_URL = buildUrlWithContextPath("userlist");
+
 $(function() {
+    // TODO: Check if the user have a session already. if so, skip the login page.
+
+    $.ajax({
+        url: USER_LIST_URL,
+        success: function(users) {
+            setUsersCounter(users);
+        },
+        error: function(object) {
+            setUsersCounter([]);
+        }
+    });
+
     $("#login-form").submit(function () {
         $.ajax({
             data: $(this).serialize(),
@@ -17,3 +31,9 @@ $(function() {
         return false;
     });
 });
+
+function setUsersCounter(users) {
+    $.each($(".users-counter"), function(index, element) {
+        element.innerText = (users || []).length;
+    });
+}

@@ -2,9 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="login/index.css" />
+    <script type="text/javascript" src="helpers/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="helpers/context-path-helper.js"></script>
+    <script type="text/javascript" src="login/index.js"></script>
+    <title>Login</title>
 </head>
 <body>
-<a href="login.html" >Login</a>
+<div class="wrapper">
+    <div id="main-content">
+        <label for="login-form" class="form-header">
+            Login
+        </label>
+        <label class="highlighted">
+            Solve problems using an evolution algorithm
+        </label>
+        <div id="form-main">
+            <form id="login-form" action="Login" method="post">
+                <input id="user-name-label" type="text" name="username" placeholder="Username" />
+                <br />
+                <div id="error-placeholder"></div>
+                <input type="submit" value="Login" />
+            </form>
+        </div>
+        <div id="form-footer">
+            <div id="online-indicator">
+                <span class="green-dot"></span>
+                <label class="users-counter"></label>
+                <label>Online</label>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
