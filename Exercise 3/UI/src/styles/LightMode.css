@@ -1,0 +1,16 @@
+.primary-color{
+    -fx-background-color: #FFFFFF;
+}
+
+.secondary-color{
+    -fx-background-color: #E7E7E7;
+}
+
+Label{
+    -fx-text-fill: black;
+}
+
+.round-border{
+    -fx-background-radius: 100px;
+}
+
