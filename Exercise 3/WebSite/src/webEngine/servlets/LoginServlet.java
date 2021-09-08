@@ -13,26 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "LoginServlet", urlPatterns = {"/Login"})
+@WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
 public class LoginServlet extends HttpServlet {
-
-    private static final String HOME_PAGE = "/home.html";
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        processRequest(req, resp);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        processRequest(req, resp);
-    }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setStatus(HttpServletResponse.SC_OK);
-        String usernameFromSession = SessionUtils.getUsername(request);
 
+        String usernameFromSession = SessionUtils.getUsername(request);
         if (usernameFromSession == null) {
             // If it's the first time this user login
             UserManager userManager = ServletUtils.getUserManager(getServletContext());
@@ -46,8 +33,8 @@ public class LoginServlet extends HttpServlet {
                     if (!userManager.isUserExists(username)) {
                         // Add new username and create a session
                         userManager.addUser(username);
-                        SessionUtils.createNewSession(request, username);
-                        response.getOutputStream().println(HOME_PAGE);
+                        SessionUtils.startSession(request, username);
+                        response.getOutputStream().println(Constants.PAGE_HOME);
                     } else {
                         // Username already exists
                         response.getWriter().println("Username already exists. Please try a different one.");
@@ -61,7 +48,19 @@ public class LoginServlet extends HttpServlet {
             }
         } else {
             // User already logged in
-            response.getOutputStream().println(HOME_PAGE);
+            response.getOutputStream().println(Constants.PAGE_HOME);
         }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        processRequest(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        processRequest(req, resp);
     }
 }

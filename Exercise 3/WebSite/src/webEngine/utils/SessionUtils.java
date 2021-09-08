@@ -16,7 +16,7 @@ public final class SessionUtils {
         return sessionAttribute != null ? sessionAttribute.toString() : null;
     }
 
-    public static void createNewSession(HttpServletRequest request, String username) {
+    public static void startSession(HttpServletRequest request, String username) {
         request.getSession(true).setAttribute(Constants.USERNAME_PARAMETER, username);
     }
 
@@ -24,7 +24,7 @@ public final class SessionUtils {
         return request.getSession(false) != null;
     }
 
-    public static void clearSession (HttpServletRequest request) {
+    public static void endSession(HttpServletRequest request) {
         request.getSession().invalidate();
     }
 }

@@ -10,7 +10,24 @@
 </head>
 <body>
 <header>
-    header
+    <section id="top-header">
+        <div id="main-top-header">
+            <label class="welcoming">
+                Welcome
+            </label>
+            <label class="username-logged-in"></label>
+        </div>
+        <div class="logout-panel">
+            <label class="logout-button button" onclick="logout()">
+                Logout
+            </label>
+        </div>
+    </section>
+    <section id="bot-header">
+        <label>Upload Problem:</label>
+        <input id="file-input" class="hide-input" type="file" accept="text/xml" />
+        <label for="file-input" class="button">Choose a file</label>
+    </section>
 </header>
 <section>
     <aside class="side-menu">
