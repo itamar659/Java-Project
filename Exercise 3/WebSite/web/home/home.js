@@ -1,5 +1,5 @@
 var refreshRate = 2000;
-var USER_LIST_URL = buildUrlWithContextPath("userlist");
+var USER_LIST_URL = "userlist";
 var LOGOUT_URL = "logout";
 
 $(function () {
@@ -21,6 +21,24 @@ function ajaxUsersList() {
     });
 }
 
+function refreshUsersList(users) {
+    console.log("pulled new user list: " + users);
+    $("#users-list").empty();
+
+    $.each($(".users-counter"), function(index, element) {
+        element.innerText = (users || []).length;
+    });
+
+    $.each(users || [], function(index, username) {
+        $('<div class="user">' +
+            '<span id="user-name">' +
+            username +
+            '</span>' +
+            '</div>')
+            .appendTo($("#users-list"));
+    });
+}
+
 function ajaxLoggedInUsername() {
     $.ajax({
         url: USER_LIST_URL,
@@ -36,20 +54,6 @@ function ajaxLoggedInUsername() {
             console.log(relocation);
             window.location.href = buildUrlWithContextPath(relocation.responseText);
         }
-    });
-}
-
-function refreshUsersList(users) {
-    console.log("pulled new user list: " + users);
-    $("#users-list").empty();
-
-    $.each($(".users-counter"), function(index, element) {
-        element.innerText = (users || []).length;
-    });
-
-    $.each(users || [], function(index, username) {
-        $('<li>' + username + '</li>')
-            .appendTo($("#users-list"));
     });
 }
 

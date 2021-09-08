@@ -21,12 +21,12 @@ body {
     padding-top: 20px;
 }
 
-#header {
+#header-container {
     border-bottom: 1px solid #dce8f1;
     margin-bottom: 20px;
 }
 
-#main-content {
+#table-container {
     border-radius: 10px;
     background: #fff;
     padding: 30px 0 0 0;

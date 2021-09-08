@@ -1,4 +1,4 @@
-var USER_LIST_URL = buildUrlWithContextPath("userlist");
+var USER_LIST_URL = "userlist";
 
 $(function() {
     ajaxLoggedInUsername();
