@@ -179,7 +179,7 @@ public class Engine implements Serializable {
     }
 
     public void loadTTEEngineFromString(String xmlFileAsString) throws JAXBException, XMLExtractException {
-        this.evoEngine = TTEvoEngineCreator.createFromXMLString(xmlFileAsString);
+        this.evoEngine = TTEvoEngineCreator.createEngineFromXMLString(xmlFileAsString);
         this.evoEngine.addFinishRunListener(this::algorithmFinished);
 
         this.isFileLoaded = true;

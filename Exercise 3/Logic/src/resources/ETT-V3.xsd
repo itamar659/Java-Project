@@ -38,6 +38,7 @@
 			<xs:all>
 				<xs:element ref="ETT-Name"/>
 				<xs:element ref="ETT-Teaching"/>
+				<xs:element name="ETT-Working-Hours" type="xs:int"/>
 			</xs:all>
 			<xs:attribute name="id" type="xs:int" use="required"/>
 		</xs:complexType>
@@ -61,23 +62,6 @@
 			<xs:attribute name="hours" type="xs:int" use="required"/>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="ETT-Selection">
-		<xs:complexType>
-			<xs:all>
-				<xs:element name="ETT-Elitism" type="xs:int" minOccurs="0"/>
-			</xs:all>
-			<xs:attribute name="type" use="required">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:enumeration value="Truncation"/>
-						<xs:enumeration value="RouletteWheel"/>
-						<xs:enumeration value="Tournament"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:attribute>
-			<xs:attribute name="configuration" type="xs:string"/>
-		</xs:complexType>
-	</xs:element>
 	<xs:element name="ETT-Rules">
 		<xs:complexType>
 			<xs:sequence>
@@ -94,6 +78,8 @@
 				<xs:enumeration value="Knowledgeable"/>
 				<xs:enumeration value="DayOffTeacher"/>
 				<xs:enumeration value="Sequentiality"/>
+				<xs:enumeration value="DayOffClass"/>
+				<xs:enumeration value="WorkingHoursPreference"/>
 				<xs:enumeration value="Satisfactory"/>
 			</xs:restriction>
 		</xs:simpleType>
@@ -122,65 +108,14 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="ETT-Name" type="xs:string"/>
-	<xs:element name="ETT-Mutations">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ETT-Mutation" maxOccurs="unbounded"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="ETT-Mutation">
-		<xs:complexType>
-			<xs:attribute name="probability" type="xs:double" use="required"/>
-			<xs:attribute name="name" use="required">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:enumeration value="Flipping"/>
-						<xs:enumeration value="Sizer"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:attribute>
-			<xs:attribute name="configuration" type="xs:string" use="required"/>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="ETT-InitialPopulation">
-		<xs:complexType>
-			<xs:attribute name="size" type="xs:int" use="required"/>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="ETT-EvolutionEngine">
-		<xs:complexType>
-			<xs:all>
-				<xs:element ref="ETT-InitialPopulation"/>
-				<xs:element ref="ETT-Selection"/>
-				<xs:element ref="ETT-Crossover"/>
-				<xs:element ref="ETT-Mutations"/>
-			</xs:all>
-		</xs:complexType>
-	</xs:element>
 	<xs:element name="ETT-Descriptor">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="ETT-TimeTable"/>
-				<xs:element ref="ETT-EvolutionEngine"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="ETT-Configuration" type="xs:string"/>
-	<xs:element name="ETT-Crossover">
-		<xs:complexType>
-			<xs:attribute name="configuration" type="xs:string"/>
-			<xs:attribute name="name" use="required">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:enumeration value="AspectOriented"/>
-						<xs:enumeration value="DayTimeOriented"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:attribute>
-			<xs:attribute name="cutting-points" type="xs:int" use="required"/>
-		</xs:complexType>
-	</xs:element>
 	<xs:element name="ETT-Classes">
 		<xs:complexType>
 			<xs:sequence>

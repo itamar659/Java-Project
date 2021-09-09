@@ -1,13 +1,7 @@
 package logic.schema;
 
 import engine.base.configurable.Configurable;
-import engine.base.Crossover;
-import engine.base.Mutation;
-import engine.base.Selection;
-import logic.evoAlgorithm.factory.CrossoverFactory;
-import logic.evoAlgorithm.factory.MutationFactory;
 import logic.evoAlgorithm.factory.RuleFactory;
-import logic.evoAlgorithm.factory.SelectionFactory;
 import logic.schema.exceptions.XMLExtractException;
 import logic.schema.generated.*;
 import logic.timeTable.*;
@@ -31,84 +25,6 @@ public class XMLExtractor {
 
         StringReader reader = new StringReader(xmlFileAsString);
         this.ettDescriptor = (ETTDescriptor) jaxbUnmarshaller.unmarshal(reader);
-    }
-
-    public Selection<TimeTable> extractSelectionOperator() throws XMLExtractException {
-        ETTSelection ettSelection = ettDescriptor.getETTEvolutionEngine().getETTSelection();
-        if (ettSelection == null) {
-            throw new XMLExtractException("You have to give a selection method in the xml.");
-        }
-
-        // Step 1 - create the object
-        SelectionFactory factory = new SelectionFactory();
-        Selection<TimeTable> selection = factory.create(ettSelection.getType());
-        if (selection == null) {
-            throw new XMLExtractException(String.format("There is no selection type of '%s', or type not given.", ettSelection.getType()));
-        }
-        // Step 2 - set the configurations (object parameters) if there are any
-        setParametersIfPossible(selection, ettSelection.getConfiguration());
-
-        // Step 3 - return the object
-        return selection;
-    }
-
-    public Crossover<TimeTable> extractCrossoverOperator() throws XMLExtractException {
-        ETTCrossover ettCrossover = ettDescriptor.getETTEvolutionEngine().getETTCrossover();
-        if (ettCrossover == null) {
-            throw new XMLExtractException("You have to give a crossover method in the xml.");
-        }
-
-        // Step 1 - create the object
-        CrossoverFactory factory = new CrossoverFactory();
-        Crossover<TimeTable> crossover = factory.create(ettCrossover.getName());
-        if (crossover == null) {
-            throw new XMLExtractException(String.format("There is no crossover named '%s', or name not given.", ettCrossover.getName()));
-        }
-
-        // Step 2 - set the configurations (object parameters) if there are any
-        setParametersIfPossible(crossover, ettCrossover.getConfiguration());
-
-        if (ettCrossover.getCuttingPoints() < 0) {
-            throw new XMLExtractException("Cutting-Points is a non-negative number.");
-        }
-
-        crossover.setCuttingPoints(ettCrossover.getCuttingPoints());
-
-        // Step 3 - return the object
-        return crossover;
-    }
-
-    public Set<Mutation<TimeTable>> extractMutationsOperator() throws XMLExtractException {
-        ETTMutations ettMutations = ettDescriptor.getETTEvolutionEngine().getETTMutations();
-        if (ettMutations == null) {
-            throw new XMLExtractException("You have to give at least an empty list of mutations " +
-                    "(to make sure it's not made by a mistake but on purpose).");
-        }
-
-        MutationFactory factory = new MutationFactory();
-        Set<Mutation<TimeTable>> mutations = new HashSet<>();
-
-        for (ETTMutation ettMutation : ettMutations.getETTMutation()) {
-            // Step 1 - create the object
-            Mutation<TimeTable> mutation = factory.create(ettMutation.getName());
-            if (mutation == null) {
-                throw new XMLExtractException(String.format("There is no mutation named '%s', or name not given.", ettMutation.getName()));
-            }
-
-            if (ettMutation.getProbability() < 0 || ettMutation.getProbability() > 1) {
-                throw new XMLExtractException(String.format("mutation '%s' probability should be between 0 to 1.", ettMutation.getName()));
-            }
-
-            mutation.setProbability(ettMutation.getProbability());
-
-            mutations.add(mutation);
-
-            // Step 2 - set the configurations (object parameters) if there are any
-            setParametersIfPossible(mutation, ettMutation.getConfiguration());
-        }
-
-        // Step 3 - return the object
-        return mutations;
     }
 
     public Rules<TimeTable> extractRules() throws XMLExtractException {
@@ -155,15 +71,6 @@ public class XMLExtractor {
         return rules;
     }
 
-    public int extractPopulationSize() throws XMLExtractException {
-        int popSize = ettDescriptor.getETTEvolutionEngine().getETTInitialPopulation().getSize();
-        if (popSize <= 0) {
-            throw new XMLExtractException("Population size have to be positive number.");
-        }
-
-        return popSize;
-    }
-
     public int extractDays() throws XMLExtractException {
         int days = ettDescriptor.getETTTimeTable().getDays();
         if (days < 0) {
@@ -178,22 +85,6 @@ public class XMLExtractor {
             throw new XMLExtractException("Hours value has to be non-negative value");
         }
         return ettDescriptor.getETTTimeTable().getHours();
-    }
-
-    public int extractElitism() throws XMLExtractException {
-        ETTSelection selection = ettDescriptor.getETTEvolutionEngine().getETTSelection();
-
-        int elitism = 0;
-        if (selection.getETTElitism() != null) {
-            elitism = ettDescriptor.getETTEvolutionEngine().getETTSelection().getETTElitism();
-        }
-
-        int popSize = extractPopulationSize();
-        if (!(0 <= elitism && elitism <= popSize)) {
-            throw new XMLExtractException("Elitism has to be value between 0 and the population size");
-        }
-
-        return elitism;
     }
 
     public List<Course> extractCourses() throws XMLExtractException {
