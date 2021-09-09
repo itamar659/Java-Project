@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class ProblemManager {
 
-    private final ProblemStatisticsBuilder problemStatisticsBuilder = new ProblemStatisticsBuilder();
+    private static final ProblemStatisticsBuilder problemStatisticsBuilder = new ProblemStatisticsBuilder();
 
     private final Map<Integer, ProblemPair> id2problem = new HashMap<>();
     private int currentID = 1;
@@ -40,6 +40,10 @@ public class ProblemManager {
 
     public TimeTableProblem getProblem(int problemID) {
         return id2problem.get(problemID).realProblem;
+    }
+
+    public boolean contains(int problemId) {
+        return id2problem.containsKey(problemId);
     }
 
     private static class ProblemPair {

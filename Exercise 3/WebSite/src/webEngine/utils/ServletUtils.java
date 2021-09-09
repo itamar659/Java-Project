@@ -1,5 +1,6 @@
 package webEngine.utils;
 
+import com.google.gson.Gson;
 import webEngine.ProblemManager;
 import webEngine.users.UserManager;
 

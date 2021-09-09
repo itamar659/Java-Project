@@ -151,26 +151,20 @@ function logout() {
 }
 
 function createProblemDialog(event) {
-    /* TODO:
-    *    Check if the user doesn't have running an algorithm already.
-    *       if possible - redirect him to the next page and lock his engine.
-    *    if not - tell the user he cant run 2 algorithms.
-    */
+    // TODO: display a nice dialog if the user want to solve this problem or not.
 
     var id = this.children[0].innerText;
 
     $.ajax({
-        url: EVOLUTION_URL, // TODO: engineAlgorithm page?
+        url: PROBLEMS_URL,
         data: {
-            problemId: id // TODO: ID
+            problemId: id,
+            action: "add"
         },
         success: function (json) {
-            window.g = json;
-
             if (json.canRunAlgorithm) {
-                // TODO: redirect
+                window.location.href = json.url;
             } else {
-                // TODO: display error
                 alert("Already running an algorithm: " + json.problemId);
             }
         }

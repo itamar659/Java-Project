@@ -5,9 +5,7 @@ import com.google.gson.JsonObject;
 import logic.evoAlgorithm.TimeTableProblem;
 import logic.schema.TTEvoEngineCreator;
 import logic.schema.exceptions.XMLExtractException;
-import webEngine.ProblemStatisticsBuilder;
 import webEngine.helpers.Constants;
-import webEngine.ProblemStatistics;
 import webEngine.utils.ServletUtils;
 import webEngine.utils.SessionUtils;
 
@@ -26,7 +24,6 @@ import java.util.Scanner;
 @WebServlet(urlPatterns = {"/upload"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class UploadServlet extends HttpServlet {
-
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
