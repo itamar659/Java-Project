@@ -6,6 +6,7 @@ import logic.evoAlgorithm.TimeTableProblem;
 import logic.schema.TTEvoEngineCreator;
 import logic.schema.exceptions.XMLExtractException;
 import webEngine.helpers.Constants;
+import webEngine.utils.ServletLogger;
 import webEngine.utils.ServletUtils;
 import webEngine.utils.SessionUtils;
 
@@ -27,9 +28,11 @@ public class UploadServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // TODO: move this code to an abstract class that extends HttpServlet so everyone will have this code without any duplication
         String username = SessionUtils.getUsername(request);
         if (username == null) {
             response.sendRedirect(getServletContext().getContextPath() + Constants.PAGE_LOGIN);
+            ServletLogger.getLogger().warning("The user is not authorized to get to this page without a known session id");
             return;
         }
 
@@ -43,11 +46,15 @@ public class UploadServlet extends HttpServlet {
             TimeTableProblem problem = TTEvoEngineCreator.createProblemFromXMLString(xmlFileAsString);
 
             ServletUtils.getProblemManager(getServletContext()).addProblem(username, problem);
+
+            ServletLogger.getLogger().info(username + " uploaded a new problem to the site.");
         } catch (JAXBException | XMLExtractException e) {
             errorMessage = e.getMessage();
             isFileCorrupted = true;
-        } catch (ServletException ignored) {
+        } catch (ServletException e) {
             response.sendRedirect(getServletContext().getContextPath() + Constants.PAGE_LOGIN);
+            ServletLogger.getLogger().severe(request.toString());
+            ServletLogger.getLogger().severe("error message: " + e.getMessage());
             return;
         }
 

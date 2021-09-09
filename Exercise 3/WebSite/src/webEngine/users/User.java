@@ -28,6 +28,7 @@ public class User {
     public User(String name) {
         this.name = name;
         this.registerTime = new Date();
+        this.solvingProblemID = null;
     }
 
     private void changeName(String name) {
@@ -39,11 +40,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(name, user.name);
+        return Objects.equals(name, user.name) && Objects.equals(registerTime, user.registerTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(name, registerTime);
     }
 }

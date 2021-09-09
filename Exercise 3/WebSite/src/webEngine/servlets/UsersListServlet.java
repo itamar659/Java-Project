@@ -3,6 +3,7 @@ package webEngine.servlets;
 import com.google.gson.Gson;
 import webEngine.helpers.Constants;
 import webEngine.users.UserManager;
+import webEngine.utils.ServletLogger;
 import webEngine.utils.ServletUtils;
 import webEngine.utils.SessionUtils;
 

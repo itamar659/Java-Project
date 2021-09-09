@@ -2,6 +2,7 @@ package webEngine.servlets;
 
 
 import webEngine.users.UserManager;
+import webEngine.utils.ServletLogger;
 import webEngine.utils.ServletUtils;
 import webEngine.helpers.Constants;
 import webEngine.utils.SessionUtils;
@@ -35,6 +36,7 @@ public class LoginServlet extends HttpServlet {
                         userManager.addUser(username);
                         SessionUtils.startSession(request, username);
                         response.getOutputStream().println(Constants.PAGE_HOME);
+                        ServletLogger.getLogger().info(String.format("'%s' logged in.", username));
                     } else {
                         // Username already exists
                         response.getWriter().println("Username already exists. Please try a different one.");
@@ -45,11 +47,14 @@ public class LoginServlet extends HttpServlet {
                 // Username syntax is not valid
                 response.getWriter().println("Please insert a valid username.");
                 response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+
+                ServletLogger.getLogger().info(String.format("'%s' tried to login with an invalid name.", username));
             }
         } else {
             // User already logged in
             response.getOutputStream().println(Constants.PAGE_HOME);
         }
+
     }
 
     @Override

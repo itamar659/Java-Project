@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import webEngine.helpers.Constants;
 import webEngine.users.User;
+import webEngine.utils.ServletLogger;
 import webEngine.utils.ServletUtils;
 import webEngine.utils.SessionUtils;
 
@@ -28,10 +29,10 @@ public class ProblemServlet extends HttpServlet {
         response.setContentType("application/json");
 
         String action = request.getParameter(Constants.ACTION_PARAMETER);
-        action = action == null ? "basic" : action;
+        action = action == null ? "getproblemlist" : action;
 
         switch (action) {
-            case "basic":
+            case "getproblemlist":
                 response.getOutputStream().println(
                         new Gson().toJson(
                                 ServletUtils.getProblemManager(getServletContext()).getProblemsStatistics()
@@ -79,6 +80,8 @@ public class ProblemServlet extends HttpServlet {
                     .getProblemStatistics(userProblemId).removeUser(thisUser);
             thisUser.setSolvingProblemID(null);
         }
+
+        ServletLogger.getLogger().info(String.format("user %s stop solving problem id: %d", username, userProblemId));
     }
 
     private void addUserToProblem(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -101,15 +104,14 @@ public class ProblemServlet extends HttpServlet {
         Integer userProblemId = thisUser.getSolvingProblemID();
         boolean canRunAlgorithm = userProblemId == null;
 
-        if (canRunAlgorithm) {
+        if (canRunAlgorithm || userProblemId == requestedProblemId) {
             // set the user to solve this problem and only this.
             ServletUtils.getProblemManager(getServletContext())
                     .getProblemStatistics(requestedProblemId).addUser(thisUser);
             thisUser.setSolvingProblemID(requestedProblemId);
-            
+
             userProblemId = requestedProblemId;
-        } else if (userProblemId == requestedProblemId){
-            canRunAlgorithm = true;
+            ServletLogger.getLogger().info(String.format("%s trying to solve problem id: %d", username, requestedProblemId));
         }
 
         // return json
