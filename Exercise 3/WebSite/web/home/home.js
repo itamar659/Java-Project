@@ -2,7 +2,6 @@ var refreshRate = 2000;
 var USER_LIST_URL = "userlist";
 var LOGOUT_URL = "logout";
 var PROBLEMS_URL = "problems";
-var EVOLUTION_URL = "evolutionAlgorithm"
 
 $(function () {
     ajaxLoggedInUsername();

@@ -34,30 +34,32 @@ html, body {
 
 /* header */
 header {
+    display: flex;
     border-bottom: 1px solid #dce8f1;
     padding: 30px;
     margin-bottom: 5px;
+    align-items: center;
 }
 
-.upload-section {
-    display: grid;
-    border-bottom: 2px solid #dce8f1;
-    padding-bottom: 5px;
-    margin-bottom: 10px;
-    box-shadow: 0 10px 10px -14px #56baed;
+.column {
+    width: 33.33%;
 }
 
-.upload-button {
+.right-column {
     float: right;
 }
 
-#main-top-header {
-    display: flex;
-    align-items: center;
-    width: 85%;
+.middle-column {
+    text-align: center;
 }
 
-.welcoming {
+.left-column {
+    display: inline-flex;
+    float: left;
+    text-align: center;
+}
+
+.header-label {
     padding-right: 8px;
     font-size: 22px;
 }
@@ -66,13 +68,49 @@ header {
     font-size: 18px;
 }
 
-.logout-panel {
-    display: inline-block;
-    width: 15%;
-    float: right;
+.margin-left {
+    margin-left: 10px;
 }
 
-.logout-button {
+/*General styles*/
+.button {
+    background-color: #56baed;
+    border: 2px solid #56baed;
+    color: white;
+    padding: 8px 30px;
+    margin: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    text-transform: uppercase;
+    font-size: 13px;
+    box-shadow: 0 2px 6px 0 rgba(95,186,233,0.6);
+    border-radius: 5px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid #5AF;
+    transition-duration: 0.15s;
+}
+
+.button:active {
+    background-color: #4ad;
+    color: white;
+}
+
+.button:disabled {
+    background-color: #d1dfe7;
+    border: 2px solid #d1dfe7;
+    color: white;
+    box-shadow: 0 2px 6px 0 rgba(227, 239, 246, 0.6);
+    cursor: default;
+}
+
+.simple-blue-button {
     float: right;
     font-size: 18px;
     color: #74b3ea;

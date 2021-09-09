@@ -10,16 +10,28 @@
 </head>
 <body id="background">
 <header>
-    <div class="logout-panel">
-        <label class="logout-button underline-hover" onclick="logout()">
-            Logout
+    <div class="column">
+        <div class="left-column">
+            <a href="home.html" class="simple-blue-button underline-hover" onclick="back()">
+                Go Back
+            </a>
+            <label class="username-logged-in cut-text margin-left"></label>
+        </div>
+    </div>
+    <div class="middle-column column">
+        <label class="header-label">
+            Solving problem ID:
+        </label>
+        <label class="header-label problem-id">
+            5 <!-- TODO: do it dynamically -->
         </label>
     </div>
-    <div id="main-top-header">
-        <label class="welcoming">
-            Welcome
-        </label>
-        <label class="username-logged-in cut-text"></label>
+    <div class="column">
+        <div class="right-column">
+            <label class="simple-blue-button underline-hover" onclick="logout()">
+                Logout
+            </label>
+        </div>
     </div>
 </header>
 </body>

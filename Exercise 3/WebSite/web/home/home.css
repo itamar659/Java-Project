@@ -84,11 +84,32 @@ table {
 
 /* header */
 header {
+    display: flex;
     border-bottom: 1px solid #dce8f1;
     padding: 30px;
     margin-bottom: 5px;
+    align-items: center;
 }
 
+.header-label {
+    padding-right: 8px;
+    font-size: 22px;
+}
+
+.column {
+    width: 50%;
+}
+
+.center-vert {
+    vertical-align: bottom;
+}
+
+.username-logged-in {
+    font-size: 18px;
+}
+
+/*Main content styles: center-container and his children*/
+/* upload section */
 .upload-section {
     display: grid;
     border-bottom: 2px solid #dce8f1;
@@ -101,29 +122,6 @@ header {
     float: right;
 }
 
-#main-top-header {
-    display: flex;
-    align-items: center;
-    width: 85%;
-}
-
-.welcoming {
-    padding-right: 8px;
-    font-size: 22px;
-}
-
-.username-logged-in {
-    font-size: 18px;
-}
-
-.logout-panel {
-    display: inline-block;
-    width: 15%;
-    float: right;
-}
-
-/*Main content styles: center-container and his children*/
-/* upload section */
 .error-display {
     color: red;
 }
@@ -254,7 +252,7 @@ header {
     cursor: default;
 }
 
-.logout-button {
+.simple-blue-button {
     float: right;
     font-size: 18px;
     color: #74b3ea;
