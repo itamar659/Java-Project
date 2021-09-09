@@ -27,7 +27,7 @@ public final class TTEvoEngineCreator implements Serializable {
         return evoEngine;
     }
 
-    public static EvolutionEngine<TimeTable> createFromProblem(Problem<TimeTable> problem) {
+    public static EvolutionEngine<TimeTable> createEngineFromProblem(Problem<TimeTable> problem) {
         EvolutionEngine<TimeTable> evoEngine = new TimeTableEvolutionEngine();
         evoEngine.setProblem(problem);
         return evoEngine;

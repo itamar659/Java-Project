@@ -187,7 +187,7 @@ public class Engine implements Serializable {
     }
 
     public void loadTTEEngineWithProblem(Problem<TimeTable> problem) {
-        this.evoEngine = TTEvoEngineCreator.createFromProblem(problem);
+        this.evoEngine = TTEvoEngineCreator.createEngineFromProblem(problem);
         this.evoEngine.addFinishRunListener(this::algorithmFinished);
 
         this.isFileLoaded = true;

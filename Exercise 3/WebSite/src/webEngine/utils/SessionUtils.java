@@ -27,4 +27,12 @@ public final class SessionUtils {
     public static synchronized void endSession(HttpServletRequest request) {
         request.getSession().invalidate();
     }
+
+    public static void setAttribute(HttpServletRequest request, String s, Object o) {
+        request.getSession(false).setAttribute(s, o);
+    }
+
+    public static Object getAttribute(HttpServletRequest request, String s) {
+        return request.getSession(false).getAttribute(s);
+    }
 }

@@ -34,5 +34,44 @@
         </div>
     </div>
 </header>
+<main>
+    <!-- Tabs. Move then to somewhere else in the code. -->
+    <div class="tabs-container">
+        <div class="tabs">
+            <button class="tab-link" onclick="changeTab(event, 'teachers')">Teachers</button>
+            <button class="tab-link" onclick="changeTab(event, 'classes')">Classes</button>
+            <button class="tab-link" onclick="changeTab(event, 'courses')">Courses</button>
+        </div>
+        <div>
+            <div id="teachers" class="tab-content active-tab" style="display: block">
+                <section class="tabs-counter-container">
+                    <label>Number of teachers: </label>
+                    <label class="teachers-count">0</label>
+                </section>
+                <section class="tabs-content-display">
+                    <div class="card">
+                        <div class="card-information">
+                            <label>Name: xxx</label>
+                            <label>ID: 123</label>
+                            <label>Hours Working: 200</label>
+                            <label>Teaches:</label>
+                            <ul>
+                                <li>
+                                    math - 1
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div id="classes" class="tab-content" style="display: none">
+                YO
+            </div>
+            <div id="courses" class="tab-content" style="display: none">
+                SUP
+            </div>
+        </div>
+    </div>
+</main>
 </body>
 </html>

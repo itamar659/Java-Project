@@ -22,7 +22,7 @@ html, body {
     bottom: 0;
 }
 
-#main {
+main {
     background-color: white;
     padding: 10px;
     border-radius: 10px 10px 0 0;
@@ -70,6 +70,73 @@ header {
 
 .margin-left {
     margin-left: 10px;
+}
+
+
+/* Tabs */
+.tabs-container {
+    box-shadow: 0 4px 16px -4px #56baed;
+}
+.tabs {
+    overflow: hidden;
+    border: 1px solid #20a6ea;
+    background-color: #17b2f3;
+    border-radius: 6px 6px 0 0;
+}
+
+.tabs button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+    color: white;
+}
+
+.tabs button:hover {
+    background-color: #20a6ea;
+}
+
+.tabs button:active {
+    background-color: #1389c4;
+}
+
+.tab-content {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #def6ff;
+    border-top: none;
+}
+
+
+/* Information tabs */
+.card {
+    display: inline-block;
+    border: 1px solid #20a6ea;
+    padding: 20px;
+    align-items: center;
+    box-shadow: 0 0 8px -3px #56baed;
+    margin: 10px;
+}
+
+.card-information {
+    display: grid;
+    grid-row-gap: 5px;
+}
+
+.card-information ul {
+    margin: 0;
+}
+
+.tabs-content-display {
+    display: block;
+}
+
+.tabs-counter-container {
+    margin: 5px;
 }
 
 /*General styles*/

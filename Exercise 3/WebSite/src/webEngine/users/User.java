@@ -6,7 +6,7 @@ import java.util.Objects;
 public class User {
 
     private String name;
-    private Integer solvingProblemID;
+    private Integer solvingProblemID; // TODO: can use the servletContext instead?
     private final Date registerTime;
 
     public Integer getSolvingProblemID() {
