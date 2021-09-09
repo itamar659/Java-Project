@@ -1,0 +1,98 @@
+html, body {
+    background-color: #56baed;
+    font-family: sans-serif;
+}
+
+.cut-text {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 100%;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+#background {
+    background-color: white;
+    margin: 10px 10px 0 10px;
+    border-radius: 10px 10px 0 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+#main {
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px 10px 0 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    overflow: auto;
+}
+
+/*Top site style: header-container and his children*/
+#header-container {
+    border-bottom: 2px solid #dce8f1;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    box-shadow: 0 10px 10px -14px #56baed;
+}
+
+#top-header {
+    border-bottom: 1px solid #dce8f1;
+    padding: 20px;
+    margin-bottom: 5px;
+}
+
+#main-top-header {
+    display: flex;
+    align-items: center;
+    width: 85%;
+}
+
+.welcoming {
+    padding-right: 8px;
+    font-size: 22px;
+}
+
+.username-logged-in {
+    font-size: 18px;
+}
+
+.logout-panel {
+    display: inline-block;
+    width: 15%;
+    float: right;
+}
+
+.logout-button {
+    float: right;
+    font-size: 18px;
+    color: #74b3ea;
+    display:inline-block;
+    text-decoration: none;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.underline-hover:after {
+    display: block;
+    left: 0;
+    bottom: -10px;
+    width: 0;
+    height: 2px;
+    background-color: #56baed;
+    content: "";
+    transition: width 0.2s;
+}
+
+.underline-hover:hover {
+    color: #0d0d0d;
+}
+
+.underline-hover:hover:after {
+    width: 100%;
+}
