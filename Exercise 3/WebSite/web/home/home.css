@@ -32,7 +32,7 @@ table tr:active {
 }
 
 table td {
-    padding: 30px 5px;
+    padding: 15px 5px;
     width: 20%;
 }
 
@@ -61,9 +61,8 @@ table {
     border-bottom: 3px solid #20a6ea;
 }
 
-#main {
+#background {
     background-color: white;
-    padding: 10px;
     margin: 10px 10px 0 10px;
     border-radius: 10px 10px 0 0;
     position: absolute;
@@ -71,6 +70,16 @@ table {
     right: 0;
     top: 0;
     bottom: 0;
+}
+
+#main {
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px 10px 0 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
 }
 
 /*Top site style: header-container and his children*/
@@ -146,6 +155,11 @@ table {
     display: inline-block;
     width: 85%;
     padding-right: 1.5%;
+}
+
+.grid {
+    display: grid;
+    grid-row-gap: 6px;
 }
 
 #side-menu {

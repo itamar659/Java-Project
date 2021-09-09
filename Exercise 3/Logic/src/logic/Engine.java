@@ -11,9 +11,9 @@ import logic.schema.TTEvoEngineCreator;
 import logic.schema.exceptions.XMLExtractException;
 
 import javax.xml.bind.JAXBException;
-import java.io.File;
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 // Wrapper with more functionality to EvolutionEngine
@@ -37,7 +37,6 @@ public class Engine implements Serializable {
     private final TimeStopCondition timeStopCondition;
 
     private EvolutionEngine<TimeTable> evoEngine;
-    private final TTEvoEngineCreator TTEvoEngineCreator;
     private final evoEngineSettingsWrapper evoEngineSettings;
     private final Factories factories;
 
@@ -172,7 +171,6 @@ public class Engine implements Serializable {
         this.multiThreaded = false;
         this.state = State.IDLE;
         this.evoEngineSettings = new evoEngineSettingsWrapper((TimeTableEvolutionEngine) this.evoEngine);
-        this.TTEvoEngineCreator = new TTEvoEngineCreator();
         this.factories = new Factories();
 
         maxGenerationsStopCondition = new MaxGenerationsStopCondition<>(evoEngine);
@@ -188,12 +186,28 @@ public class Engine implements Serializable {
         this.state = State.IDLE;
     }
 
+    public void loadTTEEngineWithProblem(Problem<TimeTable> problem) {
+        this.evoEngine = TTEvoEngineCreator.createFromProblem(problem);
+        this.evoEngine.addFinishRunListener(this::algorithmFinished);
+
+        this.isFileLoaded = true;
+        this.state = State.IDLE;
+    }
+
     public void changeCrossover(String crossoverName){
         this.evoEngine.setCrossover(factories.getCrossoverFactory().create(crossoverName));
     }
 
     public void changeSelection(String selectionName) {
         this.evoEngine.setSelection(factories.getSelectionFactory().create(selectionName));
+    }
+
+    public Set<Mutation<TimeTable>> getMutations() {
+        return evoEngine.getMutations();
+    }
+
+    public void setPopulationSize(int popSize) {
+        evoEngine.setPopulationSize(popSize);
     }
 
     public void startAlgorithm() {

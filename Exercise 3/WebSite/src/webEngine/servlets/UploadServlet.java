@@ -1,9 +1,14 @@
 package webEngine.servlets;
 
 import com.google.gson.Gson;
-import logic.Engine;
+import logic.evoAlgorithm.TimeTableProblem;
+import logic.schema.TTEvoEngineCreator;
 import logic.schema.exceptions.XMLExtractException;
+import webEngine.ProblemStatisticsBuilder;
+import webEngine.helpers.Constants;
+import webEngine.ProblemStatistics;
 import webEngine.utils.ServletUtils;
+import webEngine.utils.SessionUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -21,23 +26,34 @@ import java.util.Scanner;
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class UploadServlet extends HttpServlet {
 
+    ProblemStatisticsBuilder problemStatisticsBuilder = new ProblemStatisticsBuilder();
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/json");
+        String username = SessionUtils.getUsername(request);
+        if (username == null) {
+            response.sendRedirect(getServletContext().getContextPath() + Constants.PAGE_LOGIN);
+            return;
+        }
 
+        response.setContentType("text/json");
         String errorMessage = null;
         boolean isFileCorrupted = false;
 
-        Part theEngineXML = request.getPart("file");
-        String xmlFileAsString = readFromInputStream(theEngineXML.getInputStream());
-
         try {
-            Engine engine = new Engine();
-            engine.loadTTEEngineFromString(xmlFileAsString);
-            ServletUtils.getEngineManager(getServletContext()).addEngine(engine);
+            Part theEngineXML = request.getPart("file");
+            String xmlFileAsString = readFromInputStream(theEngineXML.getInputStream());
+            TimeTableProblem problem = TTEvoEngineCreator.createProblemFromXMLString(xmlFileAsString);
+
+            problemStatisticsBuilder.setProblem(problem);
+            problemStatisticsBuilder.setUploader(username);
+            ServletUtils.getProblemManager(getServletContext()).addProblem(problemStatisticsBuilder.create());
         } catch (JAXBException | XMLExtractException e) {
             errorMessage = e.getMessage();
             isFileCorrupted = true;
+        } catch (ServletException ignored) {
+            response.sendRedirect(getServletContext().getContextPath() + Constants.PAGE_LOGIN);
+            return;
         }
 
         Gson gson = new Gson();

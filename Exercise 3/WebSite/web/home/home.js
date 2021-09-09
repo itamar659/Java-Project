@@ -1,18 +1,19 @@
 var refreshRate = 2000;
 var USER_LIST_URL = "userlist";
 var LOGOUT_URL = "logout";
-var ENGINES_URL = "engines";
+var PROBLEMS_URL = "problems";
 
 $(function () {
     ajaxLoggedInUsername();
     ajaxUsersList();
-    ajaxEngineList();
+    ajaxProblemList();
     formUploadFileSetEvents();
 
     setInterval(ajaxUsersList, refreshRate);
-    setInterval(ajaxEngineList, refreshRate);
+    setInterval(ajaxProblemList, refreshRate);
 })
 
+// TODO - Move to different more general js file
 function ajaxUsersList() {
     $.ajax({
         url: USER_LIST_URL,
@@ -45,6 +46,7 @@ function refreshUsersList(users) {
     });
 }
 
+// TODO - Move to different more general js file
 function ajaxLoggedInUsername() {
     $.ajax({
         url: USER_LIST_URL,
@@ -62,21 +64,78 @@ function ajaxLoggedInUsername() {
     });
 }
 
-function ajaxEngineList() {
+function ajaxProblemList() {
     $.ajax({
-        url: ENGINES_URL,
-        success: refreshEngineList,
+        url: PROBLEMS_URL,
+        success: refreshProblemList,
         error: function(object) {
-            console.log("Couldn't pull the engines from the server. Sent: ");
+            console.log("Couldn't pull the problems from the server. Sent: ");
             console.log(object);
         }
     });
 }
 
-function refreshEngineList(engines) {
-    window.e = engines;
+function refreshProblemList(problems) {
+    var tableBody = $(".problems-table-body")[0];
 
-    // TODO - add the engines to the table
+    tableBody.innerHTML = "";
+    $.each(problems || [], function(index, problem) {
+        console.log(problem);
+        var row = document.createElement("tr");
+
+        var tdUploader = document.createElement("td");
+        var tdProblemInfo = document.createElement("td");
+        var tdRules = document.createElement("td");
+        var tdUsers = document.createElement("td");
+        var tdBestFitness = document.createElement("td");
+
+        tdUploader.innerText = problem.uploader;
+        tdProblemInfo.appendChild(createSectionProblemInfo(problem));
+        tdRules.appendChild(createSectionRulesInfo(problem));
+        console.log(row);
+        tdUsers.innerText = problem.users.length;
+        tdBestFitness.innerText = problem.bestFitness;
+
+
+        row.appendChild(tdUploader);
+        row.appendChild(tdProblemInfo);
+        row.appendChild(tdRules);
+        row.appendChild(tdUsers);
+        row.appendChild(tdBestFitness);
+
+
+        tableBody.appendChild(row);
+    });
+}
+
+function createSectionProblemInfo(problem) {
+    var sectionInfo = $(document.createElement("section")).addClass("grid")[0];
+
+    var tdDays = $(document.createElement("label")).text("Days:" + problem.days)[0];
+    var tdHours = $(document.createElement("label")).text("Hours:" + problem.hours)[0];
+    var tdTeachers = $(document.createElement("label")).text("Teachers:" + problem.teachers)[0];
+    var tdClasses = $(document.createElement("label")).text("Classes:" + problem.classes)[0];
+    var tdCourses = $(document.createElement("label")).text("Courses:" + problem.courses)[0];
+
+    sectionInfo.appendChild(tdDays);
+    sectionInfo.appendChild(tdHours);
+    sectionInfo.appendChild(tdTeachers);
+    sectionInfo.appendChild(tdClasses);
+    sectionInfo.appendChild(tdCourses);
+
+    return sectionInfo;
+}
+
+function createSectionRulesInfo(problem) {
+    var sectionInfo = $(document.createElement("section")).addClass("grid")[0];
+
+    var tdHard = $(document.createElement("label")).text("Hard rules:" + problem.hardRules)[0];
+    var tdSoft = $(document.createElement("label")).text("Soft rules:" + problem.softRules)[0];
+
+    sectionInfo.appendChild(tdSoft);
+    sectionInfo.appendChild(tdHard);
+
+    return sectionInfo;
 }
 
 function logout() {
@@ -132,5 +191,6 @@ function validateFile(jsonResponse) {
         $("#file-input")[0].value = "";
         $(".file-path").empty();
         $(".upload-button")[0].disabled = true;
+        alert("Upload the file successfully!");
     }
 }

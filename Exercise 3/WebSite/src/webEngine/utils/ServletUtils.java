@@ -11,11 +11,11 @@ public final class ServletUtils {
 
     // ServletContext attributes identifiers;
     private static final String USER_MANAGER_ATTRIBUTE = "userManager";
-    private static final String ENGINE_MANAGER_ATTRIBUTE = "engineManager";
+    private static final String PROBLEM_MANAGER_ATTRIBUTE = "problemManager";
 
     // Locks for synchronization
     private static final Object userManagerLock = new Object();
-    private static final Object engineManagerLock = new Object();
+    private static final Object problemManagerLock = new Object();
 
     public static UserManager getUserManager(ServletContext servletContext) {
         // Double check locking - if user manager exists
@@ -29,15 +29,15 @@ public final class ServletUtils {
         return (UserManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE);
     }
 
-    public static EngineManager getEngineManager(ServletContext servletContext) {
-        // Double check locking - if engine manager exists
-        if (servletContext.getAttribute(ENGINE_MANAGER_ATTRIBUTE) == null) {
-            synchronized (engineManagerLock) {
-                if (servletContext.getAttribute(ENGINE_MANAGER_ATTRIBUTE) == null) {
-                    servletContext.setAttribute(ENGINE_MANAGER_ATTRIBUTE, new EngineManager());
+    public static ProblemManager getProblemManager(ServletContext servletContext) {
+        // Double check locking - if problem manager exists
+        if (servletContext.getAttribute(PROBLEM_MANAGER_ATTRIBUTE) == null) {
+            synchronized (problemManagerLock) {
+                if (servletContext.getAttribute(PROBLEM_MANAGER_ATTRIBUTE) == null) {
+                    servletContext.setAttribute(PROBLEM_MANAGER_ATTRIBUTE, new ProblemManager());
                 }
             }
         }
-        return (EngineManager) servletContext.getAttribute(ENGINE_MANAGER_ATTRIBUTE);
+        return (ProblemManager) servletContext.getAttribute(PROBLEM_MANAGER_ATTRIBUTE);
     }
 }

@@ -1,24 +1,29 @@
 package webEngine.utils;
 
-import logic.Engine;
+import webEngine.ProblemStatistics;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
-public class EngineManager {
+public class ProblemManager {
 
-    private final Set<Engine> engineList = new HashSet<>();
+    private final Map<Integer, ProblemStatistics> id2problem = new HashMap<>();
+    private int currentID = 1;
 
-    public synchronized void addEngine(Engine engine) {
-        engineList.add(engine);
+    public synchronized void addProblem(ProblemStatistics problem) {
+        id2problem.put(currentID++, problem);
     }
 
-    public synchronized void removeEngine(Engine engine) {
-        engineList.remove(engine);
+    public synchronized void removeProblem(int problemID) {
+        id2problem.remove(problemID);
     }
 
-    public synchronized Set<Engine> getEngines() {
-        return new HashSet<>(engineList);
+    public synchronized Map<Integer, ProblemStatistics> getProblems() {
+        return new HashMap<>(id2problem);
+    }
+
+    public ProblemStatistics getProblem(int problemID) {
+        return id2problem.get(problemID);
     }
 
 
