@@ -29,22 +29,26 @@ html, body {
     position: absolute;
     left: 0;
     right: 0;
-    top: 0;
     overflow: auto;
 }
 
-/*Top site style: header-container and his children*/
-#header-container {
+/* header */
+header {
+    border-bottom: 1px solid #dce8f1;
+    padding: 30px;
+    margin-bottom: 5px;
+}
+
+.upload-section {
+    display: grid;
     border-bottom: 2px solid #dce8f1;
     padding-bottom: 5px;
     margin-bottom: 10px;
     box-shadow: 0 10px 10px -14px #56baed;
 }
 
-#top-header {
-    border-bottom: 1px solid #dce8f1;
-    padding: 20px;
-    margin-bottom: 5px;
+.upload-button {
+    float: right;
 }
 
 #main-top-header {

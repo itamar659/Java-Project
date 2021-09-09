@@ -8,61 +8,59 @@
     <script type="text/javascript" src="home/home.js"></script>
     <title>Home</title>
 </head>
-<body>
-<div id="background">
-    <main id="main">
-        <div id="header-container">
-            <section id="top-header">
-                <div class="logout-panel">
-                    <label class="logout-button underline-hover" onclick="logout()">
-                        Logout
-                    </label>
-                </div>
-                <div id="main-top-header">
-                    <label class="welcoming">
-                        Welcome
-                    </label>
-                    <label class="username-logged-in cut-text"></label>
-                </div>
-            </section>
-            <section id="bot-header">
-                <form id="upload-form" action="upload" enctype="multipart/form-data" method="post">
-                    <input id="file-input" class="hide-input" type="file" accept="text/xml" />
-                    <label>Upload Problem:</label>
-                    <label for="file-input" class="button">Choose a file</label>
-                    <label class="file-path"></label>
-                    <div class="left-form-side">
-                        <label class="error-display"></label>
-                        <input class="button upload-button" disabled type="submit" value="Upload File" name="upload">
-                    </div>
-                </form>
-            </section>
-        </div>
-        <div id="center-container">
-            <section id="table-container">
-                <table class="problems-table">
-                    <thead>
-                        <th style="width: 6%">ID</th>
-                        <th>Uploader</th>
-                        <th>Problem info</th>
-                        <th>Rules</th>
-                        <th>active users</th>
-                        <th>best fitness</th>
-                    </thead>
-                    <tbody class="problems-table-body">
-                    </tbody>
-                </table>
-            </section>
-            <aside id="side-menu">
-                <div class="users-information">
-                    <label>Online users: </label>
-                    <label class="users-counter"></label>
-                    <section id="users-list">
-                    </section>
-                </div>
-            </aside>
-        </div>
-    </main>
-</div>
+<body id="background">
+<header>
+    <div class="logout-panel">
+        <label class="logout-button underline-hover" onclick="logout()">
+            Logout
+        </label>
+    </div>
+    <div id="main-top-header">
+        <label class="welcoming">
+            Welcome
+        </label>
+        <label class="username-logged-in cut-text"></label>
+    </div>
+</header>
+<main id="main">
+    <section class="upload-section">
+        <form id="upload-form" action="upload" enctype="multipart/form-data" method="post">
+            <div class="left-form-side">
+                <input id="file-input" class="hide-input" type="file" accept="text/xml" />
+                <label>Upload Problem:</label>
+                <label for="file-input" class="button">Choose a file</label>
+                <label class="file-path"></label>
+            </div>
+            <div class="right-form-side">
+                <label class="error-display"></label>
+                <input class="button upload-button" disabled type="submit" value="Upload File" name="upload">
+            </div>
+        </form>
+    </section>
+    <div class="flex-container">
+        <section id="table-container">
+            <table class="problems-table">
+                <thead>
+                <th style="width: 6%">ID</th>
+                <th>Uploader</th>
+                <th>Problem info</th>
+                <th>Rules</th>
+                <th>active users</th>
+                <th>best fitness</th>
+                </thead>
+                <tbody class="problems-table-body">
+                </tbody>
+            </table>
+        </section>
+        <aside id="side-menu">
+            <div class="users-information">
+                <label>Online users: </label>
+                <label class="users-counter"></label>
+                <section id="users-list">
+                </section>
+            </div>
+        </aside>
+    </div>
+</main>
 </body>
 </html>

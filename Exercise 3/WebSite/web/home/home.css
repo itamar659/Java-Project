@@ -55,7 +55,6 @@ table {
     border-collapse: collapse;
     padding: 5px;
     width: 100%;
-    min-width: 100px;
     text-align: center;
     border-radius: 6px 6px 0 0;
     box-shadow: 0 4px 16px -4px #56baed;
@@ -80,26 +79,22 @@ table {
     position: absolute;
     left: 0;
     right: 0;
-    top: 0;
     overflow: auto;
 }
 
-/*Top site style: header-container and his children*/
-#header-container {
+/* header */
+header {
+    border-bottom: 1px solid #dce8f1;
+    padding: 30px;
+    margin-bottom: 5px;
+}
+
+.upload-section {
+    display: grid;
     border-bottom: 2px solid #dce8f1;
     padding-bottom: 5px;
     margin-bottom: 10px;
     box-shadow: 0 10px 10px -14px #56baed;
-}
-
-#top-header {
-    border-bottom: 1px solid #dce8f1;
-    padding: 20px;
-    margin-bottom: 5px;
-}
-
-#bot-header {
-    display: grid;
 }
 
 .upload-button {
@@ -127,14 +122,21 @@ table {
     float: right;
 }
 
+/*Main content styles: center-container and his children*/
+/* upload section */
 .error-display {
     color: red;
-    display: inline-block;
+}
+
+.right-form-side {
+    display: flex;
+    float: right;
+    align-items: center;
 }
 
 .left-form-side {
-    display: flex;
-    float: right;
+    display: inline-block;
+    float: left;
     align-items: center;
 }
 
@@ -147,8 +149,7 @@ table {
     z-index: -1;
 }
 
-
-/*Main content styles: center-container and his children*/
+/* main content section */
 #center-container {
     display: flex;
 }
@@ -209,6 +210,10 @@ table {
 .user-name {
     font-size: 18px;
     cursor: default;
+}
+
+.flex-container {
+    display: flex;
 }
 
 /*General styles*/
