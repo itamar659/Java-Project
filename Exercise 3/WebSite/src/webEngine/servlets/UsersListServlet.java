@@ -20,6 +20,7 @@ public class UsersListServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // TODO - Add action count to send back only the number of users instead of the user list
 //        if (!SessionUtils.hasSession(request)) {
 //            // Don't allow guests to view the users list
 //            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

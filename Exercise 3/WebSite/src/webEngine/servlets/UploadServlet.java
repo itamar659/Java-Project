@@ -1,6 +1,7 @@
 package webEngine.servlets;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import logic.evoAlgorithm.TimeTableProblem;
 import logic.schema.TTEvoEngineCreator;
 import logic.schema.exceptions.XMLExtractException;
@@ -26,7 +27,6 @@ import java.util.Scanner;
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class UploadServlet extends HttpServlet {
 
-    ProblemStatisticsBuilder problemStatisticsBuilder = new ProblemStatisticsBuilder();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -36,7 +36,7 @@ public class UploadServlet extends HttpServlet {
             return;
         }
 
-        response.setContentType("text/json");
+        response.setContentType("application/json");
         String errorMessage = null;
         boolean isFileCorrupted = false;
 
@@ -45,9 +45,7 @@ public class UploadServlet extends HttpServlet {
             String xmlFileAsString = readFromInputStream(theEngineXML.getInputStream());
             TimeTableProblem problem = TTEvoEngineCreator.createProblemFromXMLString(xmlFileAsString);
 
-            problemStatisticsBuilder.setProblem(problem);
-            problemStatisticsBuilder.setUploader(username);
-            ServletUtils.getProblemManager(getServletContext()).addProblem(problemStatisticsBuilder.create());
+            ServletUtils.getProblemManager(getServletContext()).addProblem(username, problem);
         } catch (JAXBException | XMLExtractException e) {
             errorMessage = e.getMessage();
             isFileCorrupted = true;
@@ -57,32 +55,29 @@ public class UploadServlet extends HttpServlet {
         }
 
         Gson gson = new Gson();
-        response.getOutputStream().println(gson.toJson(new JsonObjectToReturn(errorMessage, isFileCorrupted)));
-    }
-
-    private static class JsonObjectToReturn {
-        public String errorMessage;
-        public boolean isFileCorrupted;
-
-        public JsonObjectToReturn(String errorMessage, boolean isFileCorrupted) {
-            this.errorMessage = errorMessage;
-            this.isFileCorrupted = isFileCorrupted;
-        }
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("isFileCorrupted", isFileCorrupted);
+        jsonObject.addProperty("errorMessage", errorMessage);
+        response.getOutputStream().println(gson.toJson(jsonObject));
     }
 
     private String readFromInputStream(InputStream inputStream) {
         return new Scanner(inputStream).useDelimiter("\\Z").next();
     }
 
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Regular doGet and doPost">
+
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(req, resp);
+        processRequest(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(req, resp);
+        processRequest(request, response);
     }
+
+    // </editor-fold>
 }

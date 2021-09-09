@@ -24,7 +24,6 @@ public class LogoutServlet extends HttpServlet {
         // Remove session
         SessionUtils.endSession(request);
         response.getOutputStream().println(getServletContext().getContextPath() + Constants.PAGE_LOGIN);
-
     }
 
     @Override

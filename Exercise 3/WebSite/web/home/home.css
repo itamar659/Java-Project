@@ -33,7 +33,6 @@ table tr:active {
 
 table td {
     padding: 15px 5px;
-    width: 20%;
 }
 
 table th {
@@ -41,6 +40,7 @@ table th {
     padding: 10px;
     border-bottom: 3px solid #20a6ea;
     background-color: #17b2f3;
+    width: 19%;
 }
 
 table th:first-child {
@@ -55,6 +55,7 @@ table {
     border-collapse: collapse;
     padding: 5px;
     width: 100%;
+    min-width: 100px;
     text-align: center;
     border-radius: 6px 6px 0 0;
     box-shadow: 0 4px 16px -4px #56baed;
@@ -80,6 +81,7 @@ table {
     left: 0;
     right: 0;
     top: 0;
+    overflow: auto;
 }
 
 /*Top site style: header-container and his children*/
@@ -152,7 +154,7 @@ table {
 }
 
 #table-container {
-    display: inline-block;
+    display: inline-table;
     width: 85%;
     padding-right: 1.5%;
 }

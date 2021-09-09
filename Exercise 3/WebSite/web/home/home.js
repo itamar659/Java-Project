@@ -2,11 +2,13 @@ var refreshRate = 2000;
 var USER_LIST_URL = "userlist";
 var LOGOUT_URL = "logout";
 var PROBLEMS_URL = "problems";
+var EVOLUTION_URL = "evolutionAlgorithm"
 
 $(function () {
     ajaxLoggedInUsername();
     ajaxUsersList();
     ajaxProblemList();
+
     formUploadFileSetEvents();
 
     setInterval(ajaxUsersList, refreshRate);
@@ -80,31 +82,32 @@ function refreshProblemList(problems) {
 
     tableBody.innerHTML = "";
     $.each(problems || [], function(index, problem) {
-        console.log(problem);
-        var row = document.createElement("tr");
+        var trRow = document.createElement("tr");
 
+        var tdID = document.createElement("td");
         var tdUploader = document.createElement("td");
         var tdProblemInfo = document.createElement("td");
         var tdRules = document.createElement("td");
         var tdUsers = document.createElement("td");
         var tdBestFitness = document.createElement("td");
 
+        tdID.innerText = problem.problemID;
         tdUploader.innerText = problem.uploader;
         tdProblemInfo.appendChild(createSectionProblemInfo(problem));
         tdRules.appendChild(createSectionRulesInfo(problem));
-        console.log(row);
         tdUsers.innerText = problem.users.length;
         tdBestFitness.innerText = problem.bestFitness;
 
+        trRow.appendChild(tdID);
+        trRow.appendChild(tdUploader);
+        trRow.appendChild(tdProblemInfo);
+        trRow.appendChild(tdRules);
+        trRow.appendChild(tdUsers);
+        trRow.appendChild(tdBestFitness);
 
-        row.appendChild(tdUploader);
-        row.appendChild(tdProblemInfo);
-        row.appendChild(tdRules);
-        row.appendChild(tdUsers);
-        row.appendChild(tdBestFitness);
+        trRow.onclick = createProblemDialog;
 
-
-        tableBody.appendChild(row);
+        tableBody.appendChild(trRow);
     });
 }
 
@@ -143,9 +146,33 @@ function logout() {
         url: LOGOUT_URL,
         success: function(url) {
             window.location.href = url;
+        }
+    });
+}
+
+function createProblemDialog(event) {
+    /* TODO:
+    *    Check if the user doesn't have running an algorithm already.
+    *       if possible - redirect him to the next page and lock his engine.
+    *    if not - tell the user he cant run 2 algorithms.
+    */
+
+    var id = this.children[0].innerText;
+
+    $.ajax({
+        url: EVOLUTION_URL, // TODO: engineAlgorithm page?
+        data: {
+            problemId: id // TODO: ID
         },
-        error: function() {
-            window.location.href = "/";
+        success: function (json) {
+            window.g = json;
+
+            if (json.canRunAlgorithm) {
+                // TODO: redirect
+            } else {
+                // TODO: display error
+                alert("Already running an algorithm: " + json.problemId);
+            }
         }
     });
 }
@@ -181,11 +208,12 @@ function formUploadFileSetEvents() {
     });
 }
 
-function validateFile(jsonResponse) {
-    // isFileCorrupted - indicate if the file successfully loaded or not.
-    // errorMessage - the message what's the problem in the file.
-    if (jsonResponse.isFileCorrupted) {
-        $(".error-display")[0].innerText = jsonResponse.errorMessage;
+function validateFile(json) {
+    // json object:
+    //  isFileCorrupted - indicate if the file successfully loaded or not.
+    //  errorMessage - the message what's the problem in the file.
+    if (json.isFileCorrupted) {
+        $(".error-display")[0].innerText = json.errorMessage;
     } else {
         $(".error-display")[0].innerHTML = "";
         $("#file-input")[0].value = "";

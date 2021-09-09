@@ -4,9 +4,13 @@ import logic.evoAlgorithm.TimeTableProblem;
 
 public class ProblemStatisticsBuilder {
 
-    private int currentID = 1;
+    private int problemID = 1;
     private TimeTableProblem problem;
     private String uploader;
+
+    public void setProblemID(int problemID) {
+        this.problemID = problemID;
+    }
 
     public void setProblem(TimeTableProblem problem) {
         this.problem = problem;
@@ -17,6 +21,6 @@ public class ProblemStatisticsBuilder {
     }
 
     public ProblemStatistics create() {
-        return new ProblemStatistics(uploader, currentID++, problem);
+        return new ProblemStatistics(uploader, problemID, problem);
     }
 }

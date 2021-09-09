@@ -24,7 +24,7 @@ public class ProblemServlet extends HttpServlet {
         if (action == null) {
             response.getOutputStream().println(
                     gson.toJson(
-                            ServletUtils.getProblemManager(getServletContext()).getProblems()
+                            ServletUtils.getProblemManager(getServletContext()).getProblemsStatistics()
                     )
             );
         } else if (action.equals("getproblem")) {
@@ -32,7 +32,7 @@ public class ProblemServlet extends HttpServlet {
                 int problemID = Integer.parseInt(request.getParameter(Constants.PROBLEM_ID_PARAMETER));
                 response.getOutputStream().println(
                         gson.toJson(
-                                ServletUtils.getProblemManager(getServletContext()).getProblem(problemID)
+                                ServletUtils.getProblemManager(getServletContext()).getProblemStatistics(problemID)
                     )
             );
             } catch (NumberFormatException ignored) {

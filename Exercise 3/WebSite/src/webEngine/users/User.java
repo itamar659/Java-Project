@@ -6,7 +6,16 @@ import java.util.Objects;
 public class User {
 
     private String name;
+    private Integer solvingProblemID;
     private final Date registerTime;
+
+    public Integer getSolvingProblemID() {
+        return solvingProblemID;
+    }
+
+    public void setSolvingProblemID(Integer solvingProblemID) {
+        this.solvingProblemID = solvingProblemID;
+    }
 
     public String getName() {
         return name;

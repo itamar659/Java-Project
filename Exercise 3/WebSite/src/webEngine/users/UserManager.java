@@ -14,11 +14,15 @@ public class UserManager {
         users.remove(users.findUserByName(username));
     }
 
-    public synchronized boolean isUserExists(String username) {
+    public boolean isUserExists(String username) {
         return users.findUserByName(username) != null;
     }
 
     public Collection<String> getNameList() {
         return users.getNames();
+    }
+
+    public User getUserByName(String username) {
+        return users.findUserByName(username);
     }
 }
