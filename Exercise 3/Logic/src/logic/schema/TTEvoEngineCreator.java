@@ -41,7 +41,7 @@ public final class TTEvoEngineCreator implements Serializable {
         int days = xmlExtractor.extractDays();
         int hours = xmlExtractor.extractHours();
         List<Course> courses = xmlExtractor.extractCourses();
-        List<Teacher> teachers = xmlExtractor.extractTeachers(courses);
+        List<Teacher> teachers = xmlExtractor.extractTeachers(courses, days * hours);
         List<Class> classes = xmlExtractor.extractClasses(courses, days * hours);
         Rules<TimeTable> rules = xmlExtractor.extractRules();
 

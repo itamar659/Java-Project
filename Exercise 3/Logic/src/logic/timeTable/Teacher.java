@@ -11,6 +11,7 @@ public class Teacher implements HasId, HasName, Cloneable, Serializable {
 
     private String id;
     private String name;
+    private int workingHours;
     private ArrayList<String> teachesCourses;
 
     @Override
@@ -29,6 +30,14 @@ public class Teacher implements HasId, HasName, Cloneable, Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getWorkingHours() {
+        return workingHours;
+    }
+
+    public void setWorkingHours(int workingHours) {
+        this.workingHours = workingHours;
     }
 
     public final List<String> getTeachesCoursesIDs() {

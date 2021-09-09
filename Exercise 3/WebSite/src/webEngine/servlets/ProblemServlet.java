@@ -104,7 +104,7 @@ public class ProblemServlet extends HttpServlet {
         Integer userProblemId = thisUser.getSolvingProblemID();
         boolean canRunAlgorithm = userProblemId == null;
 
-        if (canRunAlgorithm || userProblemId == requestedProblemId) {
+        if (canRunAlgorithm) {
             // set the user to solve this problem and only this.
             ServletUtils.getProblemManager(getServletContext())
                     .getProblemStatistics(requestedProblemId).addUser(thisUser);
@@ -112,6 +112,11 @@ public class ProblemServlet extends HttpServlet {
 
             userProblemId = requestedProblemId;
             ServletLogger.getLogger().info(String.format("%s trying to solve problem id: %d", username, requestedProblemId));
+        } else if (userProblemId == requestedProblemId) {
+            // The user already started this problem and want to continue solving it.
+            // The user didn't removed himself from the problem before this call.
+            canRunAlgorithm = true;
+
         }
 
         // return json

@@ -109,7 +109,7 @@ public class XMLExtractor {
         return courses;
     }
 
-    public List<Teacher> extractTeachers(List<Course> courses) throws XMLExtractException {
+    public List<Teacher> extractTeachers(List<Course> courses, int maxHours) throws XMLExtractException {
         ETTTeachers ettTeachers = ettDescriptor.getETTTimeTable().getETTTeachers();
         if (ettTeachers == null) {
             throw new XMLExtractException("You have to give at least an empty list of teachers " +
@@ -126,9 +126,14 @@ public class XMLExtractor {
                 ettTeacher.setETTName("No Name");
             }
             teacher.setName(ettTeacher.getETTName());
+            teacher.setWorkingHours(ettTeacher.getETTWorkingHours());
+            if (teacher.getWorkingHours() > maxHours || teacher.getWorkingHours() < 0) {
+                throw new XMLExtractException(String.format("Teacher ID %s works for %d hours. possible to work for minimum 0 up to %d hours",
+                        teacher.getName(), teacher.getWorkingHours(), maxHours));
+            }
 
             if (ettTeacher.getETTTeaching() == null) {
-                throw new XMLExtractException(String.format("Teacher ass ID '%s' has to have at least an empty list of 'Teaching' courses " +
+                throw new XMLExtractException(String.format("Teacher ID '%s' has to have at least an empty list of 'Teaching' courses " +
                         "(to make sure it's not made by a mistake but on purpose).", ettTeacher.getId()));
             }
 
