@@ -96,20 +96,23 @@ table {
 }
 
 #main-top-header {
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    width: 85%;
 }
 
 .welcoming {
+    padding-right: 8px;
     font-size: 22px;
 }
 
 .username-logged-in {
     font-size: 18px;
-    display: initial;
 }
 
 .logout-panel {
     display: inline-block;
+    width: 15%;
     float: right;
 }
 
@@ -230,6 +233,7 @@ table {
 }
 
 .logout-button {
+    float: right;
     font-size: 18px;
     color: #74b3ea;
     display:inline-block;
