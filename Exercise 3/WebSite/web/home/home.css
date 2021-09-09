@@ -178,6 +178,7 @@ table {
     box-shadow: 0 4px 16px -4px #56baed;
     border-bottom: 3px solid #20a6ea;
     text-align: center;
+    min-width: 100px;
 }
 
 #users-list {
