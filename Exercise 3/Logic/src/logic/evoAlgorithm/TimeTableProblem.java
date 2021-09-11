@@ -6,6 +6,7 @@ import logic.timeTable.Class;
 import logic.timeTable.rules.base.Rules;
 import engine.base.Solution;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -14,13 +15,13 @@ public class TimeTableProblem implements Problem<TimeTable> {
     private static final Random rand = new Random();
 
     // All the classes in this time table
-    private List<Class> classes;
+    private List<Class> classes = new ArrayList<>();
     // All the courses in this time table
-    private List<Course> courses;
+    private List<Course> courses = new ArrayList<>();
     // All the teachers that teach in this time table
-    private List<Teacher> teachers;
+    private List<Teacher> teachers = new ArrayList<>();
     // The set of rules for this time table
-    private Rules<TimeTable> rules;
+    private Rules<TimeTable> rules = new Rules<>();
     // Days available to study
     private int days;
     // amount of max hours to study everyday

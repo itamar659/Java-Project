@@ -3,6 +3,10 @@ html, body {
     font-family: sans-serif;
 }
 
+label {
+    align-self: center;
+}
+
 .cut-text {
     text-overflow: ellipsis;
     overflow: hidden;
@@ -41,7 +45,7 @@ header {
     align-items: center;
 }
 
-.column {
+.header-column {
     width: 33.33%;
 }
 
@@ -57,6 +61,7 @@ header {
     display: inline-flex;
     float: left;
     text-align: center;
+    align-items: center;
 }
 
 .header-label {
@@ -138,6 +143,14 @@ header {
 .tabs-counter-container {
     margin: 5px;
 }
+
+/* unnamed yet */
+.body-column {
+    width: 50%;
+}
+
+/* Best solution table */
+
 
 /*General styles*/
 .button {

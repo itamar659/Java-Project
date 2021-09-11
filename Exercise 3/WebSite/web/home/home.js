@@ -172,7 +172,7 @@ function createProblemDialog(event) {
 
 function formUploadFileSetEvents() {
     $("#file-input")[0].onchange = function () {
-        $(".error-display")[0].innerHTML = "";
+        $(".upload-result")[0].innerHTML = "";
         $(".upload-button")[0].disabled = false;
         $(".file-path")[0].innerText = "File Name: " + this.files[0].name;
     };
@@ -181,7 +181,8 @@ function formUploadFileSetEvents() {
         var formData = new FormData();
         var file = $("#file-input")[0].files[0];
         if (file === undefined) {
-            $(".error-display")[0].innerText = "Please choose a file and don't press 'cancel'";
+            $(".upload-result")[0].style.color = "red";
+            $(".upload-result")[0].innerText = "Please choose a file and don't press 'cancel'";
             $(".file-path").empty();
             $(".upload-button")[0].disabled = true;
             return false;
@@ -206,12 +207,13 @@ function validateFile(json) {
     //  isFileCorrupted - indicate if the file successfully loaded or not.
     //  errorMessage - the message what's the problem in the file.
     if (json.isFileCorrupted) {
-        $(".error-display")[0].innerText = json.errorMessage;
+        $(".upload-result")[0].style.color = "red";
+        $(".upload-result")[0].innerText = json.errorMessage;
     } else {
-        $(".error-display")[0].innerHTML = "";
+        $(".upload-result")[0].style.color = "limegreen";
+        $(".upload-result")[0].innerText = "Upload the file successfully!";
         $("#file-input")[0].value = "";
         $(".file-path").empty();
         $(".upload-button")[0].disabled = true;
-        alert("Upload the file successfully!");
     }
 }

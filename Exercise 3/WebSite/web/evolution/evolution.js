@@ -8,6 +8,7 @@ $(function () {
 
     $.ajax({
         url: ENGINES_URL,
+        timeout: 2000,
         success: loadSiteInformation,
         error: function(errorObj) {
             e = errorObj;
@@ -56,10 +57,80 @@ function changeTab(evt, type) {
 }
 
 function loadSiteInformation(json) {
-    /* Json object information:
-     * Same as the engine.......
+    console.log(json);
+
+    /* Json object very simple information:
+     * almost each one of the following attribute has properties.
+     * it's better to view in console which value have what.
+     *
+     * Every one of them also saved as json. parse first.
+     * generation
+     * generationInterval
+     * bestSolution
+     * stopConditions
+     * problem
+     * populationSize
+     * elitism
+     * selection
+     * crossover
+     * mutations
      */
 
-    window.e = json;
-    console.log("Finish");
+    // var grid = $(".teachers-tab")[0];
+    // // grid.innerText = "";
+    //
+    // var problem = JSON.parse(json.problem);
+    // $.each(problem.teachers, function(index, teacher) {
+    //     grid.appendChild(extractInfo(teacher));
+    // });
+}
+
+// <div className="card">
+//     <div className="card-information">
+//         <label>Name: xxx</label>
+//         <label>ID: 123</label>
+//         <label>Hours Working: 200</label>
+//         <label>Teaches:</label>
+//         <ul>
+//             <li>
+//                 math - 1
+//             </li>
+//         </ul>
+//     </div>
+// </div>
+
+function extractInfo(teacher) {
+    // var divContainer = document.createElement("div");
+    // divContainer.classList.add("card");
+    //
+    // var divInformative = document.createElement("div");
+    // divInformative.classList.add("card-information");
+    //
+    // var labelName = document.createElement("Label");
+    // var labelID = document.createElement("Label");
+    // var labelHoursWorking = document.createElement("Label");
+    // var labelTeaches = document.createElement("Label");
+    // var ul = document.createElement("ul");
+    //
+    // labelName.innerText = "name: " + teacher.name;
+    // labelID.innerText = "ID: " + teacher.id;
+    // labelHoursWorking.innerText = "Working Hours: " + teacher.workingHours;
+    // labelTeaches.innerText = "Teaches:";
+    //
+    // $.each(teacher.teachesCourses, function(index, courseID) {
+    //     var li = document.createElement("li");
+    //     li.innerText = courseID;
+    //
+    //     ul.appendChild(li);
+    // });
+    //
+    // divInformative.appendChild(labelName);
+    // divInformative.appendChild(labelID);
+    // divInformative.appendChild(labelHoursWorking);
+    // divInformative.appendChild(labelTeaches);
+    // divInformative.appendChild(ul);
+    //
+    // divContainer.appendChild(divInformative);
+    //
+    // return divContainer
 }

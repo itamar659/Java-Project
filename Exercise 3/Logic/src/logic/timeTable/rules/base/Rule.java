@@ -22,6 +22,10 @@ public abstract class Rule<T> implements HasId, Serializable {
 
     public abstract float calcFitness(Solution<T> solution);
 
+    public Rule() {
+        type = Rules.RULE_TYPE.SOFT;
+    }
+
     @Override
     public String toString() {
         return "Rule{" +

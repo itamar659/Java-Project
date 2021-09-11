@@ -4,6 +4,7 @@ import engine.base.stopConditions.MaxGenerationsStopCondition;
 import engine.base.stopConditions.MaxFitnessStopCondition;
 import engine.base.stopConditions.TimeStopCondition;
 import logic.evoAlgorithm.TimeTableEvolutionEngine;
+import logic.evoAlgorithm.crossovers.AspectOriented;
 import logic.evoAlgorithm.factory.Factories;
 import logic.timeTable.TimeTable;
 import engine.base.*;
@@ -12,6 +13,7 @@ import logic.schema.exceptions.XMLExtractException;
 
 import javax.xml.bind.JAXBException;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -37,8 +39,7 @@ public class Engine implements Serializable {
     private final TimeStopCondition timeStopCondition;
 
     private EvolutionEngine<TimeTable> evoEngine;
-    private final evoEngineSettingsWrapper evoEngineSettings;
-    private final Factories factories;
+    private evoEngineSettingsWrapper evoEngineSettings;
 
     public evoEngineSettingsWrapper getEvoEngineSettings() {
         return evoEngineSettings;
@@ -116,6 +117,10 @@ public class Engine implements Serializable {
         evoEngine.setUpdateGenerationInterval(everyGens);
     }
 
+    public int getUpdateGenerationInterval() {
+        return evoEngine.getUpdateGenerationInterval();
+    }
+
     public TimeTable getBestResult() {
         return (TimeTable) evoEngine.getBestSolution();
     }
@@ -138,6 +143,16 @@ public class Engine implements Serializable {
                     break;
             }
         }
+    }
+
+    public Set<engine.base.stopConditions.StopCondition> getStopConditions() {
+        Set<engine.base.stopConditions.StopCondition> stopConditions = new HashSet<>();
+
+        stopConditions.add(maxGenerationsStopCondition);
+        stopConditions.add(maxFitnessStopCondition);
+        stopConditions.add(timeStopCondition);
+
+        return stopConditions;
     }
 
     public boolean isActiveStopCondition(StopCondition stopCondition) {
@@ -170,8 +185,6 @@ public class Engine implements Serializable {
     public Engine() {
         this.multiThreaded = false;
         this.state = State.IDLE;
-        this.evoEngineSettings = new evoEngineSettingsWrapper((TimeTableEvolutionEngine) this.evoEngine);
-        this.factories = new Factories();
 
         maxGenerationsStopCondition = new MaxGenerationsStopCondition<>(evoEngine);
         maxFitnessStopCondition = new MaxFitnessStopCondition<>(evoEngine);
@@ -186,8 +199,9 @@ public class Engine implements Serializable {
         this.state = State.IDLE;
     }
 
-    public void loadTTEEngineWithProblem(Problem<TimeTable> problem) {
+    public void loadTTEEngineByProblem(Problem<TimeTable> problem) {
         this.evoEngine = TTEvoEngineCreator.createEngineFromProblem(problem);
+        this.evoEngineSettings = new evoEngineSettingsWrapper((TimeTableEvolutionEngine) this.evoEngine);
         this.evoEngine.addFinishRunListener(this::algorithmFinished);
 
         this.isFileLoaded = true;
@@ -195,11 +209,11 @@ public class Engine implements Serializable {
     }
 
     public void changeCrossover(String crossoverName){
-        this.evoEngine.setCrossover(factories.getCrossoverFactory().create(crossoverName));
+        this.evoEngine.setCrossover(Factories.getCrossoverFactory().create(crossoverName));
     }
 
     public void changeSelection(String selectionName) {
-        this.evoEngine.setSelection(factories.getSelectionFactory().create(selectionName));
+        this.evoEngine.setSelection(Factories.getSelectionFactory().create(selectionName));
     }
 
     public Set<Mutation<TimeTable>> getMutations() {

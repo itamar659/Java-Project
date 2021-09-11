@@ -10,7 +10,7 @@
 </head>
 <body id="background">
 <header>
-    <div class="column">
+    <div class="header-column">
         <div class="left-column">
             <a href="home.html" class="simple-blue-button underline-hover" onclick="back()">
                 Go Back
@@ -18,7 +18,7 @@
             <label class="username-logged-in cut-text margin-left"></label>
         </div>
     </div>
-    <div class="middle-column column">
+    <div class="middle-column header-column">
         <label class="header-label">
             Solving problem ID:
         </label>
@@ -26,7 +26,7 @@
             5 <!-- TODO: do it dynamically -->
         </label>
     </div>
-    <div class="column">
+    <div class="header-column">
         <div class="right-column">
             <label class="simple-blue-button underline-hover" onclick="logout()">
                 Logout
@@ -36,41 +36,65 @@
 </header>
 <main>
     <!-- Tabs. Move then to somewhere else in the code. -->
-    <div class="tabs-container">
-        <div class="tabs">
-            <button class="tab-link" onclick="changeTab(event, 'teachers')">Teachers</button>
-            <button class="tab-link" onclick="changeTab(event, 'classes')">Classes</button>
-            <button class="tab-link" onclick="changeTab(event, 'courses')">Courses</button>
+    <div class="body-column">
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab-link" onclick="changeTab(event, 'teachers')">Teachers</button>
+                <button class="tab-link" onclick="changeTab(event, 'classes')">Classes</button>
+                <button class="tab-link" onclick="changeTab(event, 'courses')">Courses</button>
+                <button class="tab-link" onclick="changeTab(event, 'rules')">Rules</button>
+            </div>
+            <div>
+                <div id="teachers" class="tab-content active-tab" style="display: block">
+                    <section class="tabs-counter-container">
+                        <label>Number of teachers: </label>
+                        <label class="teachers-count">0</label>
+                    </section>
+                    <section class="tabs-content-display teachers-tab">
+    <!--                    <div class="card">-->
+    <!--                        <div class="card-information">-->
+    <!--                            <label>Name: xxx</label>-->
+    <!--                            <label>ID: 123</label>-->
+    <!--                            <label>Hours Working: 200</label>-->
+    <!--                            <label>Teaches:</label>-->
+    <!--                            <ul>-->
+    <!--                                <li>-->
+    <!--                                    math - 1-->
+    <!--                                </li>-->
+    <!--                            </ul>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+                    </section>
+                </div>
+                <div id="classes" class="tab-content" style="display: none">
+                    <section class="tabs-counter-container">
+                        <label>Number of Classes: </label>
+                        <label class="teachers-count">0</label>
+                    </section>
+                    <section class="tabs-content-display classes-tab">
+                    </section>
+                </div>
+                <div id="courses" class="tab-content" style="display: none">
+                    <section class="tabs-counter-container">
+                        <label>Number of Courses: </label>
+                        <label class="teachers-count">0</label>
+                    </section>
+                    <section class="tabs-content-display courses-tab">
+                    </section>
+                </div>
+                <div id="rules" class="tab-content" style="display: none">
+                    <section class="tabs-counter-container">
+                        <label>Number of Rules: </label>
+                        <label class="rules-count">0</label>
+                    </section>
+                    <section class="tabs-content-display rules-tab">
+                    </section>
+                </div>
+            </div>
         </div>
-        <div>
-            <div id="teachers" class="tab-content active-tab" style="display: block">
-                <section class="tabs-counter-container">
-                    <label>Number of teachers: </label>
-                    <label class="teachers-count">0</label>
-                </section>
-                <section class="tabs-content-display">
-                    <div class="card">
-                        <div class="card-information">
-                            <label>Name: xxx</label>
-                            <label>ID: 123</label>
-                            <label>Hours Working: 200</label>
-                            <label>Teaches:</label>
-                            <ul>
-                                <li>
-                                    math - 1
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <div id="classes" class="tab-content" style="display: none">
-                YO
-            </div>
-            <div id="courses" class="tab-content" style="display: none">
-                SUP
-            </div>
-        </div>
+    </div>
+    <div class="body-column">
+
     </div>
 </main>
 </body>

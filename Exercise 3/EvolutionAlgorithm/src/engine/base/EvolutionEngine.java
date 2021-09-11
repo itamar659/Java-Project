@@ -93,6 +93,10 @@ public abstract class EvolutionEngine<T> implements Serializable {
         this.updateGenerationInterval = updateGenerationInterval;
     }
 
+    public int getUpdateGenerationInterval() {
+        return this.updateGenerationInterval;
+    }
+
     public Map<String, StopCondition> getStopConditions() {
         return stopConditions;
     }

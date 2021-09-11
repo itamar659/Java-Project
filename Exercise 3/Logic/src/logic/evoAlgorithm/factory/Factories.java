@@ -1,26 +1,27 @@
 package logic.evoAlgorithm.factory;
 
-import engine.base.Selection;
+public final class Factories {
 
-public class Factories {
-    private final CrossoverFactory crossoverFactory = new CrossoverFactory();
-    private final MutationFactory mutationFactory = new MutationFactory();
-    private final RuleFactory ruleFactory = new RuleFactory();
-    private final SelectionFactory selectionFactory = new SelectionFactory();
+    private Factories() { }
 
-    public CrossoverFactory getCrossoverFactory() {
+    private static final CrossoverFactory crossoverFactory = new CrossoverFactory();
+    private static final MutationFactory mutationFactory = new MutationFactory();
+    private static final RuleFactory ruleFactory = new RuleFactory();
+    private static final SelectionFactory selectionFactory = new SelectionFactory();
+
+    public static CrossoverFactory getCrossoverFactory() {
         return crossoverFactory;
     }
 
-    public MutationFactory getMutationFactory() {
+    public static MutationFactory getMutationFactory() {
         return mutationFactory;
     }
 
-    public RuleFactory getRuleFactory() {
+    public static RuleFactory getRuleFactory() {
         return ruleFactory;
     }
 
-    public SelectionFactory getSelectionFactory() {
+    public static SelectionFactory getSelectionFactory() {
         return selectionFactory;
     }
 

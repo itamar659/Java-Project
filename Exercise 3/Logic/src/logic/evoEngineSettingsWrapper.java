@@ -32,10 +32,6 @@ public class evoEngineSettingsWrapper implements Serializable {
         return TTEAlgorithm.getCrossover();
     }
 
-    public final Set<Mutation<TimeTable>> getMutations() {
-        return TTEAlgorithm.getMutations();
-    }
-
     public int getPopulationSize() {
         return TTEAlgorithm.getPopulationSize();
     }

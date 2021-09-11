@@ -39,6 +39,7 @@ public class TimeTable implements Solution<TimeTable>, Serializable {
     public TimeTable(TimeTableProblem problem) {
         this.problem = problem;
         this.lessons = new ArrayList<>();
+        this.rules = new Rules<>();
     }
 
     @Override
@@ -65,6 +66,9 @@ public class TimeTable implements Solution<TimeTable>, Serializable {
         }
 
         float fitnessSum = (softFitness * softRatio) + (hardFitness * hardRatio);
+        if (fitnessSum <= 0f) {
+            return 0;
+        }
 
         return fitnessSum / ((softRules * softRatio) + (hardRules * hardRatio));
     }
