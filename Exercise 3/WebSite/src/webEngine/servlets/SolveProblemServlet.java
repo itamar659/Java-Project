@@ -4,8 +4,6 @@ import com.google.gson.*;
 import engine.base.*;
 import logic.Engine;
 import logic.evoAlgorithm.TimeTableProblem;
-import logic.evoAlgorithm.factory.CrossoverFactory;
-import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rule;
 import webEngine.gsonHelpers.gsonSerializers.*;
 import webEngine.gsonHelpers.gsonStrategy.EngineStrategy;
@@ -25,6 +23,12 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = {"/evolutionengine"})
 public class SolveProblemServlet extends HttpServlet {
+
+    private final Gson gson;
+
+    public SolveProblemServlet() {
+        this.gson = createGsonByGsonBuilder();
+    }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -48,30 +52,22 @@ public class SolveProblemServlet extends HttpServlet {
             return;
         }
 
-        GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeAdapter(Selection.class, new SelectionSerializer<>())
-                .registerTypeAdapter(Crossover.class, new CrossoverSerializer<>())
-                .registerTypeAdapter(Mutation.class, new MutationSerializer<>())
-                .registerTypeAdapter(Rule.class, new RuleSerializer<>())
-                .registerTypeAdapter(Problem.class, new ProblemSerializer<>())
-                .registerTypeAdapter(Solution.class, new TimeTableSerializer())
-                .setExclusionStrategies(new SolutionExclusionStrategy())
-                .setExclusionStrategies(new EvolutionEngineExclusionStrategy())
-                .setExclusionStrategies(new EngineStrategy())
-                .serializeNulls()
-                .setPrettyPrinting();
+
 
         response.getOutputStream().println(
-                gsonBuilder.create().toJson(
+                gson.toJson(
                         engine
                 )
         );
 
         System.out.println(
-                gsonBuilder.create().toJson(
+                gson.toJson(
                         engine
                 )
         );
+
+
+        // TODO: Allow user to solve many problems. Not just one.
 
     }
 
@@ -89,6 +85,22 @@ public class SolveProblemServlet extends HttpServlet {
         }
 
         return engine;
+    }
+
+    private Gson createGsonByGsonBuilder() {
+        return new GsonBuilder()
+                .registerTypeAdapter(Selection.class, new SelectionSerializer<>())
+                .registerTypeAdapter(Crossover.class, new CrossoverSerializer<>())
+                .registerTypeAdapter(Mutation.class, new MutationSerializer<>())
+                .registerTypeAdapter(Rule.class, new RuleSerializer<>())
+                .registerTypeAdapter(Problem.class, new ProblemSerializer<>())
+                .registerTypeAdapter(Solution.class, new TimeTableSerializer())
+                .setExclusionStrategies(new SolutionExclusionStrategy())
+                .setExclusionStrategies(new EvolutionEngineExclusionStrategy())
+                .setExclusionStrategies(new EngineStrategy())
+                .serializeNulls()
+                .setPrettyPrinting()
+                .create();
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Regular doGet and doPost">
