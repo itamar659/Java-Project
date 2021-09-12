@@ -1,9 +1,10 @@
 package webEngine.servlets;
 
 import com.google.gson.Gson;
+import webEngine.helpers.BaseSecurityHttpServlet;
 import webEngine.helpers.Constants;
+import webEngine.users.User;
 import webEngine.users.UserManager;
-import webEngine.utils.ServletLogger;
 import webEngine.utils.ServletUtils;
 import webEngine.utils.SessionUtils;
 
@@ -16,7 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @WebServlet(name = "UsersListServlet", urlPatterns = {"/userlist"})
-public class UsersListServlet extends HttpServlet {
+public class UsersListServlet extends BaseSecurityHttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -51,16 +52,11 @@ public class UsersListServlet extends HttpServlet {
     }
 
     private void responseUsername(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String username = SessionUtils.getUsername(request);
-        if (username == null) {
-            // If the user doesn't have a session, send it back to login page, and return.
-            response.getOutputStream().println(Constants.PAGE_LOGIN);
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        } else {
+        if (hasSession(request,response)) {
             Gson gson = new Gson();
             response.setContentType("application/json");
             try (PrintWriter out = response.getWriter()) {
-                String json = gson.toJson(username);
+                String json = gson.toJson(SessionUtils.getUser(request).getUsername());
                 out.println(json);
                 out.flush();
             }

@@ -6,15 +6,15 @@ public class UserManager {
 
     private final UserList users = new UserList();
 
-    public synchronized void addUser(String username) {
-        users.add(new User(username));
+    public synchronized void addUser(User user) {
+        users.add(user);
     }
 
-    public synchronized void removeUser(String username) {
-        users.remove(users.findUserByName(username));
+    public synchronized void removeUser(User user) {
+        users.remove(user);
     }
 
-    public boolean isUserExists(String username) {
+    public boolean isUsernameExists(String username) {
         return users.findUserByName(username) != null;
     }
 

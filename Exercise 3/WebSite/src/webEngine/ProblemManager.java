@@ -18,9 +18,7 @@ public class ProblemManager {
         problemStatisticsBuilder.setUploader(uploader);
 
         ProblemPair p = new ProblemPair(problem, problemStatisticsBuilder.create());
-
         id2problem.put(currentID, p);
-
         currentID++;
     }
 
@@ -64,37 +62,4 @@ public class ProblemManager {
             this.problemStatistics = problem;
         }
     }
-
-
-//    private static class EngineStatistics {
-//
-//        private Engine engine;
-//        private final Set<User> activeUsers = new HashSet<>();
-//
-//        public EngineStatistics() {
-//        }
-//
-//        public void addUser(User user) {
-//            activeUsers.add(user);
-//        }
-//
-//        public void removeUser(User user) {
-//            activeUsers.remove(user);
-//        }
-//
-//        public User findUserByName(String name) {
-//            return activeUsers.stream()
-//                    .filter(user -> user.getName().equals(name))
-//                    .findFirst()
-//                    .orElse(null);
-//        }
-//
-//        public int size() {
-//            return activeUsers.size();
-//        }
-//
-//        public Set<User> getActiveUsers() {
-//            return activeUsers;
-//        }
-//    }
 }

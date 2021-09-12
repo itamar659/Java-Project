@@ -144,7 +144,7 @@ function logout() {
     $.ajax({
         url: LOGOUT_URL,
         success: function(url) {
-            window.location.href = url;
+            window.location.href = buildUrlWithContextPath(url);
         }
     });
 }
@@ -161,11 +161,7 @@ function createProblemDialog(event) {
             action: "add"
         },
         success: function (json) {
-            if (json.canRunAlgorithm) {
-                window.location.href = json.url;
-            } else {
-                alert("Already running an algorithm: " + json.problemId);
-            }
+            window.location.href = buildUrlWithContextPath(json.url);
         }
     });
 }

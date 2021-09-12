@@ -5,7 +5,9 @@ import com.google.gson.JsonObject;
 import logic.evoAlgorithm.TimeTableProblem;
 import logic.schema.TTEvoEngineCreator;
 import logic.schema.exceptions.XMLExtractException;
+import webEngine.helpers.BaseSecurityHttpServlet;
 import webEngine.helpers.Constants;
+import webEngine.users.User;
 import webEngine.utils.ServletLogger;
 import webEngine.utils.ServletUtils;
 import webEngine.utils.SessionUtils;
@@ -24,15 +26,11 @@ import java.util.Scanner;
 
 @WebServlet(urlPatterns = {"/upload"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
-public class UploadServlet extends HttpServlet {
+public class UploadServlet extends BaseSecurityHttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO: move this code to an abstract class that extends HttpServlet so everyone will have this code without any duplication
-        String username = SessionUtils.getUsername(request);
-        if (username == null) {
-            response.sendRedirect(getServletContext().getContextPath() + Constants.PAGE_LOGIN);
-            ServletLogger.getLogger().warning("The user is not authorized to get to this page without a known session id");
+        if (!hasSession(request, response)) {
             return;
         }
 
@@ -44,6 +42,7 @@ public class UploadServlet extends HttpServlet {
             Part theEngineXML = request.getPart("file");
             String xmlFileAsString = readFromInputStream(theEngineXML.getInputStream());
             TimeTableProblem problem = TTEvoEngineCreator.createProblemFromXMLString(xmlFileAsString);
+            String username = SessionUtils.getUser(request).getUsername();
 
             ServletUtils.getProblemManager(getServletContext()).addProblem(username, problem);
 
@@ -52,7 +51,7 @@ public class UploadServlet extends HttpServlet {
             errorMessage = e.getMessage();
             isFileCorrupted = true;
         } catch (ServletException e) {
-            response.sendRedirect(getServletContext().getContextPath() + Constants.PAGE_LOGIN);
+            response.sendRedirect(Constants.PAGE_LOGIN);
             ServletLogger.getLogger().severe(request.toString());
             ServletLogger.getLogger().severe("error message: " + e.getMessage());
             return;

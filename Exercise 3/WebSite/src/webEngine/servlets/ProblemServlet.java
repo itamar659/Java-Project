@@ -2,27 +2,43 @@ package webEngine.servlets;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import webEngine.helpers.BaseSecurityHttpServlet;
 import webEngine.helpers.Constants;
 import webEngine.users.User;
 import webEngine.utils.ServletLogger;
 import webEngine.utils.ServletUtils;
 import webEngine.utils.SessionUtils;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(urlPatterns = {"/problems"})
-public class ProblemServlet extends HttpServlet {
+public class ProblemServlet extends BaseSecurityHttpServlet {
+
+    public static Integer getProblemID(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
+        int requestedProblemId;
+        try {
+            requestedProblemId = Integer.parseInt(request.getParameter(Constants.PROBLEM_ID_PARAMETER));
+
+            if (!ServletUtils.getProblemManager(servletContext).contains(requestedProblemId)) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                return null;
+            }
+        } catch (NumberFormatException ignored) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return null;
+        }
+
+        return requestedProblemId;
+    }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = SessionUtils.getUsername(request);
-        if (username == null) {
-            response.sendRedirect(getServletContext().getContextPath() + Constants.PAGE_LOGIN);
+        if (!hasSession(request, response)) {
             return;
         }
 
@@ -46,7 +62,7 @@ public class ProblemServlet extends HttpServlet {
                 addUserToProblem(request, response);
                 break;
             case "remove":
-                removeUserFromProblem(request);
+                removeUserFromProblem(request, response);
                 break;
             default:
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -70,66 +86,55 @@ public class ProblemServlet extends HttpServlet {
         }
     }
 
-    private void removeUserFromProblem(HttpServletRequest request) {
-        String username = SessionUtils.getUsername(request);
-        User thisUser = ServletUtils.getUserManager(getServletContext()).getUserByName(username);
-        Integer userProblemId = thisUser.getSolvingProblemID();
-
-        if (userProblemId != null) {
-            ServletUtils.getProblemManager(getServletContext())
-                    .getProblemStatistics(userProblemId).removeUser(thisUser);
-            thisUser.setSolvingProblemID(null);
+    private void removeUserFromProblem(HttpServletRequest request, HttpServletResponse response) {
+        Integer requestedProblemId = getProblemID(request, response, getServletContext());
+        if (requestedProblemId == null) {
+            return;
         }
 
-        ServletLogger.getLogger().info(String.format("user %s stop solving problem id: %d", username, userProblemId));
+        User thisUser = SessionUtils.getUser(request);
+        removeUser(thisUser, requestedProblemId);
     }
 
     private void addUserToProblem(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // Check the problem id the client sent
-        int requestedProblemId;
-        try {
-            requestedProblemId = Integer.parseInt(request.getParameter(Constants.PROBLEM_ID_PARAMETER));
-        } catch (NumberFormatException ignored) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-        if (!ServletUtils.getProblemManager(getServletContext()).contains(requestedProblemId)) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        Integer requestedProblemId = getProblemID(request, response, getServletContext());
+        if (requestedProblemId == null) {
             return;
         }
 
-        // Get the required parameters to work with
-        String username = SessionUtils.getUsername(request);
-        User thisUser = ServletUtils.getUserManager(getServletContext()).getUserByName(username);
-        Integer userProblemId = thisUser.getSolvingProblemID();
-        boolean canRunAlgorithm = userProblemId == null;
+        User thisUser = SessionUtils.getUser(request);
+        addUser(thisUser, requestedProblemId);
 
-        if (canRunAlgorithm) {
-            // set the user to solve this problem and only this.
-            ServletUtils.getProblemManager(getServletContext())
-                    .getProblemStatistics(requestedProblemId).addUser(thisUser);
-            thisUser.setSolvingProblemID(requestedProblemId);
+        thisUser.setActiveProblem(requestedProblemId);
 
-            userProblemId = requestedProblemId;
-            ServletLogger.getLogger().info(String.format("%s trying to solve problem id: %d", username, requestedProblemId));
-        } else if (userProblemId == requestedProblemId) {
-            // The user already started this problem and want to continue solving it.
-            // The user didn't removed himself from the problem before this call.
-            canRunAlgorithm = true;
-
-        }
-
-        // return json
-        Gson gson = new Gson();
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("canRunAlgorithm", canRunAlgorithm);
-        jsonObject.addProperty("problemId", userProblemId);
-        jsonObject.addProperty("url", canRunAlgorithm ? getServletContext().getContextPath() + Constants.PAGE_SOLVE_PROBLEM : "");
+        jsonObject.addProperty("url", Constants.PAGE_SOLVE_PROBLEM);
+
         response.getOutputStream().println(
-                gson.toJson(
+                new Gson().toJson(
                         jsonObject
                 )
         );
+    }
+
+    private void removeUser(User user, int problemId) {
+        if (!user.isSolvingProblemID(problemId)) {
+            ServletUtils.getProblemManager(getServletContext())
+                    .getProblemStatistics(problemId)
+                    .removeUser(user);
+
+            ServletLogger.getLogger().info(String.format("user %s stop solving problem id: %d", user.getUsername(), problemId));
+        }
+    }
+
+    private void addUser(User user, int problemId) {
+        if (!user.isSolvingProblemID(problemId)) {
+            ServletUtils.getProblemManager(getServletContext())
+                    .getProblemStatistics(problemId)
+                    .addUser(user);
+
+            ServletLogger.getLogger().info(String.format("%s start trying to solve problem id: %d", user.getUsername(), problemId));
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Regular doGet and doPost">

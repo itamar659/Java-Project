@@ -12,7 +12,7 @@ $(function () {
         success: loadSiteInformation,
         error: function(errorObj) {
             e = errorObj;
-            window.location.href = errorObj.responseText;
+            window.location.href = buildUrlWithContextPath(errorObj.responseText);
         }
     });
 })
@@ -38,7 +38,7 @@ function logout() {
     $.ajax({
         url: LOGOUT_URL,
         success: function(url) {
-            window.location.href = url;
+            window.location.href = buildUrlWithContextPath(url);
         }
     });
 }

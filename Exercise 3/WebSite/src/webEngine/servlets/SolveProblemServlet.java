@@ -9,20 +9,21 @@ import webEngine.gsonHelpers.gsonSerializers.*;
 import webEngine.gsonHelpers.gsonStrategy.EngineStrategy;
 import webEngine.gsonHelpers.gsonStrategy.EvolutionEngineExclusionStrategy;
 import webEngine.gsonHelpers.gsonStrategy.SolutionExclusionStrategy;
+import webEngine.helpers.BaseSecurityHttpServlet;
 import webEngine.helpers.Constants;
 import webEngine.users.User;
+import webEngine.utils.ServletLogger;
 import webEngine.utils.ServletUtils;
 import webEngine.utils.SessionUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(urlPatterns = {"/evolutionengine"})
-public class SolveProblemServlet extends HttpServlet {
+public class SolveProblemServlet extends BaseSecurityHttpServlet {
 
     private final Gson gson;
 
@@ -32,43 +33,28 @@ public class SolveProblemServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if (!hasSession(request, response)) {
+            return;
+        }
+
+        User user = SessionUtils.getUser(request);
+        Integer problemId = user.getActiveProblemID();
+        if (problemId == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getOutputStream().println(Constants.PAGE_HOME);
+            ServletLogger.getLogger().warning(String.format(
+                    "%s tried to view his active problem, but there is no active problem.", user.getUsername()));
+            return;
+        }
+
         response.setContentType("application/json");
-        // Check if a valid user request this page
-        String username = SessionUtils.getUsername(request);
-        if (username == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getOutputStream().println(getServletContext().getContextPath() + Constants.PAGE_LOGIN);
-            return;
-        }
-
-        User thisUser = ServletUtils.getUserManager(getServletContext()).getUserByName(username);
-        Integer userProblemId = thisUser.getSolvingProblemID();
-
-        Engine engine = getTheEngine(request, userProblemId);
-
-        if (userProblemId == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getOutputStream().println(getServletContext().getContextPath() + Constants.PAGE_HOME);
-            return;
-        }
-
-
+        Engine engine = getTheEngine(request, problemId);
 
         response.getOutputStream().println(
                 gson.toJson(
                         engine
                 )
         );
-
-        System.out.println(
-                gson.toJson(
-                        engine
-                )
-        );
-
-
-        // TODO: Allow user to solve many problems. Not just one.
-
     }
 
     private Engine getTheEngine(HttpServletRequest request, int userProblemId) {

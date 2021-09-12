@@ -2,6 +2,7 @@ package webEngine.helpers;
 
 public class Constants {
 
+    public static final String USER_ATTRIBUTE = "user";
     public static final String USERNAME_PARAMETER = "username";
     public static final String ACTION_PARAMETER = "action";
     public static final String PROBLEM_ID_PARAMETER = "problemId";

@@ -1,6 +1,7 @@
 package webEngine.utils;
 
 import webEngine.helpers.Constants;
+import webEngine.users.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -10,14 +11,12 @@ public final class SessionUtils {
     // Don't allow to create an instance of this class
     private SessionUtils() { }
 
-    public static String getUsername (HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        Object sessionAttribute = session != null ? session.getAttribute(Constants.USERNAME_PARAMETER) : null;
-        return sessionAttribute != null ? sessionAttribute.toString() : null;
+    public static User getUser(HttpServletRequest request) {
+        return (User) request.getSession(false).getAttribute(Constants.USER_ATTRIBUTE);
     }
 
-    public static synchronized void startSession(HttpServletRequest request, String username) {
-        request.getSession(true).setAttribute(Constants.USERNAME_PARAMETER, username);
+    public static synchronized void startSession(HttpServletRequest request, User user) {
+        request.getSession(true).setAttribute(Constants.USER_ATTRIBUTE, user);
     }
 
     public static synchronized boolean hasSession(HttpServletRequest request) {

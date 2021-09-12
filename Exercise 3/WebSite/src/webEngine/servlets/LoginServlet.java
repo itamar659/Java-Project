@@ -1,6 +1,7 @@
 package webEngine.servlets;
 
 
+import webEngine.users.User;
 import webEngine.users.UserManager;
 import webEngine.utils.ServletLogger;
 import webEngine.utils.ServletUtils;
@@ -20,8 +21,7 @@ public class LoginServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String usernameFromSession = SessionUtils.getUsername(request);
-        if (usernameFromSession == null) {
+        if (!SessionUtils.hasSession(request)) {
             // If it's the first time this user login
             UserManager userManager = ServletUtils.getUserManager(getServletContext());
             String username = request.getParameter(Constants.USERNAME_PARAMETER);
@@ -31,10 +31,11 @@ public class LoginServlet extends HttpServlet {
                 username = username.trim();
 
                 synchronized (this) {
-                    if (!userManager.isUserExists(username)) {
+                    if (!userManager.isUsernameExists(username)) {
                         // Add new username and create a session
-                        userManager.addUser(username);
-                        SessionUtils.startSession(request, username);
+                        User user = new User(username);
+                        userManager.addUser(user);
+                        SessionUtils.startSession(request, user);
                         response.getOutputStream().println(Constants.PAGE_HOME);
                         ServletLogger.getLogger().info(String.format("'%s' logged in.", username));
                     } else {

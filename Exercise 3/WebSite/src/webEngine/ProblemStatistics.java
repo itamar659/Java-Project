@@ -39,10 +39,12 @@ public class ProblemStatistics {
 
     public synchronized void addUser(User user) {
         users.add(user);
+        user.addSolvingProblemID(this.problemID);
     }
 
     public synchronized void removeUser(User user) {
         users.remove(user);
+        user.removeSolvingProblemID(this.problemID);
     }
 
     public void hasUser(User user) {

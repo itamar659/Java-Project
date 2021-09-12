@@ -17,7 +17,7 @@ public class UserList implements Iterable<User> {
 
     public User findUserByName(String username) {
         return users.stream()
-                .filter(user -> user.getName().equals(username))
+                .filter(user -> user.getUsername().equals(username))
                 .findFirst()
                 .orElse(null);
     }
@@ -27,7 +27,7 @@ public class UserList implements Iterable<User> {
     }
 
     public Collection<String> getNames() {
-        return users.stream().map(User::getName).collect(Collectors.toList());
+        return users.stream().map(User::getUsername).collect(Collectors.toList());
     }
 
     @Override
