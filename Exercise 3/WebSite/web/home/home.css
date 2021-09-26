@@ -1,5 +1,5 @@
 html, body {
-    background-color: #56baed;
+    background-color: #66b9e3;
     font-family: sans-serif;
 }
 
@@ -11,54 +11,13 @@ html, body {
     display: inline-block;
 }
 
+.li-item{
+    float:left;
+}
+
 aside {
     float: right;
     display: inline-block;
-}
-
-table tr {
-    background-color: white;
-    border-bottom: 1px solid #d6d6d6;
-    transition: background-color 0.3s;
-}
-
-table tr:hover {
-    background-color: #f4f4f4;
-    font-weight: bold;
-    color: #17b2f3;
-}
-table tr:active {
-    background-color: #ebebeb;
-}
-
-table td {
-    padding: 15px 5px;
-}
-
-table th {
-    color: white;
-    padding: 10px;
-    border-bottom: 3px solid #20a6ea;
-    background-color: #17b2f3;
-    width: 19%;
-}
-
-table th:first-child {
-    border-radius: 5px 0 0 0;
-}
-
-table th:last-child {
-    border-radius: 0 5px 0 0;
-}
-
-table {
-    border-collapse: collapse;
-    padding: 5px;
-    width: 100%;
-    text-align: center;
-    border-radius: 6px 6px 0 0;
-    box-shadow: 0 4px 16px -4px #56baed;
-    border-bottom: 3px solid #20a6ea;
 }
 
 #background {
@@ -112,10 +71,7 @@ header {
 /* upload section */
 .upload-section {
     display: grid;
-    border-bottom: 2px solid #dce8f1;
-    padding-bottom: 5px;
-    margin-bottom: 10px;
-    box-shadow: 0 10px 10px -14px #56baed;
+    margin: 5px;
 }
 
 .upload-button {

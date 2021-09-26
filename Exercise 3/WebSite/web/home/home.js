@@ -3,6 +3,7 @@ var USER_LIST_URL = "userlist";
 var LOGOUT_URL = "logout";
 var PROBLEMS_URL = "problems";
 
+//window.onload() jQuery
 $(function () {
     ajaxLoggedInUsername();
     ajaxUsersList();
@@ -38,11 +39,10 @@ function refreshUsersList(users) {
     });
 
     $.each(users || [], function(index, username) {
-        $('<div class="user">' +
-            '<label id="user-name" class="cut-text">' +
+        $('<h5>' +
+            '<i class="fa fa-circle text-success"></i>' +
             username +
-            '</label>' +
-            '</div>')
+            '</h5>')
             .appendTo($("#users-list"));
     });
 }

@@ -1,6 +1,7 @@
 package webEngine.servlets;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import engine.base.*;
 import logic.Engine;
 import logic.evoAlgorithm.TimeTableProblem;

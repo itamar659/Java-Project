@@ -69,8 +69,10 @@ header {
     font-size: 22px;
 }
 
+.upload-section {
+}
+
 .username-logged-in {
-    font-size: 18px;
 }
 
 .margin-left {
@@ -118,23 +120,6 @@ header {
 
 
 /* Information tabs */
-.card {
-    display: inline-block;
-    border: 1px solid #20a6ea;
-    padding: 20px;
-    align-items: center;
-    box-shadow: 0 0 8px -3px #56baed;
-    margin: 10px;
-}
-
-.card-information {
-    display: grid;
-    grid-row-gap: 5px;
-}
-
-.card-information ul {
-    margin: 0;
-}
 
 .tabs-content-display {
     display: block;

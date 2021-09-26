@@ -3,99 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="evolution/evolution.css" />
+    <!-- Bootstrap core CSS  -->
+    <link href="common/bootstrap.min.css" rel="stylesheet" />
+    <!-- Light Bootstrap Table core CSS  -->
+    <link href="common/light-bootstrap-dashboard.css?v=1.4.0" rel="stylesheet"/>
+    <!-- Fonts -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+
+
     <script type="text/javascript" src="helpers/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="helpers/context-path-helper.js"></script>
     <script type="text/javascript" src="evolution/evolution.js"></script>
     <title>Evolution Algorithm is awesome!</title>
 </head>
-<body id="background">
-<header>
-    <div class="header-column">
-        <div class="left-column">
-            <a href="home.html" class="simple-blue-button underline-hover" onclick="back()">
-                Go Back
-            </a>
-            <label class="username-logged-in cut-text margin-left"></label>
-        </div>
-    </div>
-    <div class="middle-column header-column">
-        <label class="header-label">
-            Solving problem ID:
-        </label>
-        <label class="header-label problem-id">
-            5 <!-- TODO: do it dynamically -->
-        </label>
-    </div>
-    <div class="header-column">
-        <div class="right-column">
-            <label class="simple-blue-button underline-hover" onclick="logout()">
-                Logout
-            </label>
-        </div>
-    </div>
-</header>
-<main>
-    <!-- Tabs. Move then to somewhere else in the code. -->
-    <div class="body-column">
-        <div class="tabs-container">
-            <div class="tabs">
-                <button class="tab-link" onclick="changeTab(event, 'teachers')">Teachers</button>
-                <button class="tab-link" onclick="changeTab(event, 'classes')">Classes</button>
-                <button class="tab-link" onclick="changeTab(event, 'courses')">Courses</button>
-                <button class="tab-link" onclick="changeTab(event, 'rules')">Rules</button>
+<body>
+
+    <div class="wrapper">
+        <div class="sidebar" data-color="azure">
+            <!--
+                Tip 1: you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple"
+                Tip 2: you can also add an image using data-image tag
+            -->
+            <div class="sidebar-wrapper">
+                <div class="logo">
+                        <span class="simple-text">
+                            Evolutionary Engine
+                        </span>
+                </div>
+                <ul class="nav">
+                    <li>
+                        <a href="home.html">
+                            <p><img style="float:left;" src="common/dashboard.png" alt="dashboard"/> Dashboard</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="logout()">
+                            <img style="float:left;" src="common/logout.png" alt="logout"/>
+                            <p>Logout</p>
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <div>
-                <div id="teachers" class="tab-content active-tab" style="display: block">
-                    <section class="tabs-counter-container">
-                        <label>Number of teachers: </label>
-                        <label class="teachers-count">0</label>
-                    </section>
-                    <section class="tabs-content-display teachers-tab">
-    <!--                    <div class="card">-->
-    <!--                        <div class="card-information">-->
-    <!--                            <label>Name: xxx</label>-->
-    <!--                            <label>ID: 123</label>-->
-    <!--                            <label>Hours Working: 200</label>-->
-    <!--                            <label>Teaches:</label>-->
-    <!--                            <ul>-->
-    <!--                                <li>-->
-    <!--                                    math - 1-->
-    <!--                                </li>-->
-    <!--                            </ul>-->
-    <!--                        </div>-->
-    <!--                    </div>-->
-                    </section>
-                </div>
-                <div id="classes" class="tab-content" style="display: none">
-                    <section class="tabs-counter-container">
-                        <label>Number of Classes: </label>
-                        <label class="teachers-count">0</label>
-                    </section>
-                    <section class="tabs-content-display classes-tab">
+
+        </div>
+
+        <div class="main-panel">
+                    <!--            <a href="home.html" class="simple-blue-button underline-hover" onclick="back()">-->
+                    <!--                Go Back-->
+                    <!--            </a>-->
+            <nav class="navbar navbar-default navbar-fixed">
+                <div class="container-fluid">
+                    <section class="upload-section">
+                        <div class="left-column">
+                            <h4>
+                                Hey :
+                                <span class="username-logged-in"></span>
+                            </h4>
+                        </div>
+                        <div class="right-column">
+                            <h4>
+                                Solving problem ID:
+                                <span class="problem-id">  5 <!-- TODO: do it dynamically --></span>
+                            </h4>
+
+                        </div>
                     </section>
                 </div>
-                <div id="courses" class="tab-content" style="display: none">
-                    <section class="tabs-counter-container">
-                        <label>Number of Courses: </label>
-                        <label class="teachers-count">0</label>
-                    </section>
-                    <section class="tabs-content-display courses-tab">
-                    </section>
-                </div>
-                <div id="rules" class="tab-content" style="display: none">
-                    <section class="tabs-counter-container">
-                        <label>Number of Rules: </label>
-                        <label class="rules-count">0</label>
-                    </section>
-                    <section class="tabs-content-display rules-tab">
-                    </section>
+            </nav>
+
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">System Information</h4>
+                                </div>
+                                <div class="content">
+                                    <div id="systemInformation" class="ct-chart">
+                                        <!--                                        <section id="table-container">-->
+<!--                                        <div class="table-responsive table-full-width">-->
+<!--                                            <table class="table table-hover">-->
+<!--                                                <thead>-->
+<!--                                                <th style="width: 6%">ID</th>-->
+<!--                                                <th>Uploader</th>-->
+<!--                                                <th>Problem info</th>-->
+<!--                                                <th>Rules</th>-->
+<!--                                                <th>active users</th>-->
+<!--                                                <th>best fitness</th>-->
+<!--                                                </thead>-->
+<!--                                                <tbody class="problems-table-body">-->
+<!--                                                </tbody>-->
+<!--                                            </table>-->
+<!--                                        </div>-->
+                                        <!--                                        </section>-->
+                                    </div>
+                                    <div class="footer">
+                                        <hr>
+                                        <div class="legend">
+                                            <i class="fa fa-circle text-success"></i> Online
+                                            <i class="fa fa-circle text-danger"></i> Offline
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Configuration </h4>
+                                </div>
+                                <div class="content">
+                                    <div id="config" class="ct-chart">
+                                        <section id="Configuration">
+
+                                        </section>
+                                    </div>
+                                    <div class="footer">
+                                        <hr>
+                                        <div class="legend">
+                                            <i class="fa fa-circle text-success"></i> Online
+                                            <i class="fa fa-circle text-danger"></i> Offline
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+
         </div>
-    </div>
-    <div class="body-column">
+
 
     </div>
-</main>
+
+
+        <!-- Tabs. Move then to somewhere else in the code. -->
+    <!--    <div class="body-column">-->
+    <!--        <div class="tabs-container">-->
+    <!--            <div class="tabs">-->
+    <!--                <button class="tab-link" onclick="changeTab(event, 'teachers')">Teachers</button>-->
+    <!--                <button class="tab-link" onclick="changeTab(event, 'classes')">Classes</button>-->
+    <!--                <button class="tab-link" onclick="changeTab(event, 'courses')">Courses</button>-->
+    <!--                <button class="tab-link" onclick="changeTab(event, 'rules')">Rules</button>-->
+    <!--            </div>-->
+    <!--            <div>-->
+    <!--                <div id="teachers" class="tab-content active-tab" style="display: block">-->
+    <!--                    <section class="tabs-counter-container">-->
+    <!--                        <label>Number of teachers: </label>-->
+    <!--                        <label class="teachers-count">0</label>-->
+    <!--                    </section>-->
+    <!--                    <section class="tabs-content-display teachers-tab">-->
+    <!--    &lt;!&ndash;                    <div class="card">&ndash;&gt;-->
+    <!--    &lt;!&ndash;                        <div class="card-information">&ndash;&gt;-->
+    <!--    &lt;!&ndash;                            <label>Name: xxx</label>&ndash;&gt;-->
+    <!--    &lt;!&ndash;                            <label>ID: 123</label>&ndash;&gt;-->
+    <!--    &lt;!&ndash;                            <label>Hours Working: 200</label>&ndash;&gt;-->
+    <!--    &lt;!&ndash;                            <label>Teaches:</label>&ndash;&gt;-->
+    <!--    &lt;!&ndash;                            <ul>&ndash;&gt;-->
+    <!--    &lt;!&ndash;                                <li>&ndash;&gt;-->
+    <!--    &lt;!&ndash;                                    math - 1&ndash;&gt;-->
+    <!--    &lt;!&ndash;                                </li>&ndash;&gt;-->
+    <!--    &lt;!&ndash;                            </ul>&ndash;&gt;-->
+    <!--    &lt;!&ndash;                        </div>&ndash;&gt;-->
+    <!--    &lt;!&ndash;                    </div>&ndash;&gt;-->
+    <!--                    </section>-->
+    <!--                </div>-->
+    <!--                <div id="classes" class="tab-content" style="display: none">-->
+    <!--                    <section class="tabs-counter-container">-->
+    <!--                        <label>Number of Classes: </label>-->
+    <!--                        <label class="teachers-count">0</label>-->
+    <!--                    </section>-->
+    <!--                    <section class="tabs-content-display classes-tab">-->
+    <!--                    </section>-->
+    <!--                </div>-->
+    <!--                <div id="courses" class="tab-content" style="display: none">-->
+    <!--                    <section class="tabs-counter-container">-->
+    <!--                        <label>Number of Courses: </label>-->
+    <!--                        <label class="teachers-count">0</label>-->
+    <!--                    </section>-->
+    <!--                    <section class="tabs-content-display courses-tab">-->
+    <!--                    </section>-->
+    <!--                </div>-->
+    <!--                <div id="rules" class="tab-content" style="display: none">-->
+    <!--                    <section class="tabs-counter-container">-->
+    <!--                        <label>Number of Rules: </label>-->
+    <!--                        <label class="rules-count">0</label>-->
+    <!--                    </section>-->
+    <!--                    <section class="tabs-content-display rules-tab">-->
+    <!--                    </section>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+    <!--    <div class="body-column">-->
+
+    <!--    </div>-->
 </body>
 </html>

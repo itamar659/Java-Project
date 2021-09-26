@@ -3,64 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="home/home.css" />
+    <!-- Bootstrap core CSS  -->
+    <link href="common/bootstrap.min.css" rel="stylesheet" />
+    <!-- Light Bootstrap Table core CSS  -->
+    <link href="common/light-bootstrap-dashboard.css?v=1.4.0" rel="stylesheet"/>
+    <!-- Fonts -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+
     <script type="text/javascript" src="helpers/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="helpers/context-path-helper.js"></script>
     <script type="text/javascript" src="home/home.js"></script>
     <title>Home</title>
 </head>
-<body id="background">
-<header>
-    <div class="header-column">
-        <label class="header-label">
-            Welcome
-        </label>
-        <label class="username-logged-in cut-text center-vert"></label>
-    </div>
-    <div class="header-column">
-        <label class="simple-blue-button underline-hover" onclick="logout()">
-            Logout
-        </label>
-    </div>
-</header>
-<main>
-    <section class="upload-section">
-        <form id="upload-form" action="upload" enctype="multipart/form-data" method="post">
-            <div class="left-form-side">
-                <input id="file-input" class="hide-input" type="file" accept="text/xml" />
-                <label>Upload Problem:</label>
-                <label for="file-input" class="button">Choose a file</label>
-                <label class="file-path"></label>
+
+<div class="wrapper">
+    <div class="sidebar" data-color="azure">
+            <!--
+                Tip 1: you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple"
+                Tip 2: you can also add an image using data-image tag
+            -->
+            <div class="sidebar-wrapper">
+                <div class="logo">
+                    <span class="simple-text">
+                        Evolutionary Engine
+                    </span>
+                </div>
+                <ul class="nav">
+                    <li class="active" >
+                        <a href="home.html">
+                            <img style="float:left;" src="common/dashboard.png" alt="dashboard"/>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="logout()">
+                            <img style="float:left;" src="common/logout.png" alt="logout"/>
+                            <p>Logout</p>
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <div class="right-form-side">
-                <label class="upload-result"></label>
-                <input class="button upload-button" disabled type="submit" value="Upload File" name="upload">
-            </div>
-        </form>
-    </section>
-    <div class="flex-container">
-        <section id="table-container">
-            <table class="problems-table">
-                <thead>
-                <th style="width: 6%">ID</th>
-                <th>Uploader</th>
-                <th>Problem info</th>
-                <th>Rules</th>
-                <th>active users</th>
-                <th>best fitness</th>
-                </thead>
-                <tbody class="problems-table-body">
-                </tbody>
-            </table>
-        </section>
-        <aside id="side-menu">
-            <div class="users-information">
-                <label>Online users: </label>
-                <label class="users-counter"></label>
-                <section id="users-list">
-                </section>
-            </div>
-        </aside>
+
     </div>
-</main>
+
+    <div class="main-panel">
+            <nav class="navbar navbar-default navbar-fixed">
+                <div class="container-fluid">
+                    <section class="upload-section">
+                        <form id="upload-form" action="upload" enctype="multipart/form-data" method="post">
+                            <div class="left-form-side">
+                                <input id="file-input" class="hide-input" type="file" accept="text/xml" />
+                                <label>Upload Problem:</label>
+                                <label for="file-input" class="button">Choose a file</label>
+                                <label class="file-path"></label>
+                            </div>
+                            <div class="right-form-side">
+                                <label class="upload-result"></label>
+                                <input class="button upload-button" disabled type="submit" value="Upload File" name="upload">
+                            </div>
+                        </form>
+                    </section>
+                </div>
+            </nav>
+
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Uploaded Problems</h4>
+                                </div>
+                                <div class="content">
+                                    <div id="chartPreferences" class="ct-chart">
+<!--                                        <section id="table-container">-->
+                                        <div class="table-responsive table-full-width">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <th style="width: 6%">ID</th>
+                                                <th>Uploader</th>
+                                                <th>Problem info</th>
+                                                <th>Rules</th>
+                                                <th>active users</th>
+                                                <th>best fitness</th>
+                                                </thead>
+                                                <tbody class="problems-table-body">
+                                                </tbody>
+                                            </table>
+                                        </div>
+<!--                                        </section>-->
+                                    </div>
+                                    <div class="footer">
+                                        <hr>
+                                        <div class="legend">
+                                            <i class="fa fa-circle text-success"></i> Online
+                                            <i class="fa fa-circle text-danger"></i> Offline
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Online Users: <span class="users-counter"></span></h4>
+                                </div>
+                                <div class="content">
+                                    <div id="chartHours" class="ct-chart">
+                                        <section id="users-list">
+
+                                        </section>
+                                    </div>
+                                    <div class="footer">
+                                        <hr>
+                                        <div class="legend">
+                                            <i class="fa fa-circle text-success"></i> Online
+                                            <i class="fa fa-circle text-danger"></i> Offline
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+</div>
+
 </body>
 </html>
