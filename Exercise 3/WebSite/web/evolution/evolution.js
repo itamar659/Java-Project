@@ -107,11 +107,10 @@ function loadSiteInformation(json) {
     $(".dayspan").html(json.evoEngine.problem.days);
     $(".hourspan").html(json.evoEngine.problem.hours);
 
-    createTeachersCard(json.evoEngine.problem.teachers);
-    createClassesCard(json.evoEngine.problem.classes);
+    createTeachersCard(json.evoEngine.problem.teachers, json.evoEngine.problem.courses);
+    createClassesCard(json.evoEngine.problem.classes, json.evoEngine.problem.courses);
     createCoursesCard(json.evoEngine.problem.courses);
     createRulesCard(json.evoEngine.problem.rules);
-
 
 }
 
@@ -138,7 +137,7 @@ function createRulesCard(rules){
     });
 }
 
-function createTeachersCard(teachers){
+function createTeachersCard(teachers, courses){
     var tableBody = $(".teachersInfo-table-body")[0];
     tableBody.innerHTML = "";
 
@@ -151,7 +150,8 @@ function createTeachersCard(teachers){
 
         tdID.innerText = element.id;
         tdName.innerText = element.name;
-        // tdTeach.appendChild(createSectionProblemInfo(element.teachesCourses));
+        tdTeach.innerText = createSectionTeachInfo(element.teachesCourses, courses);
+
         trRow.appendChild(tdID);
         trRow.appendChild(tdName);
         trRow.appendChild(tdTeach);
@@ -178,7 +178,7 @@ function createCoursesCard(courses){
     });
 }
 
-function createClassesCard(classes){
+function createClassesCard(classes, courses){
     var tableBody = $(".classesInfo-table-body")[0];
     tableBody.innerHTML = "";
 
@@ -192,7 +192,7 @@ function createClassesCard(classes){
 
         tdID.innerText = element.id;
         tdName.innerText = element.name;
-        // tdCourses2Hours.appendChild(createSectionProblemInfo(element.teachesCourses));
+        tdCourses2Hours.innerText = createSectionClassesInfo(element.courseID2Hours, courses);
         tdTotalHours.innerText = element.totalHours;
         trRow.appendChild(tdID);
         trRow.appendChild(tdName);
@@ -201,4 +201,35 @@ function createClassesCard(classes){
 
         tableBody.appendChild(trRow);
     });
+}
+
+function createSectionTeachInfo(teachesCourses, courses) {
+    var string = "";
+
+    $.each(teachesCourses, function(index, element){
+        string += courses.find(item => item.id === element).name;
+        if(index + 1 !== teachesCourses.length){
+            string += ", ";
+        }
+    })
+
+    return string;
+}
+
+function createSectionClassesInfo(courseID2Hours, courses){
+    var string = "";
+
+    $.each(courseID2Hours, function(index, element){
+        string += courses.find(item => item.id === index).name;
+        string += " : ";
+        string += element;
+        if(index + 1 !== courseID2Hours.length && index % 2 === 0){
+            string += "\n";
+        }
+        else{
+            string += ", ";
+        }
+    })
+
+    return string;
 }
