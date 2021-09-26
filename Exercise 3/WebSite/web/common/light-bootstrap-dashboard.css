@@ -336,6 +336,12 @@ input:focus {
     background: rgba(255, 255, 255, 0.23);
 }
 
+.sidebar .nav .active-pro{
+    position: absolute;
+    width: 100%;
+    bottom: 10px;
+}
+
 .sidebar .nav li.separator {
     margin: 15px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);

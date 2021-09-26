@@ -76,61 +76,129 @@ function loadSiteInformation(json) {
      * mutations
      */
 
-    // var grid = $(".teachers-tab")[0];
-    // // grid.innerText = "";
-    //
-    // var problem = JSON.parse(json.problem);
-    // $.each(problem.teachers, function(index, teacher) {
-    //     grid.appendChild(extractInfo(teacher));
-    // });
+    /*
+        evoEngine {
+            bestSolution: null,
+            crossover: null,
+            currentGeneration: 0,
+            elitism: 0,
+            historyGeneration2Fitness: {},
+            isPaused: false,
+            isRunning: false,
+            mutations: [],
+            population: null,
+            populationSize: 0,
+            problem:{
+                        classes: (5) [{…}, {…}, {…}, {…}, {…}],
+                        courses: (7) [{…}, {…}, {…}, {…}, {…}, {…}, {…}],
+                        days: 6,
+                        hours: 8,
+                        rules: {rules: Array(4), hardRuleWeight: 60},
+                        teachers: (6) [{…}, {…}, {…}, {…}, {…}, {…}],
+                    }
+            [[Prototype]]: Object,
+            selection: null,
+            stopConditions: {},
+            updateGenerationInterval: 100,
+        }
+     */
+    console.log(json.evoEngine.problem);
+
+    $(".dayspan").html(json.evoEngine.problem.days);
+    $(".hourspan").html(json.evoEngine.problem.hours);
+
+    createTeachersCard(json.evoEngine.problem.teachers);
+    createClassesCard(json.evoEngine.problem.classes);
+    createCoursesCard(json.evoEngine.problem.courses);
+    createRulesCard(json.evoEngine.problem.rules);
+
+
 }
 
-// <div className="card">
-//     <div className="card-information">
-//         <label>Name: xxx</label>
-//         <label>ID: 123</label>
-//         <label>Hours Working: 200</label>
-//         <label>Teaches:</label>
-//         <ul>
-//             <li>
-//                 math - 1
-//             </li>
-//         </ul>
-//     </div>
-// </div>
+function createRulesCard(rules){
+    var tableBody = $(".rulesInfo-table-body")[0];
+    tableBody.innerHTML = "";
 
-function extractInfo(teacher) {
-    // var divContainer = document.createElement("div");
-    // divContainer.classList.add("card");
-    //
-    // var divInformative = document.createElement("div");
-    // divInformative.classList.add("card-information");
-    //
-    // var labelName = document.createElement("Label");
-    // var labelID = document.createElement("Label");
-    // var labelHoursWorking = document.createElement("Label");
-    // var labelTeaches = document.createElement("Label");
-    // var ul = document.createElement("ul");
-    //
-    // labelName.innerText = "name: " + teacher.name;
-    // labelID.innerText = "ID: " + teacher.id;
-    // labelHoursWorking.innerText = "Working Hours: " + teacher.workingHours;
-    // labelTeaches.innerText = "Teaches:";
-    //
-    // $.each(teacher.teachesCourses, function(index, courseID) {
-    //     var li = document.createElement("li");
-    //     li.innerText = courseID;
-    //
-    //     ul.appendChild(li);
-    // });
-    //
-    // divInformative.appendChild(labelName);
-    // divInformative.appendChild(labelID);
-    // divInformative.appendChild(labelHoursWorking);
-    // divInformative.appendChild(labelTeaches);
-    // divInformative.appendChild(ul);
-    //
-    // divContainer.appendChild(divInformative);
-    //
-    // return divContainer
+    $("#hardRuleWeight").innerText = rules.hardRulesWeight;
+
+    $.each(rules.rules, function (index, element){
+        var trRow = document.createElement("tr");
+        var tdNo = document.createElement("td");
+        var tdName = document.createElement("td");
+        var tdType = document.createElement("td");
+
+        tdNo.innerText = index + 1;
+        tdName.innerText = element.name;
+        tdType.innerText = element.type;
+
+        trRow.appendChild(tdNo);
+        trRow.appendChild(tdName);
+        trRow.appendChild(tdType);
+        tableBody.appendChild(trRow);
+    });
+}
+
+function createTeachersCard(teachers){
+    var tableBody = $(".teachersInfo-table-body")[0];
+    tableBody.innerHTML = "";
+
+    $.each(teachers, function (index, element){
+        var trRow = document.createElement("tr");
+
+        var tdID = document.createElement("td");
+        var tdName = document.createElement("td");
+        var tdTeach = document.createElement("td");
+
+        tdID.innerText = element.id;
+        tdName.innerText = element.name;
+        // tdTeach.appendChild(createSectionProblemInfo(element.teachesCourses));
+        trRow.appendChild(tdID);
+        trRow.appendChild(tdName);
+        trRow.appendChild(tdTeach);
+
+        tableBody.appendChild(trRow);
+    });
+}
+
+function createCoursesCard(courses){
+    var tableBody = $(".coursesInfo-table-body")[0];
+    tableBody.innerHTML = "";
+
+    $.each(courses, function (index, element){
+        var trRow = document.createElement("tr");
+        var tdID = document.createElement("td");
+        var tdName = document.createElement("td");
+
+        tdID.innerText = element.id;
+        tdName.innerText = element.name;
+
+        trRow.appendChild(tdID);
+        trRow.appendChild(tdName);
+        tableBody.appendChild(trRow);
+    });
+}
+
+function createClassesCard(classes){
+    var tableBody = $(".classesInfo-table-body")[0];
+    tableBody.innerHTML = "";
+
+    $.each(classes, function (index, element){
+        var trRow = document.createElement("tr");
+
+        var tdID = document.createElement("td");
+        var tdName = document.createElement("td");
+        var tdCourses2Hours = document.createElement("td");
+        var tdTotalHours = document.createElement("td");
+
+        tdID.innerText = element.id;
+        tdName.innerText = element.name;
+        // tdCourses2Hours.appendChild(createSectionProblemInfo(element.teachesCourses));
+        tdTotalHours.innerText = element.totalHours;
+        trRow.appendChild(tdID);
+        trRow.appendChild(tdName);
+        trRow.appendChild(tdCourses2Hours);
+        trRow.appendChild(tdTotalHours);
+
+        tableBody.appendChild(trRow);
+    });
 }
