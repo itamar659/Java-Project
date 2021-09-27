@@ -20,6 +20,10 @@ label {
 .hourspan{
 
 }
+
+.sector{
+    border: 1px solid black;
+}
 #background {
     background-color: white;
     margin: 10px 10px 0 10px;

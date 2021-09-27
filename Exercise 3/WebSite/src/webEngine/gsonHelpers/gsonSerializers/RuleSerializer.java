@@ -14,6 +14,7 @@ public class RuleSerializer<T> implements JsonSerializer<Rule<T>> {
     public JsonElement serialize(Rule<T> tRule, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("type", tRule.getType().toString());
+        jsonObject.addProperty("name", tRule.getId());
 
         if (tRule instanceof Configurable) {
             JsonObject configurations = new JsonObject();
