@@ -187,25 +187,25 @@
                                 </div>
                                 <div class="content">
                                     <div clas="container-fluid">
-                                        <form id="config-form" action="config" enctype="multipart/form-data" method="post">
+                                        <form id="config-form" action="evolutionengine" method="post">
                                             <div class="row">
                                                 <div class="sector col-md-6">
                                                     <div class="row mb-6">
                                                         <label for="population" class="col-sm-3 col-form-label">Population: </label>
                                                         <div class="col-sm-9">
-                                                            <input id="population" name="population" type="text" placeholder="Default input" aria-label="default input example">
+                                                            <input id="population" name="populationSize" type="text" placeholder="Default input" aria-label="default input example">
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6">
                                                         <label for="elitism" class="col-sm-3 col-form-label">Elitism: </label>
                                                         <div class="col-sm-9">
-                                                            <input id="elitism" type="text" placeholder="Default input" aria-label="default input example">
+                                                            <input id="elitism"  name="elitism" type="text" placeholder="Default input" aria-label="default input example">
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6">
                                                         <label for="selectSelection" class="col-sm-3 col-form-label">Selection</label>
                                                         <div class="col-sm-9">
-                                                            <select onchange="window[this.value+'Selected']();" id="selectSelection" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                                            <select onchange="window[this.value+'Selected']();" id="selectSelection" name="selectionName" class="form-select form-select-sm" aria-label=".form-select-sm example">
                                                                 <option selected>Open this select menu</option>
                                                                 <option value="roulette">Roulette Wheel</option>
                                                                 <option value="truncation">Truncation</option>
@@ -216,13 +216,13 @@
                                                     <div id="hidden-selection-form" class="row mb-6 hider">
                                                         <label id="hidden-selection-label" for="hidden-selection-Input" class="col-sm-3 col-form-label">[holder]</label>
                                                         <div class="col-sm-9">
-                                                            <input id="hidden-selection-Input" type="text" placeholder="Default input" aria-label="default input example">
+                                                            <input id="hidden-selection-Input" type="text" name="selectionInput" placeholder="Default input" aria-label="default input example">
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6">
                                                         <label for="selectCrossover" class="col-sm-3 col-form-label">Crossover</label>
                                                         <div class="col-sm-9">
-                                                            <select onchange="window[this.value+'Selected']();" id="selectCrossover" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                                            <select onchange="window[this.value+'Selected']();" name="crossoverName" id="selectCrossover" class="form-select form-select-sm" aria-label=".form-select-sm example">
                                                                 <option selected>Open this select menu</option>
                                                                 <option value="aspect">Aspect Oriented</option>
                                                                 <option value="daytime">Day Time Oriented</option>
@@ -230,9 +230,9 @@
                                                         </div>
                                                     </div>
                                                     <div id="hidden-crossover-form" class="row mb-6 hider">
-                                                        <label id="hidden-crossover-label" for="hidden-crossover-Input" class="col-sm-3 col-form-label">[holder]</label>
+                                                        <label id="hidden-crossover-label" for="hidden-crossover-Input" class="col-sm-2 col-form-label">[holder]</label>
                                                         <div class="col-sm-9">
-                                                            <input id="hidden-crossover-Input" type="text" placeholder="Default input" aria-label="default input example">
+                                                            <input id="hidden-crossover-Input" type="text" name="crossoverInput" placeholder="Default input" aria-label="default input example">
                                                         </div>
                                                     </div>
                                                     <div id="hidden-crossoverAspect-form" class="row mb-6 hider">
@@ -268,7 +268,7 @@
                                                             <input type="text" id="maxTimeText" disabled>
                                                         </div>
                                                     </div>
-                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                    <button type="submit" id="submit-config" class="btn btn-primary">Submit</button>
                                                 </div>
                                                 <div id="mutation-div" class="col-md-6">
                                                     <label for="population" class="col-sm-3 col-form-label">Mutations: </label>

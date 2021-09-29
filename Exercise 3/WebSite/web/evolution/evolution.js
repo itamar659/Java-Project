@@ -7,11 +7,30 @@ $(function () {
     ajaxLoggedInUsername();
     setCheckBoxChanges();
 
-    $('input[name="population"]').on('change', function(e) {
+    $('#population').on('change', function(e) {
         var isValid = this.value >= 0;
 
         this.classList.toggle('notValid', !isValid);
-    })
+        $("#submit-config").prop("disabled", !isValid);
+    });
+
+    $("#config-form").submit(function () {
+        var data = objectifyForm($(this).serializeArray());
+
+        console.log(JSON.stringify(data));
+
+        data = JSON.stringify(data);
+
+        $.ajax({
+            url: ENGINES_URL,
+            timeout: 2000,
+            data: {
+                action : 'update',
+                abc : data
+            }
+        });
+        return false;
+    });
 
 
     $.ajax({
@@ -24,6 +43,15 @@ $(function () {
         }
     });
 })
+
+function objectifyForm(formArray) {
+    //serialize data function
+    var returnArray = {};
+    for (var i = 0; i < formArray.length; i++){
+        returnArray[formArray[i]['name']] = formArray[i]['value'];
+    }
+    return returnArray;
+}
 
 function setCheckBoxChanges() {
     $('#maxGenCheckBox').change(function(){
