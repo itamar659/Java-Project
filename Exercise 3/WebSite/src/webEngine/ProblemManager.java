@@ -7,19 +7,20 @@ import java.util.Map;
 
 public class ProblemManager {
 
-    private static final ProblemStatisticsBuilder problemStatisticsBuilder = new ProblemStatisticsBuilder();
-
     private final Map<Integer, ProblemPair> id2problem = new HashMap<>();
     private int currentID = 1;
 
-    public synchronized void addProblem(String uploader, TimeTableProblem problem) {
+    public void addProblem(String uploader, TimeTableProblem problem) {
+        ProblemStatisticsBuilder problemStatisticsBuilder = new ProblemStatisticsBuilder();
         problemStatisticsBuilder.setProblemID(currentID);
         problemStatisticsBuilder.setProblem(problem);
         problemStatisticsBuilder.setUploader(uploader);
 
-        ProblemPair p = new ProblemPair(problem, problemStatisticsBuilder.create());
-        id2problem.put(currentID, p);
-        currentID++;
+        synchronized (this) {
+            ProblemPair p = new ProblemPair(problem, problemStatisticsBuilder.create());
+            id2problem.put(currentID, p);
+            currentID++;
+        }
     }
 
     public synchronized void removeProblem(int problemID) {
@@ -32,11 +33,11 @@ public class ProblemManager {
         return statisticsMap;
     }
 
-    public ProblemStatistics getProblemStatistics(int problemID) {
+    public synchronized ProblemStatistics getProblemStatistics(int problemID) {
         return id2problem.get(problemID).problemStatistics;
     }
 
-    public TimeTableProblem getProblem(int problemID) {
+    public synchronized TimeTableProblem getProblem(int problemID) {
         return id2problem.get(problemID).realProblem;
     }
 
