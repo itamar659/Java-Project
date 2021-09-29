@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.Set;
 
 public class User {
-
     private final String username;
     private final Set<Integer> solvingProblemID;
     private final Date registerTime;

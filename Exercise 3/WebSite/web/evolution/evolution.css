@@ -20,10 +20,18 @@ label {
 .hourspan{
 
 }
+.hider{
+    display: none;
+}
 
-.sector{
+.border-div{
     border: 1px solid black;
 }
+
+input.notValid {
+    border: 1px solid red;
+}
+
 #background {
     background-color: white;
     margin: 10px 10px 0 10px;

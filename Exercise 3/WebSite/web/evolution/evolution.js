@@ -5,6 +5,14 @@ var ENGINES_URL = "evolutionengine";
 
 $(function () {
     ajaxLoggedInUsername();
+    setCheckBoxChanges();
+
+    $('input[name="population"]').on('change', function(e) {
+        var isValid = this.value >= 0;
+
+        this.classList.toggle('notValid', !isValid);
+    })
+
 
     $.ajax({
         url: ENGINES_URL,
@@ -16,6 +24,32 @@ $(function () {
         }
     });
 })
+
+function setCheckBoxChanges() {
+    $('#maxGenCheckBox').change(function(){
+        if(this.checked){
+            $('#maxGenText').prop("disabled",false);
+        } else {
+            $('#maxGenText').prop("disabled",true);
+        }
+    });
+
+    $('#maxFitnessCheckBox').change(function(){
+        if(this.checked){
+            $('#maxFitnessText').prop("disabled",false);
+        } else {
+            $('#maxFitnessText').prop("disabled",true);
+        }
+    });
+
+    $('#maxTimeCheckBox').change(function(){
+        if(this.checked){
+            $('#maxTimeText').prop("disabled",false);
+        } else {
+            $('#maxTimeText').prop("disabled",true);
+        }
+    });
+}
 
 function ajaxLoggedInUsername() {
     $.ajax({
@@ -41,19 +75,6 @@ function logout() {
             window.location.href = buildUrlWithContextPath(url);
         }
     });
-}
-
-function changeTab(evt, type) {
-    $.each($(".tab-content"), function (index, content) {
-        content.style.display = "none";
-    });
-
-    $.each($(".tab-link"), function (index, tab) {
-        tab.classList.remove("active-tab");
-    });
-
-    $("#" + type)[0].style.display = "block";
-    evt.currentTarget.classList.add("active-tab");
 }
 
 function loadSiteInformation(json) {
@@ -232,4 +253,46 @@ function createSectionClassesInfo(courseID2Hours, courses){
     })
 
     return string;
+}
+
+function truncationSelected(){
+    $("#hidden-selection-form").removeClass("hider");
+    $("#hidden-selection-label").html("Top Precent");
+}
+function tournamentSelected(){
+    $("#hidden-selection-form").removeClass("hider");
+    $("#hidden-selection-label").html("pte");
+}
+function rouletteSelected() {
+    $("#hidden-selection-form").removeClass("hider").addClass("hider");
+}
+function aspectSelected(){
+    $("#hidden-crossover-form").removeClass("hider");
+    $("#hidden-crossover-label").html("CuttingPoints")
+
+    $("#hidden-crossoverAspect-form").removeClass("hider");
+    $("#hidden-crossoverAspect-label").html("Orientation");
+}
+function daytimeSelected(){
+    $("#hidden-crossover-form").removeClass("hider");
+    $("#hidden-crossover-label").html("CuttingPoints");
+
+    $("#hidden-crossoverAspect-form").removeClass("hider").addClass("hider");
+}
+
+var mutationsAdded = 0
+function addMutation(){
+    if(mutationsAdded === 0){
+        $("#mutation-div-body").removeClass("hider");
+    }
+    else{
+        var d = $("#mutation-div-body").clone().attr('id', 'mutation-div-body' + mutationsAdded).appendTo("#mutation-div");
+    }
+
+    mutationsAdded++;
+}
+
+function flipperSelected(){
+
+
 }
