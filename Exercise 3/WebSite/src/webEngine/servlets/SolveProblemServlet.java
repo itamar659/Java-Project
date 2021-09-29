@@ -58,6 +58,8 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
         );
     }
 
+    
+
     private Engine getTheEngine(HttpServletRequest request, int userProblemId) {
         TimeTableProblem problem =
                 ServletUtils.getProblemManager(getServletContext()).getProblem(userProblemId);

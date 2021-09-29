@@ -18,20 +18,17 @@ $(function () {
         var data = objectifyForm($(this).serializeArray());
 
         console.log(JSON.stringify(data));
-
-        data = JSON.stringify(data);
+        data['action'] = 'update';
+        //data = JSON.stringify(data);
 
         $.ajax({
             url: ENGINES_URL,
             timeout: 2000,
-            data: {
-                action : 'update',
-                abc : data
-            }
+            action : 'update',
+            data: data
         });
         return false;
     });
-
 
     $.ajax({
         url: ENGINES_URL,
@@ -321,6 +318,5 @@ function addMutation(){
 }
 
 function flipperSelected(){
-
 
 }
