@@ -16,7 +16,7 @@ public class DayTimeOriented extends BaseCrossover {
 
     private static final Random rand = new Random();
 
-    private static final String PARAMETER_CUTTING_POINTS = "CuttingPoints";
+    public static final String PARAMETER_CUTTING_POINTS = "CuttingPoints";
 
     @Override
     public String getName() {

@@ -10,7 +10,7 @@ import java.util.AbstractMap;
 
 public class Truncation implements Selection<TimeTable>, Configurable {
 
-    private static final String PARAMETER_TOP_PERCENT = "TopPercent";
+    public static final String PARAMETER_TOP_PERCENT = "TopPercent";
 
     private final Configuration configuration;
 

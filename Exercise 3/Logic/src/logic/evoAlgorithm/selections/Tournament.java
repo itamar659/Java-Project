@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class Tournament implements Selection<TimeTable>, Configurable {
 
-    private static final String PARAMETER_PTE = "pte";
+    public static final String PARAMETER_PTE = "pte";
 
     private static final Random rand = new Random();
 

@@ -21,8 +21,8 @@ public class AspectOriented extends BaseCrossover {
         CLASS, TEACHER;
     }
 
-    private static final String PARAMETER_ORIENTATION = "Orientation";
-    private static final String PARAMETER_CUTTING_POINTS = "CuttingPoints";
+    public static final String PARAMETER_ORIENTATION = "Orientation";
+    public static final String PARAMETER_CUTTING_POINTS = "CuttingPoints";
 
     private final Configuration configuration;
 

@@ -6,6 +6,11 @@ import com.google.gson.JsonObject;
 import engine.base.*;
 import logic.Engine;
 import logic.evoAlgorithm.TimeTableProblem;
+import logic.evoAlgorithm.crossovers.AspectOriented;
+import logic.evoAlgorithm.factory.Factories;
+import logic.evoAlgorithm.selections.Tournament;
+import logic.evoAlgorithm.selections.Truncation;
+import logic.timeTable.TimeTable;
 import logic.timeTable.rules.base.Rule;
 import webEngine.gsonHelpers.gsonSerializers.*;
 import webEngine.gsonHelpers.gsonStrategy.EngineStrategy;
@@ -152,8 +157,73 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
     }
 
     private void updateEngine(HttpServletRequest request, Engine engine) {
-        // TODO:
-//        gson.fromJson()
+        final String CROSSOVER_NAME_PARAM = "crossoverName";
+        final String CROSSOVER_CUTTING_POINTS_PARAM = "crossoverCuttingPoints";
+        final String CROSSOVER_ASPECT_ORIENTATION_PARAM = "crossoverInputAspect";
+
+        final String SELECTION_NAME_PARAM = "selectionName";
+        final String SELECTION_INPUT_PARAM = "selectionInput";
+
+        final String MUTATION_NAME_PARAM;
+        final String MUTATION_PROBABILITY_PARAM;
+        final String MUTATION_MAX_TUPPLES_PARAM;
+        final String MUTATION_FLIPPING_COMPONENT_PARAM;
+
+        final String POPULATION_SIZE_PARAM = "populationSize";
+        final String ELITISM_PARAM = "elitism";
+
+        final String INTERVAL_PARAM = "interval";
+
+        final String MAX_GEN_PARAM = "maxGeneration";
+        final String MAX_FITNESS_PARAM = "maxFitness";
+        final String MAX_TIME_PARAM = "maxTime";
+
+
+        // Set engine configurations
+        try {
+            engine.setPopulationSize(Integer.parseInt(request.getParameter(POPULATION_SIZE_PARAM)));
+            engine.setElitism(Integer.parseInt(request.getParameter(ELITISM_PARAM)));
+            engine.setUpdateGenerationInterval(Integer.parseInt(request.getParameter(INTERVAL_PARAM)));
+
+            try {
+                engine.setMaxGenerationsCondition(Integer.parseInt(request.getParameter(MAX_GEN_PARAM)));
+            } catch (Exception ignored) {
+            }
+            try {
+                engine.setMaxFitnessCondition(Float.parseFloat(request.getParameter(MAX_FITNESS_PARAM)));
+            } catch (Exception ignored) {
+            }
+            try {
+                engine.setTimeStopCondition(Long.parseLong(request.getParameter(MAX_TIME_PARAM)));
+            } catch (Exception ignored) {
+            }
+
+            engine.changeCrossover(request.getParameter(CROSSOVER_NAME_PARAM));
+            engine.changeSelection(request.getParameter(SELECTION_NAME_PARAM));
+            engine.getMutations().clear();
+
+            // Get Crossover
+            Crossover<TimeTable> crossover = engine.getEvoEngineSettings().getCrossover();
+            crossover.setCuttingPoints(Integer.parseInt(request.getParameter(CROSSOVER_CUTTING_POINTS_PARAM)));
+            if (crossover instanceof AspectOriented) {
+                crossover.setParameter(AspectOriented.PARAMETER_ORIENTATION, request.getParameter(CROSSOVER_ASPECT_ORIENTATION_PARAM));
+            }
+
+            // Get Selection
+            Selection<TimeTable> selection = engine.getEvoEngineSettings().getSelection();
+            if (selection instanceof Tournament) {
+                ((Tournament) selection).setParameter(Tournament.PARAMETER_PTE, request.getParameter(SELECTION_INPUT_PARAM));
+            } else if (selection instanceof Truncation) {
+                ((Truncation) selection).setParameter(Truncation.PARAMETER_TOP_PERCENT, request.getParameter(SELECTION_INPUT_PARAM));
+            }
+
+            // Get Mutations
+            // TODO...
+
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private Engine getTheEngine(User user, int userProblemId) {
