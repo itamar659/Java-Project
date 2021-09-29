@@ -27,12 +27,6 @@ import java.io.IOException;
 @WebServlet(urlPatterns = {"/evolutionengine"})
 public class SolveProblemServlet extends BaseSecurityHttpServlet {
 
-    private final Gson gson;
-
-    public SolveProblemServlet() {
-        this.gson = createGsonByGsonBuilder();
-    }
-
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (!hasSession(request, response)) {
@@ -50,8 +44,6 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
             return;
         }
 
-        response.setContentType("application/json");
-        Engine engine = getTheEngine(request, problemId);
         String action = request.getParameter(Constants.ACTION_PARAMETER);
         action = action == null ? "getEngine" : action;
 
@@ -97,19 +89,12 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
         userJson.addProperty("bestFitness",
                 hasFitness ? user.getEngine(problemId).getBestResult().getFitness() : 0);
         response.getOutputStream().println(
-                gson.toJson(
-                        engine
                 new Gson().toJson(
                         userJson
                 )
         );
     }
 
-    
-
-    private Engine getTheEngine(HttpServletRequest request, int userProblemId) {
-        TimeTableProblem problem =
-                ServletUtils.getProblemManager(getServletContext()).getProblem(userProblemId);
     private void getUsersListInformation(HttpServletResponse response, Integer problemId) throws IOException {
         JsonObject usersJson = new JsonObject();
 
@@ -146,7 +131,6 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
             return;
         }
 
-        Engine engine = (Engine) SessionUtils.getAttribute(request, Constants.ENGINE_PARAMETER);
         // TODO - Check configuration
         if (engine.getEvoEngineSettings().getPopulationSize() <= 0) {
 
@@ -181,7 +165,6 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
             engine = new Engine();
             engine.loadTTEEngineByProblem(problem);
 
-            SessionUtils.setAttribute(request, Constants.ENGINE_PARAMETER, engine);
             user.addEngine(userProblemId, engine);
         }
 
