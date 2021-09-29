@@ -8,6 +8,7 @@ import webEngine.users.User;
 import java.util.HashSet;
 import java.util.Set;
 
+// This object will hold information and be converted into json object.
 public class ProblemStatistics {
 
     // General statistics
@@ -35,6 +36,10 @@ public class ProblemStatistics {
         this.bestFitness = 0;
 
         extractProblemStatistics(problem);
+    }
+
+    public synchronized Set<User> getUsers() {
+        return new HashSet<>(users);
     }
 
     public synchronized void addUser(User user) {

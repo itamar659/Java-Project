@@ -94,7 +94,7 @@ public class ProblemServlet extends BaseSecurityHttpServlet {
         }
 
         User thisUser = SessionUtils.getUser(request);
-        removeUser(thisUser, requestedProblemId);
+        tryToRemoveUser(thisUser, requestedProblemId);
     }
 
     private void addUserToProblem(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -104,7 +104,7 @@ public class ProblemServlet extends BaseSecurityHttpServlet {
         }
 
         User thisUser = SessionUtils.getUser(request);
-        addUser(thisUser, requestedProblemId);
+        tryToAddUser(thisUser, requestedProblemId);
 
         thisUser.setActiveProblem(requestedProblemId);
 
@@ -118,7 +118,7 @@ public class ProblemServlet extends BaseSecurityHttpServlet {
         );
     }
 
-    private void removeUser(User user, int problemId) {
+    private void tryToRemoveUser(User user, int problemId) {
         if (!user.isSolvingProblemID(problemId)) {
             ServletUtils.getProblemManager(getServletContext())
                     .getProblemStatistics(problemId)
@@ -128,7 +128,7 @@ public class ProblemServlet extends BaseSecurityHttpServlet {
         }
     }
 
-    private void addUser(User user, int problemId) {
+    private void tryToAddUser(User user, int problemId) {
         if (!user.isSolvingProblemID(problemId)) {
             ServletUtils.getProblemManager(getServletContext())
                     .getProblemStatistics(problemId)

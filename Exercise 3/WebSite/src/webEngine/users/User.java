@@ -1,15 +1,15 @@
 package webEngine.users;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import logic.Engine;
+
+import java.util.*;
 
 public class User {
     private final String username;
     private final Set<Integer> solvingProblemID;
     private final Date registerTime;
     private Integer activeProblem;
+    private Map<Integer, Engine> problemID2Engine;
 
     public final Set<Integer> getSolvingProblemID() {
         return solvingProblemID;
@@ -25,6 +25,18 @@ public class User {
 
     public boolean isSolvingProblemID(Integer solvingProblemID) {
         return this.solvingProblemID.contains(solvingProblemID);
+    }
+
+    public void addEngine(Integer problemID, Engine engine) {
+        problemID2Engine.put(problemID, engine);
+    }
+
+    public void removeEngine(Integer problemID) {
+        problemID2Engine.remove(problemID);
+    }
+
+    public Engine getEngine(Integer problemID) {
+        return problemID2Engine.get(problemID);
     }
 
     public Integer getActiveProblemID() {
@@ -47,6 +59,7 @@ public class User {
         this.username = username;
         this.registerTime = new Date();
         this.solvingProblemID = new HashSet<>();
+        this.problemID2Engine = new HashMap<>();
         this.activeProblem = null;
     }
 

@@ -35,7 +35,6 @@ public class Tournament implements Selection<TimeTable>, Configurable {
 
     @Override
     public void setParameter(String parameterName, String value) {
-        // TODO: check if it's valid value in the correct range (Maybe not here but outside of this method?)
         if (parameterName.equals(PARAMETER_PTE)) {
             Float.parseFloat(value);
         } else {
