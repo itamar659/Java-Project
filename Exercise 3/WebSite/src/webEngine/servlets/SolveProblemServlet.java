@@ -32,6 +32,20 @@ import java.io.IOException;
 @WebServlet(urlPatterns = {"/evolutionengine"})
 public class SolveProblemServlet extends BaseSecurityHttpServlet {
 
+    /* Servlet actions:
+     * ================
+     * "getEngine": get the information about the problem and it's engine
+     * "update": update the engine configurations (crossover, selection, pop size...)
+     * "start": start the engine
+     * "stop": stop the engine
+     * "pause": pause the engine
+     * "resume": resume the engine
+     * "getUserInfo": returns the username and best fitness
+     * "getSolution": return the lessons of the best solution
+     * "getUsersListInformation": returns a list of all the users solving this problem
+     *                            Each user will have a username, best fitness, and current generation
+    */
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (!hasSession(request, response)) {
@@ -77,6 +91,13 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
                 break;
             case "getUserInfo":
                 getUserInformation(response, user, problemId);
+                break;
+            case "getSolution":
+                response.getOutputStream().println(
+                        new Gson().toJson(
+                                getTheEngine(user, problemId).getBestResult().getLessons()
+                        )
+                );
                 break;
             case "getUsersListInformation":
                 getUsersListInformation(response, problemId);
