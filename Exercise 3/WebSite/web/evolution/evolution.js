@@ -3,23 +3,53 @@ var USER_LIST_URL = "userlist";
 var LOGOUT_URL = "logout";
 var ENGINES_URL = "evolutionengine";
 
+function startEngineOnClick() {
+    $("#start-engine").on("click", function(e) {
+        setInterval(updateUserInfo, refreshRate);
+
+        $.ajax({
+            url: ENGINES_URL,
+            timeout: 2000,
+            data: {
+                action: "start"
+            }
+        });
+    });
+}
+
+function updateUserInfo() {
+    $.ajax({
+        url: ENGINES_URL,
+        timeout: 2000,
+        data: {
+            action: "getUserInfo"
+        },
+        success: function(res) {
+            console.log(res);
+            updateLabels(res);
+        }
+    })
+}
+
+function updateLabels(res){
+    $("#user-name-label").html(res.username);
+    $("#current-fitness-label").html(res.bestFitness);
+    $("#generation-label").html(res.currentGeneration);
+}
+
 $(function () {
     ajaxLoggedInUsername();
     setCheckBoxChanges();
-
-    $('#population').on('change', function(e) {
-        var isValid = this.value >= 0;
-
-        this.classList.toggle('notValid', !isValid);
-        $("#submit-config").prop("disabled", !isValid);
-    });
+    validations();
+    startEngineOnClick();
 
     $("#config-form").submit(function () {
         var data = objectifyForm($(this).serializeArray());
-
-        console.log(JSON.stringify(data));
         data['action'] = 'update';
-        //data = JSON.stringify(data);
+
+        console.log(data);
+
+        $("#engine-details-card").removeClass("hider");
 
         $.ajax({
             url: ENGINES_URL,
@@ -41,6 +71,47 @@ $(function () {
     });
 })
 
+function validations(){
+    positiveNumberValidation('#population');
+    positiveNumberValidation('#elitism');
+    positiveNumberValidation('#hidden-crossover-Input');
+
+    $('#hidden-selection-Input').on('change', function(e) {
+        var isValid;
+        var temp = $('#hidden-selection-label').html();
+        if(temp === "Top Percent"){
+            isValid = this.value >= 0 && this.value <= 100;
+        }else{
+            isValid = this.value >= 0 && this.value <= 1;
+        }
+        this.classList.toggle('notValid', !isValid);
+        checkFormValidationAndToggleDisablePropOnSubmitButton();
+    });
+}
+
+function checkFormValidationAndToggleDisablePropOnSubmitButton(){
+    var arr = $('#config-form *').filter(':input');
+    $('#config-form input[type="text"]').each(function(){
+        var input = $(this);
+       if(input.hasClass('notValid') || input.value.length === 0){
+           $("#submit-config").prop("disabled", true);
+           return false;
+       }
+    });
+
+    $("#submit-config").prop("disabled", false);
+    return true;
+}
+
+function positiveNumberValidation(id){
+    $(id).on('change', function(e) {
+        var isValid = this.value >= 0;
+
+        this.classList.toggle('notValid', !isValid);
+        checkFormValidationAndToggleDisablePropOnSubmitButton();
+    });
+}
+
 function objectifyForm(formArray) {
     //serialize data function
     var returnArray = {};
@@ -51,27 +122,17 @@ function objectifyForm(formArray) {
 }
 
 function setCheckBoxChanges() {
-    $('#maxGenCheckBox').change(function(){
-        if(this.checked){
-            $('#maxGenText').prop("disabled",false);
-        } else {
-            $('#maxGenText').prop("disabled",true);
-        }
-    });
+    setCheckBoxChangesHelper('#maxGenCheckBox', '#maxGenText');
+    setCheckBoxChangesHelper('#maxFitnessCheckBox', '#maxFitnessText');
+    setCheckBoxChangesHelper('#maxTimeCheckBox', '#maxTimeText');
+}
 
-    $('#maxFitnessCheckBox').change(function(){
+function setCheckBoxChangesHelper(obj, objToChange){
+    $(obj).change(function(){
         if(this.checked){
-            $('#maxFitnessText').prop("disabled",false);
+            $(objToChange).prop("disabled",false);
         } else {
-            $('#maxFitnessText').prop("disabled",true);
-        }
-    });
-
-    $('#maxTimeCheckBox').change(function(){
-        if(this.checked){
-            $('#maxTimeText').prop("disabled",false);
-        } else {
-            $('#maxTimeText').prop("disabled",true);
+            $(objToChange).prop("disabled",true);
         }
     });
 }
@@ -105,51 +166,6 @@ function logout() {
 function loadSiteInformation(json) {
     console.log(json);
 
-    /* Json object very simple information:
-     * almost each one of the following attribute has properties.
-     * it's better to view in console which value have what.
-     *
-     * Every one of them also saved as json. parse first.
-     * generation
-     * generationInterval
-     * bestSolution
-     * stopConditions
-     * problem
-     * populationSize
-     * elitism
-     * selection
-     * crossover
-     * mutations
-     */
-
-    /*
-        evoEngine {
-            bestSolution: null,
-            crossover: null,
-            currentGeneration: 0,
-            elitism: 0,
-            historyGeneration2Fitness: {},
-            isPaused: false,
-            isRunning: false,
-            mutations: [],
-            population: null,
-            populationSize: 0,
-            problem:{
-                        classes: (5) [{…}, {…}, {…}, {…}, {…}],
-                        courses: (7) [{…}, {…}, {…}, {…}, {…}, {…}, {…}],
-                        days: 6,
-                        hours: 8,
-                        rules: {rules: Array(4), hardRuleWeight: 60},
-                        teachers: (6) [{…}, {…}, {…}, {…}, {…}, {…}],
-                    }
-            [[Prototype]]: Object,
-            selection: null,
-            stopConditions: {},
-            updateGenerationInterval: 100,
-        }
-     */
-    console.log(json.evoEngine.problem);
-
     $(".dayspan").html(json.evoEngine.problem.days);
     $(".hourspan").html(json.evoEngine.problem.hours);
 
@@ -158,6 +174,7 @@ function loadSiteInformation(json) {
     createCoursesCard(json.evoEngine.problem.courses);
     createRulesCard(json.evoEngine.problem.rules);
 
+    //todo: check if the engine configed already inorder to fill the config card
 }
 
 function createRulesCard(rules){
@@ -280,25 +297,25 @@ function createSectionClassesInfo(courseID2Hours, courses){
     return string;
 }
 
-function truncationSelected(){
+function TruncationSelected(){
     $("#hidden-selection-form").removeClass("hider");
-    $("#hidden-selection-label").html("Top Precent");
+    $("#hidden-selection-label").html("Top Percent");
 }
-function tournamentSelected(){
+function TournamentSelected(){
     $("#hidden-selection-form").removeClass("hider");
     $("#hidden-selection-label").html("pte");
 }
-function rouletteSelected() {
+function RouletteWheelSelected() {
     $("#hidden-selection-form").removeClass("hider").addClass("hider");
 }
-function aspectSelected(){
+function AspectOrientedSelected(){
     $("#hidden-crossover-form").removeClass("hider");
     $("#hidden-crossover-label").html("CuttingPoints")
 
     $("#hidden-crossoverAspect-form").removeClass("hider");
     $("#hidden-crossoverAspect-label").html("Orientation");
 }
-function daytimeSelected(){
+function DayTimeOrientedSelected(){
     $("#hidden-crossover-form").removeClass("hider");
     $("#hidden-crossover-label").html("CuttingPoints");
 

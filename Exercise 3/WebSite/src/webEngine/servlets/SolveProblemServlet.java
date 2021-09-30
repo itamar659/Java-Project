@@ -243,7 +243,7 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
 
     private Gson createGsonByGsonBuilder() {
 //        TODO:
-//         add isPaused to Engine.
+//         add isPaused to Engine. also add isConfiged inorder to update config form on load of page 3.
 //         - With the engine json object, return the engine state (idle, running, paused, completed)
 
         return new GsonBuilder()

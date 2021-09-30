@@ -186,65 +186,63 @@
                                     <h4 class="title">Configuration:</h4>
                                 </div>
                                 <div class="content">
-                                    <div clas="container-fluid">
+                                    <div class="container-fluid">
                                         <form id="config-form" action="evolutionengine" method="post">
                                             <div class="row">
                                                 <div class="sector col-md-6">
                                                     <div class="row mb-6">
                                                         <label for="population" class="col-sm-3 col-form-label">Population: </label>
                                                         <div class="col-sm-9">
-                                                            <input id="population" name="populationSize" type="text" placeholder="Default input" aria-label="default input example">
+                                                            <input id="population" class="empty" name="populationSize" type="text" aria-label="default input example">
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6">
                                                         <label for="elitism" class="col-sm-3 col-form-label">Elitism: </label>
                                                         <div class="col-sm-9">
-                                                            <input id="elitism"  name="elitism" type="text" placeholder="Default input" aria-label="default input example">
+                                                            <input id="elitism" class="empty" name="elitism" type="text" aria-label="default input example">
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6">
                                                         <label for="selectSelection" class="col-sm-3 col-form-label">Selection</label>
                                                         <div class="col-sm-9">
                                                             <select onchange="window[this.value+'Selected']();" id="selectSelection" name="selectionName" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                                                <option selected>Open this select menu</option>
-                                                                <option value="roulette">Roulette Wheel</option>
-                                                                <option value="truncation">Truncation</option>
-                                                                <option value="tournament">Tournament</option>
+                                                                <option value="RouletteWheel" selected>Roulette Wheel</option>
+                                                                <option value="Truncation">Truncation</option>
+                                                                <option value="Tournament">Tournament</option>
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div id="hidden-selection-form" class="row mb-6 hider">
+                                                    <div class="row mb-6 hider" id="hidden-selection-form" >
                                                         <label id="hidden-selection-label" for="hidden-selection-Input" class="col-sm-3 col-form-label">[holder]</label>
                                                         <div class="col-sm-9">
-                                                            <input id="hidden-selection-Input" type="text" name="selectionInput" placeholder="Default input" aria-label="default input example">
+                                                            <input id="hidden-selection-Input" type="text" name="selectionInput" aria-label="default input example">
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6">
                                                         <label for="selectCrossover" class="col-sm-3 col-form-label">Crossover</label>
                                                         <div class="col-sm-9">
                                                             <select onchange="window[this.value+'Selected']();" name="crossoverName" id="selectCrossover" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                                                <option selected>Open this select menu</option>
-                                                                <option value="aspect">Aspect Oriented</option>
-                                                                <option value="daytime">Day Time Oriented</option>
+                                                                <option value="AspectOriented" selected>Aspect Oriented</option>
+                                                                <option value="DayTimeOriented">Day Time Oriented</option>
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div id="hidden-crossover-form" class="row mb-6 hider">
-                                                        <label id="hidden-crossover-label" for="hidden-crossover-Input" class="col-sm-2 col-form-label">[holder]</label>
+                                                    <div class="row mb-6" id="hidden-crossover-form" >
+                                                        <label id="hidden-crossover-label" for="hidden-crossover-Input" class="col-sm-3 col-form-label">Cutting Points: </label>
                                                         <div class="col-sm-9">
-                                                            <input id="hidden-crossover-Input" type="text" name="crossoverInput" placeholder="Default input" aria-label="default input example">
+                                                            <input id="hidden-crossover-Input" type="text" name="crossoverCuttingPoints" aria-label="default input example">
                                                         </div>
                                                     </div>
-                                                    <div id="hidden-crossoverAspect-form" class="row mb-6 hider">
+                                                    <div class="row mb-6 hider" id="hidden-crossoverAspect-form">
                                                         <label id="hidden-crossoverAspect-label" for="hidden-crossoverAspect-Input" class="col-sm-3 col-form-label">[holder]</label>
                                                         <div class="col-sm-9">
-                                                            <input id="hidden-crossoverAspect-Input" name="crossoverInputAspect" type="text" placeholder="Default input" aria-label="default input example">
+                                                            <input id="hidden-crossoverAspect-Input" name="crossoverInputAspect" type="" aria-label="default input example">
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6">
                                                         <label for="interval" class="col-sm-3 form-label">Interval: </label>
                                                         <div class="col-sm-9">
-                                                            <input id="interval" name="interval" type="text" placeholder="Default input" aria-label="default input example">
+                                                            <input id="interval" name="interval" type="text" aria-label="default input example">
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6">
@@ -268,7 +266,7 @@
                                                             <input type="text" name="maxTime" id="maxTimeText" disabled>
                                                         </div>
                                                     </div>
-                                                    <button type="submit" id="submit-config" class="btn btn-primary">Submit</button>
+                                                    <button type="submit" id="submit-config" class="btn btn-primary" disabled>Submit</button>
                                                 </div>
                                                 <div id="mutation-div" class="col-md-6">
                                                     <label for="population" class="col-sm-3 col-form-label">Mutations: </label>
@@ -295,6 +293,45 @@
                                                 </div>
                                             </div>
                                         </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="engine-details-card" class="row hider">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Engine Details:</h4>
+                                </div>
+                                <div class="content">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label class="col-sm-6 col-form-label">User Name: </label>
+                                                <label id="user-name-label" class="col-sm-3 col-form-label">[Holder] </label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label class="col-sm-6 col-form-label">Current Fitness: </label>
+                                                <label id="current-fitness-label" class="col-sm-3 col-form-label">[Holder] </label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label class="col-sm-6 col-form-label">Generation: </label>
+                                                <label id="generation-label" class="col-sm-3 col-form-label">[Holder] </label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <button id="start-engine" class="btn btn-primary">Start</button>
+                                                <button id="pause-engine" class="btn btn-warning">Pause</button>
+                                                <button id="resume-engine" class="btn btn-dark">Resume</button>
+                                                <button id="stop-engine" class="btn btn-danger">Stop</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
