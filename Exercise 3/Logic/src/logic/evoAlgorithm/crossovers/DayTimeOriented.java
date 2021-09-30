@@ -16,19 +16,10 @@ public class DayTimeOriented extends BaseCrossover {
 
     private static final Random rand = new Random();
 
-    public static final String PARAMETER_CUTTING_POINTS = "CuttingPoints";
-
     @Override
     public String getName() {
         return "Day Time Oriented";
     }
-
-    @Override
-    public int getCuttingPoints() {
-        return Integer.parseInt(configuration.getParameter(PARAMETER_CUTTING_POINTS)); // TODO: Remove this copy paste configuration shit code
-    }
-
-    private final Configuration configuration;
 
     @Override
     public ReadOnlyConfiguration getConfiguration() {
@@ -50,16 +41,10 @@ public class DayTimeOriented extends BaseCrossover {
         configuration.setParameter(parameterName, value);
     }
 
-    @Override
-    public void setCuttingPoints(int cuttingPoints) {
-        // TODO: Can be bigger from the population. it'll cut every single block
-        setParameter(PARAMETER_CUTTING_POINTS, Integer.toString(cuttingPoints));
-    }
-
     public DayTimeOriented() {
-        this.configuration = new Configuration(
+        super(new Configuration(
                 new AbstractMap.SimpleEntry<>(PARAMETER_CUTTING_POINTS, "0")
-        );
+        ));
     }
 
     @Override

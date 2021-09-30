@@ -22,9 +22,6 @@ public class AspectOriented extends BaseCrossover {
     }
 
     public static final String PARAMETER_ORIENTATION = "Orientation";
-    public static final String PARAMETER_CUTTING_POINTS = "CuttingPoints";
-
-    private final Configuration configuration;
 
     @Override
     public ReadOnlyConfiguration getConfiguration() {
@@ -47,21 +44,11 @@ public class AspectOriented extends BaseCrossover {
         configuration.setParameter(parameterName, value);
     }
 
-    @Override
-    public int getCuttingPoints() {
-        return Integer.parseInt(configuration.getParameter(PARAMETER_CUTTING_POINTS));
-    }
-
-    @Override
-    public void setCuttingPoints(int cuttingPoints) {
-        setParameter(PARAMETER_CUTTING_POINTS, Integer.toString(cuttingPoints));
-    }
-
     public AspectOriented() {
-        this.configuration = new Configuration(
+        super(new Configuration(
                 new AbstractMap.SimpleEntry<>(PARAMETER_CUTTING_POINTS, "0"),
                 new AbstractMap.SimpleEntry<>(PARAMETER_ORIENTATION, Orientation.CLASS.name())
-        );
+        ));
     }
 
     public String getOrientation() {

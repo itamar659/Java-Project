@@ -4,7 +4,6 @@ import engine.base.stopConditions.MaxGenerationsStopCondition;
 import engine.base.stopConditions.MaxFitnessStopCondition;
 import engine.base.stopConditions.TimeStopCondition;
 import logic.evoAlgorithm.TimeTableEvolutionEngine;
-import logic.evoAlgorithm.crossovers.AspectOriented;
 import logic.evoAlgorithm.factory.Factories;
 import logic.timeTable.TimeTable;
 import engine.base.*;
@@ -34,9 +33,9 @@ public class Engine implements Serializable {
     private boolean isFileLoaded;
     private State state;
 
-    private final MaxGenerationsStopCondition<TimeTable> maxGenerationsStopCondition;
-    private final MaxFitnessStopCondition<TimeTable> maxFitnessStopCondition;
-    private final TimeStopCondition timeStopCondition;
+    private MaxGenerationsStopCondition<TimeTable> maxGenerationsStopCondition;
+    private MaxFitnessStopCondition<TimeTable> maxFitnessStopCondition;
+    private TimeStopCondition timeStopCondition;
 
     private EvolutionEngine<TimeTable> evoEngine;
     private evoEngineSettingsWrapper evoEngineSettings;
@@ -183,29 +182,32 @@ public class Engine implements Serializable {
     }
 
     public Engine() {
-        this.multiThreaded = false;
-        this.state = State.IDLE;
-
-        maxGenerationsStopCondition = new MaxGenerationsStopCondition<>(evoEngine);
-        maxFitnessStopCondition = new MaxFitnessStopCondition<>(evoEngine);
-        timeStopCondition = new TimeStopCondition();
+        initializeEngineParts();
     }
 
     public void loadTTEEngineFromString(String xmlFileAsString) throws JAXBException, XMLExtractException {
         this.evoEngine = TTEvoEngineCreator.createEngineFromXMLString(xmlFileAsString);
         this.evoEngine.addFinishRunListener(this::algorithmFinished);
 
-        this.isFileLoaded = true;
-        this.state = State.IDLE;
+        initializeEngineParts();
     }
 
     public void loadTTEEngineByProblem(Problem<TimeTable> problem) {
         this.evoEngine = TTEvoEngineCreator.createEngineFromProblem(problem);
-        this.evoEngineSettings = new evoEngineSettingsWrapper((TimeTableEvolutionEngine) this.evoEngine);
         this.evoEngine.addFinishRunListener(this::algorithmFinished);
+
+        initializeEngineParts();
+    }
+
+    public void initializeEngineParts() {
+        this.evoEngineSettings = new evoEngineSettingsWrapper((TimeTableEvolutionEngine) this.evoEngine);
 
         this.isFileLoaded = true;
         this.state = State.IDLE;
+
+        maxGenerationsStopCondition = new MaxGenerationsStopCondition<>(evoEngine);
+        maxFitnessStopCondition = new MaxFitnessStopCondition<>(evoEngine);
+        timeStopCondition = new TimeStopCondition();
     }
 
     public void changeCrossover(String crossoverName){

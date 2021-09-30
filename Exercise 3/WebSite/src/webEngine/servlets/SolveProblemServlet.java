@@ -7,7 +7,6 @@ import engine.base.*;
 import logic.Engine;
 import logic.evoAlgorithm.TimeTableProblem;
 import logic.evoAlgorithm.crossovers.AspectOriented;
-import logic.evoAlgorithm.factory.Factories;
 import logic.evoAlgorithm.selections.Tournament;
 import logic.evoAlgorithm.selections.Truncation;
 import logic.timeTable.TimeTable;
@@ -16,6 +15,7 @@ import webEngine.gsonHelpers.gsonSerializers.*;
 import webEngine.gsonHelpers.gsonStrategy.EngineStrategy;
 import webEngine.gsonHelpers.gsonStrategy.EvolutionEngineExclusionStrategy;
 import webEngine.gsonHelpers.gsonStrategy.SolutionExclusionStrategy;
+import webEngine.gsonHelpers.gsonStrategy.StopConditionStrategy;
 import webEngine.helpers.BaseSecurityHttpServlet;
 import webEngine.helpers.Constants;
 import webEngine.users.User;
@@ -187,15 +187,21 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
 
             try {
                 engine.setMaxGenerationsCondition(Integer.parseInt(request.getParameter(MAX_GEN_PARAM)));
+                engine.addStopCondition(Engine.StopCondition.MAX_GENERATIONS);
             } catch (Exception ignored) {
+                engine.removeStopCondition(Engine.StopCondition.MAX_GENERATIONS);
             }
             try {
                 engine.setMaxFitnessCondition(Float.parseFloat(request.getParameter(MAX_FITNESS_PARAM)));
+                engine.addStopCondition(Engine.StopCondition.REQUESTED_FITNESS);
             } catch (Exception ignored) {
+                engine.removeStopCondition(Engine.StopCondition.REQUESTED_FITNESS);
             }
             try {
                 engine.setTimeStopCondition(Long.parseLong(request.getParameter(MAX_TIME_PARAM)));
+                engine.addStopCondition(Engine.StopCondition.BY_TIME);
             } catch (Exception ignored) {
+                engine.removeStopCondition(Engine.StopCondition.BY_TIME);
             }
 
             engine.changeCrossover(request.getParameter(CROSSOVER_NAME_PARAM));
@@ -243,8 +249,7 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
 
     private Gson createGsonByGsonBuilder() {
 //        TODO:
-//         add isPaused to Engine. also add isConfiged inorder to update config form on load of page 3.
-//         - With the engine json object, return the engine state (idle, running, paused, completed)
+//         add isConfiged inorder to update config form on load of page 3.
 
         return new GsonBuilder()
                 .registerTypeAdapter(Selection.class, new SelectionSerializer<>())
@@ -256,6 +261,7 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
                 .setExclusionStrategies(new SolutionExclusionStrategy())
                 .setExclusionStrategies(new EvolutionEngineExclusionStrategy())
                 .setExclusionStrategies(new EngineStrategy())
+                .setExclusionStrategies(new StopConditionStrategy())
                 .serializeNulls()
                 .setPrettyPrinting()
                 .create();

@@ -3,6 +3,7 @@ package logic.evoAlgorithm.crossovers.base;
 import engine.base.Crossover;
 import engine.base.Population;
 import engine.base.Solution;
+import engine.base.configurable.Configuration;
 import logic.timeTable.Lesson;
 import logic.timeTable.TimeTable;
 
@@ -13,6 +14,24 @@ import java.util.Random;
 public abstract class BaseCrossover implements Crossover<TimeTable> {
 
     protected static final Random rand = new Random();
+
+    public static final String PARAMETER_CUTTING_POINTS = "CuttingPoints";
+
+    protected final Configuration configuration;
+
+    protected BaseCrossover(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    @Override
+    public int getCuttingPoints() {
+        return Integer.parseInt(configuration.getParameter(PARAMETER_CUTTING_POINTS));
+    }
+
+    @Override
+    public void setCuttingPoints(int cuttingPoints) {
+        setParameter(PARAMETER_CUTTING_POINTS, Integer.toString(cuttingPoints));
+    }
 
     @Override
     public Population<TimeTable> crossover(Population<TimeTable> population, int size) {

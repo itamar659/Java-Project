@@ -106,11 +106,9 @@ public abstract class EvolutionEngine<T> implements Serializable {
     }
 
     public void removeStopCondition(String id) {
-        if (!this.stopConditions.containsKey(id)) {
-            throw new IllegalArgumentException("Cannot remove an id that not in the stop conditions map");
+        if (this.stopConditions.containsKey(id)) {
+            this.stopConditions.remove(id);
         }
-
-        this.stopConditions.remove(id);
     }
 
     public synchronized Solution<T> getBestSolution() {
@@ -182,16 +180,17 @@ public abstract class EvolutionEngine<T> implements Serializable {
         });
         for (; isRunning && !isPaused && !shouldStop[0]; currentGeneration++) {
 
-            setBestSolution(population.getBestSolutionFitness());
+            Solution<T> bestSolution = population.getBestSolutionFitness();
+            setBestSolution(bestSolution);
 
             // Call listeners
             if (currentGeneration % updateGenerationInterval == 0) {
-                updateHistoryGeneration2Fitness(currentGeneration, population.getBestSolutionFitness());
+                updateHistoryGeneration2Fitness(currentGeneration, bestSolution);
                 onRequiredInterval();
             }
 
             // Step 1 - check if finished
-            if (population.getBestSolutionFitness().getFitness() >= 100.0f) {
+            if (bestSolution.getFitness() >= 100.0f) {
                 break;
             }
 
