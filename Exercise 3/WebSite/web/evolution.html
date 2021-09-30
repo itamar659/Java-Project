@@ -193,13 +193,13 @@
                                                     <div class="row mb-6">
                                                         <label for="population" class="col-sm-3 col-form-label">Population: </label>
                                                         <div class="col-sm-9">
-                                                            <input id="population" class="empty" name="populationSize" type="text" aria-label="default input example">
+                                                            <input id="population" name="populationSize" type="text" aria-label="default input example">
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6">
                                                         <label for="elitism" class="col-sm-3 col-form-label">Elitism: </label>
                                                         <div class="col-sm-9">
-                                                            <input id="elitism" class="empty" name="elitism" type="text" aria-label="default input example">
+                                                            <input id="elitism" name="elitism" type="text" aria-label="default input example">
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6">
@@ -215,28 +215,28 @@
                                                     <div class="row mb-6 hider" id="hidden-selection-form" >
                                                         <label id="hidden-selection-label" for="hidden-selection-Input" class="col-sm-3 col-form-label">[holder]</label>
                                                         <div class="col-sm-9">
-                                                            <input id="hidden-selection-Input" type="text" name="selectionInput" aria-label="default input example">
+                                                            <input id="hidden-selection-Input" class="ignored" type="text" name="selectionInput" aria-label="default input example">
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6">
                                                         <label for="selectCrossover" class="col-sm-3 col-form-label">Crossover</label>
                                                         <div class="col-sm-9">
                                                             <select onchange="window[this.value+'Selected']();" name="crossoverName" id="selectCrossover" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                                                <option value="AspectOriented" selected>Aspect Oriented</option>
-                                                                <option value="DayTimeOriented">Day Time Oriented</option>
+                                                                <option value="DayTimeOriented" selected>Day Time Oriented</option>
+                                                                <option value="AspectOriented" >Aspect Oriented</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6" id="hidden-crossover-form" >
                                                         <label id="hidden-crossover-label" for="hidden-crossover-Input" class="col-sm-3 col-form-label">Cutting Points: </label>
                                                         <div class="col-sm-9">
-                                                            <input id="hidden-crossover-Input" type="text" name="crossoverCuttingPoints" aria-label="default input example">
+                                                            <input id="hidden-crossover-Input" class="ignored" type="text" name="crossoverCuttingPoints" aria-label="default input example">
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6 hider" id="hidden-crossoverAspect-form">
                                                         <label id="hidden-crossoverAspect-label" for="hidden-crossoverAspect-Input" class="col-sm-3 col-form-label">[holder]</label>
                                                         <div class="col-sm-9">
-                                                            <input id="hidden-crossoverAspect-Input" name="crossoverInputAspect" type="" aria-label="default input example">
+                                                            <input id="hidden-crossoverAspect-Input" class="ignored" name="crossoverInputAspect" type="" aria-label="default input example">
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6">
@@ -249,21 +249,21 @@
                                                         <label class="form-check-label col-sm-3" for="maxGenCheckBox">Max Generations</label>
                                                         <div class="col-sm-9">
                                                             <input class="form-check-input" type="checkbox" id="maxGenCheckBox">
-                                                            <input type="text" name="maxGeneration" id="maxGenText" disabled>
+                                                            <input type="text" class="ignored" name="maxGeneration" id="maxGenText" disabled>
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6">
                                                         <label class="form-check-label col-sm-3" for="maxFitnessCheckBox">Max Fitness</label>
                                                         <div class="col-sm-9">
                                                             <input class="form-check-input" type="checkbox" id="maxFitnessCheckBox">
-                                                            <input type="text" name="maxFitness" id="maxFitnessText" disabled>
+                                                            <input type="text" class="ignored" name="maxFitness" id="maxFitnessText" disabled>
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6">
                                                         <label class="form-check-label col-sm-3" for="maxTimeCheckBox">Max Time (seconds)</label>
                                                         <div class="col-sm-9">
                                                             <input class="form-check-input" type="checkbox" id="maxTimeCheckBox">
-                                                            <input type="text" name="maxTime" id="maxTimeText" disabled>
+                                                            <input type="text" class="ignored" name="maxTime" id="maxTimeText" disabled>
                                                         </div>
                                                     </div>
                                                     <button type="submit" id="submit-config" class="btn btn-primary" disabled>Submit</button>
@@ -283,11 +283,11 @@
                                                         </select>
                                                         <div id="mutation-items-div" class="col-sm-9 hider">
                                                             <label class="form-check-label" for="mutation-maxTupples">Max Tupples</label>
-                                                            <input id="mutation-maxTupples" type="text"  aria-label="default input example">
+                                                            <input id="mutation-maxTupples" class="ignored" type="text"  aria-label="default input example">
                                                             <label class="form-check-label" for="mutation-probability">Probability</label>
-                                                            <input id="mutation-probability" type="text" aria-label="default input example">
+                                                            <input id="mutation-probability" class="ignored" type="text" aria-label="default input example">
                                                             <label class="form-check-label" for="mutation-component">Component</label>
-                                                            <input id="mutation-component" type="text" aria-label="default input example">
+                                                            <input id="mutation-component" class="ignored" type="text" aria-label="default input example">
                                                         </div>
                                                     </div>
                                                 </div>

@@ -74,6 +74,7 @@ $(function () {
 function validations(){
     positiveNumberValidation('#population');
     positiveNumberValidation('#elitism');
+    positiveNumberValidation('#interval');
     positiveNumberValidation('#hidden-crossover-Input');
 
     $('#hidden-selection-Input').on('change', function(e) {
@@ -85,22 +86,29 @@ function validations(){
             isValid = this.value >= 0 && this.value <= 1;
         }
         this.classList.toggle('notValid', !isValid);
-        checkFormValidationAndToggleDisablePropOnSubmitButton();
+        checkFormValidationAndToggleDisabledPropOnSubmitButton();
     });
 }
 
-function checkFormValidationAndToggleDisablePropOnSubmitButton(){
+function checkFormValidationAndToggleDisabledPropOnSubmitButton(){
     var arr = $('#config-form *').filter(':input');
+    var isDisabled = false;
+
     $('#config-form input[type="text"]').each(function(){
         var input = $(this);
-       if(input.hasClass('notValid') || input.value.length === 0){
-           $("#submit-config").prop("disabled", true);
-           return false;
-       }
+        if(!input.hasClass('ignored')){
+            if(input.hasClass('notValid') || input.val().length === 0){
+                $("#submit-config").prop("disabled", true);
+                isDisabled = true;
+                return false;
+            }
+        }
     });
 
-    $("#submit-config").prop("disabled", false);
-    return true;
+    if(!isDisabled){
+        $("#submit-config").prop("disabled", false);
+    }
+
 }
 
 function positiveNumberValidation(id){
@@ -108,7 +116,7 @@ function positiveNumberValidation(id){
         var isValid = this.value >= 0;
 
         this.classList.toggle('notValid', !isValid);
-        checkFormValidationAndToggleDisablePropOnSubmitButton();
+        checkFormValidationAndToggleDisabledPropOnSubmitButton();
     });
 }
 
