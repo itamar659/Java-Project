@@ -2,6 +2,7 @@ var refreshRate = 2000;
 var USER_LIST_URL = "userlist";
 var LOGOUT_URL = "logout";
 var ENGINES_URL = "evolutionengine";
+var EVO_ENGINE;
 
 function startEngineOnClick() {
     $("#start-engine").on("click", function(e) {
@@ -21,6 +22,62 @@ function startEngineOnClick() {
             }
         });
     });
+}
+
+function showBestSolutionOnClick(){
+    if(EVO_ENGINE !== undefined){
+        var ClassesOrTeachers = $("#selectTarget").find(":selected").text();
+        setSelectors(EVO_ENGINE.problem, ClassesOrTeachers);
+        solutionOrientedChange(ClassesOrTeachers, $("#selectClassOrTeacher").find(":selected").text());
+
+        $("#show-result-engine").on("click", function(e) {
+
+            createSolutionTable(EVO_ENGINE.bestSolution, EVO_ENGINE.problem)
+
+            $("#result-card").removeClass('hider');
+
+        });
+    }
+}
+
+function setSelectors(problem, value){
+    $('#selectClassOrTeacher').find('option').remove();
+    if(value === "Classes"){
+        setSelectorHelper(problem.classes);
+    }else if(value === "Teachers"){
+        setSelectorHelper(problem.teachers);
+    }
+}
+
+function setSelectorHelper(array){
+    var select = $("#selectClassOrTeacher")[0];
+    $.each(array, function(index, item){
+        var option = document.createElement("option");
+        $(option).attr('value', item.name);
+        $(option).html(item.name);
+        select.appendChild(option);
+    })
+}
+
+function TeachersSelected(){
+    TeacherOrClassesSelectedHelper("Teachers");
+}
+
+function ClassesSelected(){
+    TeacherOrClassesSelectedHelper("Classes");
+}
+
+function TeacherOrClassesSelectedHelper(text){
+    $("#class-teacher-label").html(text);
+    if(EVO_ENGINE !== undefined){
+        setSelectors(EVO_ENGINE.problem, text);
+        solutionOrientedChange($("#selectTarget").find(":selected").text(), $("#selectClassOrTeacher").find(":selected").text());
+    }
+}
+
+//this function gets executed via the html file on change of #selectClassOrTeacher <select> element.
+function solutionOrientedChange(type, name){
+    $("#stamTitle").html(type + " " + name);
 }
 
 function disableButtons(condition){
@@ -43,13 +100,13 @@ function updateUserInfo(startEngineInterval) {
                 disableButtons(true);
                 $("#start-engine").prop("disabled", false);
                 $("#submit-config").prop("disabled", false);
-                $("#show-result-engine").removeClass('hider');
+                $("#show-result-engine").prop("disabled", false);
                 clearInterval(startEngineInterval);
             }else if(res.engineStatus === "RUNNING"){
                 disableButtons(false);
                 $("#start-engine").prop("disabled", true);
                 $("#submit-config").prop("disabled", true);
-                $("#show-result-engine").addClass('hider');
+                $("#show-result-engine").prop("disabled", true);
             }
         }
     })
@@ -91,7 +148,11 @@ $(function () {
     $.ajax({
         url: ENGINES_URL,
         timeout: 2000,
-        success: loadSiteInformation,
+        success: function(json) {
+            EVO_ENGINE = json.evoEngine;
+            loadSiteInformation(json);
+            showBestSolutionOnClick();
+        },
         error: function(errorObj) {
             e = errorObj;
             window.location.href = buildUrlWithContextPath(errorObj.responseText);
@@ -256,6 +317,12 @@ function createTeachersCard(teachers, courses){
 
         tableBody.appendChild(trRow);
     });
+}
+
+function createSolutionTable(klass, ){
+
+
+
 }
 
 function createCoursesCard(courses){

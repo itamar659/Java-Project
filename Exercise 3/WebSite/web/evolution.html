@@ -327,10 +327,51 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <button id="start-engine" class="btn btn-primary">Start</button>
-                                                <button id="pause-engine" class="btn btn-warning">Pause</button>
-                                                <button id="resume-engine" class="btn btn-dark">Resume</button>
-                                                <button id="stop-engine" class="btn btn-danger">Stop</button>
-                                                <button id="show-result-engine" class="btn btn-success hider">Show Best Result</button>
+                                                <button id="pause-engine" class="btn btn-warning" disabled>Pause</button>
+                                                <button id="resume-engine" class="btn btn-dark" disabled>Resume</button>
+                                                <button id="stop-engine" class="btn btn-danger" disabled>Stop</button>
+                                                <button id="show-result-engine" class="btn btn-success" disabled>Show Best Result</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="result-card" class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Best Solution:</h4>
+                                </div>
+                                <div class="content">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label class="col-sm-2 col-form-label">Choose Target:</label>
+                                                <select onchange="window[this.value+'Selected']();" id="selectTarget" name="selectionName" class="form-select form-select-sm col-sm-4" aria-label=".form-select-sm example">
+                                                    <option value="Classes" selected>Classes</option>
+                                                    <option value="Teachers">Teachers</option>
+                                                </select>
+                                                <label id="class-teacher-label" class="col-sm-2 col-form-label">class:</label>
+                                                <select onchange="window['solutionOrientedChange']($('#selectTarget').find(':selected').text(), this.value);" id="selectClassOrTeacher" name="selectionName" class="form-select form-select-sm col-sm-4" aria-label=".form-select-sm example">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div id="bestSolutionInfomation" class="ct-chart">
+                                                    <div class="table-responsive table-full-width">
+                                                        <h4 id="stamTitle">x</h4>
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                            </thead>
+                                                            <tbody class="bestSolutionInfo-table-body">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
