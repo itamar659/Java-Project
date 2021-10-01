@@ -3,13 +3,18 @@ var USER_LIST_URL = "userlist";
 var LOGOUT_URL = "logout";
 var ENGINES_URL = "evolutionengine";
 
+
+
 function startEngineOnClick() {
     $("#start-engine").on("click", function(e) {
         disableButtons(true);
 
         //TODO: fix bug: after completion user can click again on start and therfore with this code
         // he can make two-three and more setIntervals actions.
-        setInterval(updateUserInfo, 1000);
+        var startEngineInterval = setInterval(function(){
+            updateUserInfo(startEngineInterval)
+        }, 1000);
+        startEngineInterval.
 
         $.ajax({
             url: ENGINES_URL,
@@ -27,7 +32,7 @@ function disableButtons(condition){
     $("#stop-engine").prop("disabled", condition);
 }
 
-function updateUserInfo() {
+function updateUserInfo(startEngineInterval) {
     $.ajax({
         url: ENGINES_URL,
         timeout: 2000,
@@ -42,6 +47,7 @@ function updateUserInfo() {
                 $("#start-engine").prop("disabled", false);
                 $("#submit-config").prop("disabled", false);
                 $("#show-result-engine").removeClass('hider');
+                clearInterval(startEngineInterval);
             }else if(res.engineStatus === "RUNNING"){
                 disableButtons(false);
                 $("#start-engine").prop("disabled", true);
@@ -84,7 +90,6 @@ $(function () {
     startEngineOnClick();
     setConfigFormSubmitAction();
     //todo: check if user already configed this problem.
-    
 
     $.ajax({
         url: ENGINES_URL,
