@@ -114,6 +114,7 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
         boolean hasFitness = user.getEngine(problemId).getBestResult() != null;
         userJson.addProperty("bestFitness",
                 hasFitness ? user.getEngine(problemId).getBestResult().getFitness() : 0);
+        userJson.addProperty("engineStatus", user.getEngine(problemId).getState().toString());
         response.getOutputStream().println(
                 new Gson().toJson(
                         userJson

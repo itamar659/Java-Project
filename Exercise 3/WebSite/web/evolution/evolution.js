@@ -5,7 +5,11 @@ var ENGINES_URL = "evolutionengine";
 
 function startEngineOnClick() {
     $("#start-engine").on("click", function(e) {
-        setInterval(updateUserInfo, refreshRate);
+        disableButtons(true);
+
+        //TODO: fix bug: after completion user can click again on start and therfore with this code
+        // he can make two-three and more setIntervals actions.
+        setInterval(updateUserInfo, 1000);
 
         $.ajax({
             url: ENGINES_URL,
@@ -15,6 +19,12 @@ function startEngineOnClick() {
             }
         });
     });
+}
+
+function disableButtons(condition){
+    $("#pause-engine").prop("disabled", condition);
+    $("#resume-engine").prop("disabled", condition);
+    $("#stop-engine").prop("disabled", condition);
 }
 
 function updateUserInfo() {
@@ -27,6 +37,17 @@ function updateUserInfo() {
         success: function(res) {
             console.log(res);
             updateLabels(res);
+            if(res.engineStatus === "COMPLETED"){
+                disableButtons(true);
+                $("#start-engine").prop("disabled", false);
+                $("#submit-config").prop("disabled", false);
+                $("#show-result-engine").removeClass('hider');
+            }else if(res.engineStatus === "RUNNING"){
+                disableButtons(false);
+                $("#start-engine").prop("disabled", true);
+                $("#submit-config").prop("disabled", true);
+                $("#show-result-engine").addClass('hider');
+            }
         }
     })
 }
@@ -34,15 +55,10 @@ function updateUserInfo() {
 function updateLabels(res){
     $("#user-name-label").html(res.username);
     $("#current-fitness-label").html(res.bestFitness);
-    $("#generation-label").html(res.currentGeneration);
+    $("#engine-status-label").html(res.engineStatus);
 }
 
-$(function () {
-    ajaxLoggedInUsername();
-    setCheckBoxChanges();
-    validations();
-    startEngineOnClick();
-
+function setConfigFormSubmitAction(){
     $("#config-form").submit(function () {
         var data = objectifyForm($(this).serializeArray());
         data['action'] = 'update';
@@ -59,6 +75,16 @@ $(function () {
         });
         return false;
     });
+}
+
+$(function () {
+    ajaxLoggedInUsername();
+    setCheckBoxChanges();
+    validations();
+    startEngineOnClick();
+    setConfigFormSubmitAction();
+    //todo: check if user already configed this problem.
+    
 
     $.ajax({
         url: ENGINES_URL,
@@ -86,7 +112,6 @@ function validations(){
             isValid = this.value >= 0 && this.value <= 1;
         }
         this.classList.toggle('notValid', !isValid);
-        checkFormValidationAndToggleDisabledPropOnSubmitButton();
     });
 }
 
@@ -116,7 +141,6 @@ function positiveNumberValidation(id){
         var isValid = this.value >= 0;
 
         this.classList.toggle('notValid', !isValid);
-        checkFormValidationAndToggleDisabledPropOnSubmitButton();
     });
 }
 
@@ -142,6 +166,7 @@ function setCheckBoxChangesHelper(obj, objToChange){
         } else {
             $(objToChange).prop("disabled",true);
         }
+        checkFormValidationAndToggleDisabledPropOnSubmitButton();
     });
 }
 
