@@ -26,13 +26,10 @@ function startEngineOnClick() {
 
 function showBestSolutionOnClick(){
     if(EVO_ENGINE !== undefined){
-        var ClassesOrTeachers = $("#selectTarget").find(":selected").text();
-        setSelectors(EVO_ENGINE.problem, ClassesOrTeachers);
-        solutionOrientedChange(ClassesOrTeachers, $("#selectClassOrTeacher").find(":selected").text());
-
         $("#show-result-engine").on("click", function(e) {
-
-            createSolutionTable(EVO_ENGINE.bestSolution, EVO_ENGINE.problem)
+            var ClassesOrTeachers = $("#selectTarget").find(":selected").text();
+            setSelectors(EVO_ENGINE.problem, ClassesOrTeachers);
+            solutionOrientedChange(ClassesOrTeachers, $("#selectClassOrTeacher").find(":selected").text());
 
             $("#result-card").removeClass('hider');
 
@@ -78,6 +75,72 @@ function TeacherOrClassesSelectedHelper(text){
 //this function gets executed via the html file on change of #selectClassOrTeacher <select> element.
 function solutionOrientedChange(type, name){
     $("#stamTitle").html(type + " " + name);
+    createSolutionTable(type,name);
+}
+
+
+function createSolutionTable(teacherOrClass, name){
+    if(EVO_ENGINE !== undefined){
+        var days = EVO_ENGINE.problem.days;
+        var hours = EVO_ENGINE.problem.hours;
+
+        $("#best-solution-table-head").empty();
+
+        var tableHead = $("#best-solution-table-head")[0];
+        var trHead = document.createElement("tr");
+        var thDetail = document.createElement("th");
+        thDetail.innerText = "Hours/Days";
+        $(thDetail).attr('style', 'width:6%');
+        trHead.appendChild(thDetail);
+        for(var i = 1; i <= days; i++){
+            var thDayNo = document.createElement("th");
+            thDayNo.innerText = i;
+            trHead.appendChild(thDayNo);
+        }
+        tableHead.appendChild(trHead);
+        if(EVO_ENGINE.bestSolution !== null){
+            $("#best-solution-table-body").empty();
+            var tableBody = $("#best-solution-table-body")[0];
+            for(var hour = 1; hour <= hours; hour++){
+                var trBody = document.createElement("tr");
+                var thHoursNo = document.createElement("th");
+                thHoursNo.innerText = hour;
+                trBody.appendChild(thHoursNo);
+                for(var day = 1; day <= days; day++){
+                    var tdItem = document.createElement("td");
+                    tdItem.innerText = getTdDetails(teacherOrClass, name, EVO_ENGINE.bestSolution.lessons, day, hour);
+                    trBody.appendChild(tdItem);
+                }
+                tableBody.appendChild(trBody);
+            }
+        }
+    }
+}
+
+function  getTdDetails(teacherOrClass, name, lessons, day, hour){
+    var string = "";
+
+    var res = lessons.filter(item => {
+        if(teacherOrClass === "Classes"){
+            return item.aClass.name === name;
+        }else{ // === "Teachers"
+            return item.teacher.name === name;
+        }
+    });
+
+    var res2 = res.filter(item => {
+        return item.day === day && item.hour === hour;
+    })
+
+    if(res2.length > 0){
+        if(teacherOrClass === "Classes"){
+            string += "Teacher: " + res2[0].teacher.name + "\nCourse: " + res2[0].course.name;
+        }else{
+            string += "Class: " + res2[0].aClass.name + "\nCourse: " + res2[0].course.name;
+        }
+    }
+
+    return string;
 }
 
 function disableButtons(condition){
@@ -317,12 +380,6 @@ function createTeachersCard(teachers, courses){
 
         tableBody.appendChild(trRow);
     });
-}
-
-function createSolutionTable(klass, ){
-
-
-
 }
 
 function createCoursesCard(courses){
