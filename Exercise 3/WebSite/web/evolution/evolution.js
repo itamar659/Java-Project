@@ -3,8 +3,6 @@ var USER_LIST_URL = "userlist";
 var LOGOUT_URL = "logout";
 var ENGINES_URL = "evolutionengine";
 
-
-
 function startEngineOnClick() {
     $("#start-engine").on("click", function(e) {
         disableButtons(true);
@@ -14,7 +12,6 @@ function startEngineOnClick() {
         var startEngineInterval = setInterval(function(){
             updateUserInfo(startEngineInterval)
         }, 1000);
-        startEngineInterval.
 
         $.ajax({
             url: ENGINES_URL,
