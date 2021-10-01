@@ -51,7 +51,7 @@ public class ProblemServlet extends BaseSecurityHttpServlet {
         switch (action) {
             case "getproblemlist":
                 response.getOutputStream().println(
-                        new Gson().toJson(
+                        ServletUtils.createFullCustomGson().toJson(
                                 ServletUtils.getProblemManager(getServletContext()).getProblemsStatistics()
                         )
                 );

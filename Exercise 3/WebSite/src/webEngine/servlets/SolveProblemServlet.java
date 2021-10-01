@@ -69,7 +69,7 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
         switch (action) {
             case "getEngine":
                 response.getOutputStream().println(
-                        createGsonByGsonBuilder().toJson(
+                        ServletUtils.createFullCustomGson().toJson(
                                 getTheEngine(user, problemId)
                         )
                 );
@@ -267,26 +267,6 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
         }
 
         return engine;
-    }
-
-    private Gson createGsonByGsonBuilder() {
-//        TODO:
-//         add isConfiged inorder to update config form on load of page 3.
-
-        return new GsonBuilder()
-                .registerTypeAdapter(Selection.class, new SelectionSerializer<>())
-                .registerTypeAdapter(Crossover.class, new CrossoverSerializer<>())
-                .registerTypeAdapter(Mutation.class, new MutationSerializer<>())
-                .registerTypeAdapter(Rule.class, new RuleSerializer<>())
-                .registerTypeAdapter(Problem.class, new ProblemSerializer<>())
-                .registerTypeAdapter(Solution.class, new TimeTableSerializer())
-                .setExclusionStrategies(new SolutionExclusionStrategy())
-                .setExclusionStrategies(new EvolutionEngineExclusionStrategy())
-                .setExclusionStrategies(new EngineStrategy())
-                .setExclusionStrategies(new StopConditionStrategy())
-                .serializeNulls()
-                .setPrettyPrinting()
-                .create();
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Regular doGet and doPost">
