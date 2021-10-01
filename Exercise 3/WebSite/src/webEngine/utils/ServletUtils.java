@@ -1,7 +1,15 @@
 package webEngine.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import engine.base.*;
+import logic.timeTable.rules.base.Rule;
 import webEngine.ProblemManager;
+import webEngine.gsonHelpers.gsonSerializers.*;
+import webEngine.gsonHelpers.gsonStrategy.EngineStrategy;
+import webEngine.gsonHelpers.gsonStrategy.EvolutionEngineExclusionStrategy;
+import webEngine.gsonHelpers.gsonStrategy.SolutionExclusionStrategy;
+import webEngine.gsonHelpers.gsonStrategy.StopConditionStrategy;
 import webEngine.users.UserManager;
 
 import javax.servlet.ServletContext;
@@ -41,5 +49,22 @@ public final class ServletUtils {
             }
         }
         return (ProblemManager) servletContext.getAttribute(PROBLEM_MANAGER_ATTRIBUTE);
+    }
+
+    public static Gson createFullCustomGson() {
+        return new GsonBuilder()
+                .registerTypeAdapter(Selection.class, new SelectionSerializer<>())
+                .registerTypeAdapter(Crossover.class, new CrossoverSerializer<>())
+                .registerTypeAdapter(Mutation.class, new MutationSerializer<>())
+                .registerTypeAdapter(Rule.class, new RuleSerializer<>())
+                .registerTypeAdapter(Problem.class, new ProblemSerializer<>())
+                .registerTypeAdapter(Solution.class, new TimeTableSerializer())
+                .setExclusionStrategies(new SolutionExclusionStrategy())
+                .setExclusionStrategies(new EvolutionEngineExclusionStrategy())
+                .setExclusionStrategies(new EngineStrategy())
+                .setExclusionStrategies(new StopConditionStrategy())
+                .serializeNulls()
+                .setPrettyPrinting()
+                .create();
     }
 }
