@@ -40,6 +40,24 @@ $(function () {
     });
 })
 
+function openUserConfigurationOnClick(event) {
+    username = this.children[1].innerText; // HARDCODED username location in the table of each row.
+    $.ajax({
+        url: ENGINES_URL,
+        timeout: 2000,
+        data: {
+            "action": "getUserEngine",
+            "username": username
+        },
+        success: popupConfiguration
+    });
+}
+
+function popupConfiguration(json) {
+    console.log(json);
+    // TODO: Display configuration.
+}
+
 function alreadyConfigured(response) {
     if (response.evoEngine.crossover != null) {
         $("#engine-details-card").removeClass("hider");
@@ -511,6 +529,7 @@ function buildUserListTable(res){
     var i = 0;
     $.each(res, function(index, element){
        var trRow = document.createElement("tr");
+       trRow.onclick = openUserConfigurationOnClick;
 
         var tdNo = document.createElement("td");
         var tdUsername = document.createElement("td");
