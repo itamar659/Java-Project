@@ -1,7 +1,6 @@
 package webEngine.servlets;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import engine.base.*;
 import logic.Engine;
@@ -10,12 +9,6 @@ import logic.evoAlgorithm.crossovers.AspectOriented;
 import logic.evoAlgorithm.selections.Tournament;
 import logic.evoAlgorithm.selections.Truncation;
 import logic.timeTable.TimeTable;
-import logic.timeTable.rules.base.Rule;
-import webEngine.gsonHelpers.gsonSerializers.*;
-import webEngine.gsonHelpers.gsonStrategy.EngineStrategy;
-import webEngine.gsonHelpers.gsonStrategy.EvolutionEngineExclusionStrategy;
-import webEngine.gsonHelpers.gsonStrategy.SolutionExclusionStrategy;
-import webEngine.gsonHelpers.gsonStrategy.StopConditionStrategy;
 import webEngine.helpers.BaseSecurityHttpServlet;
 import webEngine.helpers.Constants;
 import webEngine.users.User;
@@ -153,10 +146,10 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
     }
 
     private void startResumeEngine(HttpServletResponse response, User user, Engine engine, boolean resume) {
-        if (engine.getState() == Engine.State.RUNNING) {
-            response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
-            return;
-        }
+//        if (engine.getState() == Engine.State.RUNNING) {
+//            response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+//            return;
+//        }
 
         // TODO - Check configuration
         if (engine.getEvoEngineSettings().getPopulationSize() <= 0) {

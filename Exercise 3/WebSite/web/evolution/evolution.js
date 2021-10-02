@@ -4,23 +4,89 @@ var LOGOUT_URL = "logout";
 var ENGINES_URL = "evolutionengine";
 var EVO_ENGINE;
 
+var engineStatus = "idle";
+
+$(function () {
+    ajaxLoggedInUsername();
+    setCheckBoxChanges();
+    validations();
+
+    startEngineOnClick();
+    stopEngineOnClick();
+    pauseEngineOnClick();
+    resumeEngineOnClick();
+
+    setConfigFormSubmitAction();
+
+    //todo: check if user already configed this problem.
+
+    $.ajax({
+        url: ENGINES_URL,
+        timeout: 2000,
+        success: function(json) {
+            EVO_ENGINE = json.evoEngine;
+            loadSiteInformation(json);
+            showBestSolutionOnClick();
+        },
+        error: function(errorObj) {
+            e = errorObj;
+            window.location.href = buildUrlWithContextPath(errorObj.responseText);
+        }
+    });
+})
+
 function startEngineOnClick() {
     $("#start-engine").on("click", function(e) {
-        disableButtons(true);
+        buttonsConfig_simpleChange(false, true);
 
-        //TODO: fix bug: after completion user can click again on start and therfore with this code
-        // he can make two-three and more setIntervals actions.
         var startEngineInterval = setInterval(function(){
             updateUserInfo(startEngineInterval)
         }, 1000);
 
-        $.ajax({
-            url: ENGINES_URL,
-            timeout: 2000,
-            data: {
-                action: "start"
-            }
-        });
+        simpleEvolutionEngineAjax("start");
+        engineStatus = "started";
+        buttonsConfig_startEngine()
+    });
+}
+
+function stopEngineOnClick() {
+    $("#stop-engine").on("click", function(e) {
+        simpleEvolutionEngineAjax("stop");
+        engineStatus = "stopped";
+        buttonsConfig_stopEngine();
+    });
+}
+
+function pauseEngineOnClick() {
+    $("#pause-engine").on("click", function(e) {
+        simpleEvolutionEngineAjax("pause");
+        engineStatus = "paused";
+        buttonsConfig_pauseEngine();
+    });
+}
+
+
+function resumeEngineOnClick() {
+    $("#resume-engine").on("click", function(e) {
+
+        var startEngineInterval = setInterval(function(){
+            updateUserInfo(startEngineInterval)
+        }, 1000);
+
+        simpleEvolutionEngineAjax("resume");
+        engineStatus = "started";
+        buttonsConfig_startEngine();
+    });
+}
+
+function simpleEvolutionEngineAjax(action, successFunc) {
+    $.ajax({
+        url: ENGINES_URL,
+        timeout: 2000,
+        data: {
+            action: action
+        },
+        success: successFunc
     });
 }
 
@@ -159,20 +225,42 @@ function updateUserInfo(startEngineInterval) {
         success: function(res) {
             console.log(res);
             updateLabels(res);
-            if(res.engineStatus === "COMPLETED"){
-                disableButtons(true);
-                $("#start-engine").prop("disabled", false);
-                $("#submit-config").prop("disabled", false);
-                $("#show-result-engine").prop("disabled", false);
+            if(engineStatus === "stopped"){
+                buttonsConfig_stopEngine();
                 clearInterval(startEngineInterval);
-            }else if(res.engineStatus === "RUNNING"){
-                disableButtons(false);
-                $("#start-engine").prop("disabled", true);
-                $("#submit-config").prop("disabled", true);
-                $("#show-result-engine").prop("disabled", true);
+            } else if(engineStatus === "paused") {
+                buttonsConfig_pauseEngine();
+                clearInterval(startEngineInterval);
+            } else if(engineStatus === "started") {
+                buttonsConfig_startEngine();
             }
         }
     })
+}
+
+function buttonsConfig_simpleChange(startDisable, pauseDisable) {
+    $("#pause-engine").prop("disabled", pauseDisable);
+    $("#resume-engine").prop("disabled", !pauseDisable);
+    $("#stop-engine").prop("disabled", !startDisable);
+    $("#start-engine").prop("disabled", startDisable);
+}
+
+function buttonsConfig_startEngine() {
+    buttonsConfig_simpleChange(true, false);
+    $("#submit-config").prop("disabled", true);
+    $("#show-result-engine").prop("disabled", true);
+}
+
+function buttonsConfig_pauseEngine() {
+    buttonsConfig_simpleChange(true, true);
+    $("#submit-config").prop("disabled", false);
+    $("#show-result-engine").prop("disabled", false);
+}
+
+function buttonsConfig_stopEngine() {
+    buttonsConfig_simpleChange(false, true);
+    $("#submit-config").prop("disabled", false);
+    $("#show-result-engine").prop("disabled", false);
 }
 
 function updateLabels(res){
@@ -193,35 +281,11 @@ function setConfigFormSubmitAction(){
         $.ajax({
             url: ENGINES_URL,
             timeout: 2000,
-            action : 'update',
             data: data
         });
         return false;
     });
 }
-
-$(function () {
-    ajaxLoggedInUsername();
-    setCheckBoxChanges();
-    validations();
-    startEngineOnClick();
-    setConfigFormSubmitAction();
-    //todo: check if user already configed this problem.
-
-    $.ajax({
-        url: ENGINES_URL,
-        timeout: 2000,
-        success: function(json) {
-            EVO_ENGINE = json.evoEngine;
-            loadSiteInformation(json);
-            showBestSolutionOnClick();
-        },
-        error: function(errorObj) {
-            e = errorObj;
-            window.location.href = buildUrlWithContextPath(errorObj.responseText);
-        }
-    });
-})
 
 function validations(){
     positiveNumberValidation('#population');

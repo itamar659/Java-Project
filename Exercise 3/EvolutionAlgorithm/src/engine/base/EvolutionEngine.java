@@ -29,6 +29,14 @@ public abstract class EvolutionEngine<T> implements Serializable {
     private final Listeners everyGenerationListener;
     private final Listeners finishRunListeners;
 
+    public boolean isRunning() {
+        return isRunning;
+    }
+
+    public boolean isPaused() {
+        return isPaused;
+    }
+
     public Population<T> getPopulation() {
         return population;
     }
