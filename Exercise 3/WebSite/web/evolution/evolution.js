@@ -27,6 +27,7 @@ $(function () {
             EVO_ENGINE = json.evoEngine;
             loadSiteInformation(json);
             showBestSolutionOnClick();
+            availableSolution(json);
         },
         error: function(errorObj) {
             e = errorObj;
@@ -35,16 +36,29 @@ $(function () {
     });
 })
 
+function availableSolution(response) {
+    if (response.evoEngine.crossover != null) {
+        $("#engine-details-card").removeClass("hider");
+
+        if (response.evoEngine.isRunning) {
+            engineStatus = "started";
+            startStopEngineAjax("start");
+            buttonsConfig_startEngine();
+        } else {
+            if (response.evoEngine.isPaused) {
+                engineStatus = "paused";
+                buttonsConfig_pauseEngine();
+            } else {
+                engineStatus = "stopped";
+                buttonsConfig_stopEngine();
+            }
+        }
+    }
+}
+
 function startEngineOnClick() {
     $("#start-engine").on("click", function(e) {
-        buttonsConfig_simpleChange(false, true);
-
-        var startEngineInterval = setInterval(function(){
-            updateUserInfo(startEngineInterval)
-        }, 1000);
-
-        simpleEvolutionEngineAjax("start");
-        engineStatus = "started";
+        startStopEngineAjax("start");
         buttonsConfig_startEngine()
     });
 }
@@ -67,15 +81,18 @@ function pauseEngineOnClick() {
 
 function resumeEngineOnClick() {
     $("#resume-engine").on("click", function(e) {
-
-        var startEngineInterval = setInterval(function(){
-            updateUserInfo(startEngineInterval)
-        }, 1000);
-
-        simpleEvolutionEngineAjax("resume");
-        engineStatus = "started";
+        startStopEngineAjax("resume");
         buttonsConfig_startEngine();
     });
+}
+
+function startStopEngineAjax(action) {
+    var startEngineInterval = setInterval(function(){
+        updateUserInfo(startEngineInterval)
+    }, 1000);
+
+    simpleEvolutionEngineAjax(action);
+    engineStatus = "started";
 }
 
 function simpleEvolutionEngineAjax(action, successFunc) {
@@ -232,7 +249,7 @@ function updateUserInfo(startEngineInterval) {
 
 function buttonsConfig_simpleChange(startDisable, pauseDisable) {
     $("#pause-engine").prop("disabled", pauseDisable);
-    $("#resume-engine").prop("disabled", !pauseDisable);
+    $("#resume-engine").prop("disabled", !(pauseDisable && startDisable));
     $("#stop-engine").prop("disabled", !startDisable);
     $("#start-engine").prop("disabled", startDisable);
 }

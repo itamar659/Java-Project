@@ -31,9 +31,11 @@ public class ProblemStatistics {
 
     public void calculateBestFitness() {
         users.forEach(user -> {
-            float fitness = user.getEngine(problemID).getBestResult().getFitness();
-            if (bestFitness < fitness) {
-                bestFitness = fitness;
+            if (user.getEngine(problemID).getBestResult() != null) {
+                float fitness = user.getEngine(problemID).getBestResult().getFitness();
+                if (bestFitness < fitness) {
+                    bestFitness = fitness;
+                }
             }
         });
     }
