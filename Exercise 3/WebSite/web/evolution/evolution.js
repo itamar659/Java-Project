@@ -476,6 +476,7 @@ function loadSiteInformation(json) {
 
     $(".dayspan").html(json.evoEngine.problem.days);
     $(".hourspan").html(json.evoEngine.problem.hours);
+    $("#hardRuleWeight").html("Hard rule weight - " + json.evoEngine.problem.rules.hardRuleWeight);
 
     createTeachersCard(json.evoEngine.problem.teachers, json.evoEngine.problem.courses);
     createClassesCard(json.evoEngine.problem.classes, json.evoEngine.problem.courses);
