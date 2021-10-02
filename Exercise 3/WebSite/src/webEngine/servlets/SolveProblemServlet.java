@@ -39,6 +39,7 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
      * "getSolution": return the lessons of the best solution
      * "getUsersListInformation": returns a list of all the users solving this problem
      *                            Each user will have a username, best fitness, and current generation
+     * "getUserEngine": expect parameter "username" to know which engine to return
     */
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -97,6 +98,18 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
             case "getUsersListInformation":
                 getUsersListInformation(response, problemId);
                 break;
+            case "getUserEngine":
+                try {
+                String reqUsername = request.getParameter(Constants.USERNAME_PARAMETER);
+                User reqUser = ServletUtils.getUserManager(getServletContext()).getUserByName(reqUsername);
+                response.getOutputStream().println(
+                        ServletUtils.createFullCustomGson().toJson(
+                                getTheEngine(reqUser, problemId)
+                        )
+                );
+                } catch (Exception ignored) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                }
             default:
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 break;
@@ -263,6 +276,9 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
     }
 
     private Engine getTheEngine(User user, int userProblemId) {
+        if (user == null) {
+            return null;
+        }
         Engine engine = user.getEngine(userProblemId);
         if (engine == null) {
             TimeTableProblem problem =

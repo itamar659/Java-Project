@@ -29,6 +29,15 @@ public class ProblemStatistics {
     // Evolution algorithm engine
     private float bestFitness;
 
+    public void calculateBestFitness() {
+        users.forEach(user -> {
+            float fitness = user.getEngine(problemID).getBestResult().getFitness();
+            if (bestFitness < fitness) {
+                bestFitness = fitness;
+            }
+        });
+    }
+
     // Constructor
     public ProblemStatistics(String uploader, int problemID, TimeTableProblem problem) {
         this.uploader = uploader;
