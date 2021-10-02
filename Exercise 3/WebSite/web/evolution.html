@@ -276,26 +276,18 @@
                                                         </svg>
                                                     </button>
                                                     <div id="mutation-div-body" class="row border-div hider">
-                                                        <select onchange="window[this.value+'Selected']();" id="selectMutation" class="col-sm-3 form-select form-select-sm" aria-label=".form-select-sm example">
-                                                            <option selected>Open this select menu</option>
-                                                            <option value="flipper">Flipper</option>
-                                                            <option value="sizer">Sizer</option>
+                                                        <select onchange="window[this.value+'Selected'](this);" id="selectMutation" class="col-sm-4 form-select form-select-sm" aria-label=".form-select-sm example">
+                                                            <option value="Flipper" selected>Flipper</option>
+                                                            <option value="Sizer">Sizer</option>
                                                         </select>
-                                                        <div id="mutation-items-flipper" class="col-sm-9">
-                                                            <label class="form-check-label" for="mutation-maxTupples">Max Tupples</label>
-                                                            <input id="mutation-maxTupples" class="ignored" type="text"  aria-label="default input example">
-                                                            <label class="form-check-label" for="mutation-probability">Probability</label>
-                                                            <input id="mutation-probability" class="ignored" type="text" aria-label="default input example">
-                                                            <label class="form-check-label" for="mutation-component">Component</label>
-                                                            <input id="mutation-component" class="ignored" type="text" aria-label="default input example">
+                                                        <div id="mutation-items-flipper" class="col-sm-8">
+                                                                <label class="form-check-label" for="mutation-maxTupples">Max Tupples</label>
+                                                                <input id="mutation-maxTupples" class="ignored" type="text"  aria-label="default input example">
+                                                                <label class="form-check-label" for="mutation-probability">Probability</label>
+                                                                <input id="mutation-probability" class="ignored" type="text" aria-label="default input example">
+                                                                <label id="component-label" class="form-check-label" for="mutation-component">Component</label>
+                                                                <input id="mutation-component" class="ignored" type="text" aria-label="default input example">
                                                         </div>
-
-<!--                                                        <div id="mutation-items-sizer" class="col-sm-9 hider">-->
-<!--                                                            <label class="form-check-label" for="mutation-maxTupples">Max Tupples</label>-->
-<!--                                                            <input id="mutation-maxTupples-sizer" name="" class="ignored" type="text"  aria-label="default input example">-->
-<!--                                                            <label class="form-check-label" for="mutation-probability">Probability</label>-->
-<!--                                                            <input id="mutation-probability-sizer" class="ignored" type="text" aria-label="default input example">-->
-<!--                                                        </div>-->
                                                     </div>
                                                 </div>
                                             </div>

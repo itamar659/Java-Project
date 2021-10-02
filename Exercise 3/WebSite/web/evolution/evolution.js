@@ -334,7 +334,20 @@ function objectifyForm(formArray) {
     for (var i = 0; i < formArray.length; i++){
         returnArray[formArray[i]['name']] = formArray[i]['value'];
     }
-    return arrangeJson(returnArray);
+    var mutationsToConverte = {};
+    var filterRetMap = {};
+    for(var key in returnArray){
+        if(/mutation/i.test(key))
+            mutationsToConverte[key] = returnArray[key];
+        else
+            filterRetMap[key] = returnArray[key];
+    }
+
+    arrangeJson(mutationsToConverte);
+
+    filterRetMap['mutations'] = mutationsToConverte.mutation;
+
+    return filterRetMap;
 }
 
 
@@ -596,18 +609,33 @@ function DayTimeOrientedSelected(){
 
 var mutationsAdded = 0
 function addMutation(){
-    // if(mutationsAdded === 0){
-    //     $("#mutation-div-body").removeClass("hider");
-    // }
-    // else{
-        var d = $("#mutation-div-body").clone().attr('id', 'mutation-div-body' + mutationsAdded).removeClass("hider").appendTo("#mutation-div");
-        $(d.find('#selectMutation')).attr('name', 'mutation[' + mutationsAdded + '][name]');
-        $(d.find('#mutation-maxTupples')).attr('name', 'mutation[' + mutationsAdded + '][maxTupples]');
- //   }
+    var d = $("#mutation-div-body").clone().attr('id', 'mutation-div-body' + mutationsAdded).removeClass("hider").appendTo("#mutation-div");
+    $(d.find('#selectMutation')).attr('name', 'mutation[' + mutationsAdded + '][name]').removeClass('ignored');
+    $(d.find('#mutation-maxTupples')).attr('name', 'mutation[' + mutationsAdded + '][maxTupples]').removeClass('ignored');
+    $(d.find('#mutation-probability')).attr('name', 'mutation[' + mutationsAdded + '][probability]').removeClass('ignored');
+    $(d.find('#mutation-component')).attr('name', 'mutation[' + mutationsAdded + '][component]').removeClass('ignored');
 
     mutationsAdded++;
 }
 
-function flipperSelected(){
+function FlipperSelected(obj){
+    var input = $($(obj).siblings('#mutation-items-flipper').children("#mutation-component"));
+    var label = $($(obj).siblings('#mutation-items-flipper').children("#component-label"));
 
+    input.removeClass('hider');
+    input.removeClass('ignored');
+
+    label.removeClass('hider');
+    label.removeClass('ignored');
+}
+
+function SizerSelected(obj){
+    var input = $($(obj).siblings('#mutation-items-flipper').children("#mutation-component"));
+    var label = $($(obj).siblings('#mutation-items-flipper').children("#component-label"));
+
+    input.addClass('hider');
+    input.addClass('ignored');
+
+    label.addClass('hider');
+    label.addClass('ignored');
 }

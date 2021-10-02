@@ -179,10 +179,7 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
         final String SELECTION_NAME_PARAM = "selectionName";
         final String SELECTION_INPUT_PARAM = "selectionInput";
 
-        final String MUTATION_NAME_PARAM;
-        final String MUTATION_PROBABILITY_PARAM;
-        final String MUTATION_MAX_TUPPLES_PARAM;
-        final String MUTATION_FLIPPING_COMPONENT_PARAM;
+        final String MUTATION_NAME_PARAM = "mutations";
 
         final String POPULATION_SIZE_PARAM = "populationSize";
         final String ELITISM_PARAM = "elitism";
