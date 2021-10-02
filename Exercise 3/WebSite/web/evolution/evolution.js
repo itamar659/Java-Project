@@ -263,7 +263,7 @@ function updateLabels(res){
 
 function setConfigFormSubmitAction(){
     $("#config-form").submit(function () {
-        if(checkFormValidationAndToggleDisabledPropOnSubmitButton()){
+        if(validateConfigForm()){
             var data = objectifyForm($(this).serializeArray());
             data['action'] = 'update';
 
@@ -299,20 +299,27 @@ function validations(){
     });
 }
 
-function checkFormValidationAndToggleDisabledPropOnSubmitButton(){
+function validateConfigForm(){
     var isDisabled = false;
+    var d = $("#maxGenCheckBox").checked;
 
-    $('#config-form input[type="text"]').each(function(){
-        var input = $(this);
-        if(!input.hasClass('ignored')){
-            if(input.val().length === 0) {
-                input.addClass('notValid');
-                isDisabled = true;
-            }else if(input.hasClass('notValid') && input.val().length > 0){
-                input.removeClass('notValid');
+    if($("input#maxGenCheckBox").is(':checked') || $("input#maxFitnessCheckBox").is(':checked') || $("input#maxTimeCheckBox").is(':checked') ){
+        $('#config-form input[type="text"]').each(function(){
+            var input = $(this);
+            if(!input.hasClass('ignored')){
+                if(input.val().length === 0) {
+                    input.addClass('notValid');
+                    isDisabled = true;
+                }else if(input.hasClass('notValid') && input.val().length > 0){
+                    input.removeClass('notValid');
+                }
             }
-        }
-    });
+        });
+        $('#error-submit-label').addClass('hider')
+    }else{
+        isDisabled = true;
+        $('#error-submit-label').removeClass('hider').html("Please check one of the stop Condition");
+    }
 
     return !isDisabled;
 }
