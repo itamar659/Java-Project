@@ -225,7 +225,7 @@ function updateUserInfo(startEngineInterval) {
         success: function(res) {
             console.log(res);
             updateLabels(res);
-            if(engineStatus === "stopped"){
+            if(engineStatus === "stopped" || res.engineStatus === "COMPLETED"){
                 buttonsConfig_stopEngine();
                 clearInterval(startEngineInterval);
             } else if(engineStatus === "paused") {
