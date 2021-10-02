@@ -6,6 +6,8 @@ import engine.base.*;
 import logic.Engine;
 import logic.evoAlgorithm.TimeTableProblem;
 import logic.evoAlgorithm.crossovers.AspectOriented;
+import logic.evoAlgorithm.factory.Factories;
+import logic.evoAlgorithm.mutations.Flipping;
 import logic.evoAlgorithm.selections.Tournament;
 import logic.evoAlgorithm.selections.Truncation;
 import logic.timeTable.TimeTable;
@@ -236,9 +238,25 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
             }
 
             // Get Mutations
-            // TODO...
+            int currentMutation = 0;
+            final String mutationStringFormat = "mutations[%d][%s]";
+            while (request.getParameter(String.format(mutationStringFormat, currentMutation, "name")) != null) {
+                String name = request.getParameter(String.format(mutationStringFormat, currentMutation, "name"));
+                String probability = request.getParameter(String.format(mutationStringFormat, currentMutation, "probability"));
+                String maxTupples = request.getParameter(String.format(mutationStringFormat, currentMutation, "maxTupples"));
 
+                Mutation<TimeTable> mutation = Factories.getMutationFactory().create(name);
+                mutation.setParameter(Flipping.PARAMETER_PROBABILITY, probability);
+                mutation.setParameter(Flipping.PARAMETER_MAX_TUPPLES, maxTupples);
 
+                if (mutation instanceof Flipping) {
+                    String component = request.getParameter(String.format(mutationStringFormat, currentMutation, "component"));
+                    mutation.setParameter(Flipping.PARAMETER_COMPONENT, component);
+                }
+
+                engine.getMutations().add(mutation);
+                currentMutation++;
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

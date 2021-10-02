@@ -15,8 +15,8 @@ import java.util.Random;
 
 public class Sizer implements Mutation<TimeTable> {
 
-    private static final String PARAMETER_TOTAL_TUPPLES = "TotalTupples";
-    private static final String PARAMETER_PROBABILITY = "Probability";
+    public static final String PARAMETER_TOTAL_TUPPLES = "TotalTupples";
+    public static final String PARAMETER_PROBABILITY = "Probability";
 
     private static final Random rand = new Random();
     private final Configuration configuration;

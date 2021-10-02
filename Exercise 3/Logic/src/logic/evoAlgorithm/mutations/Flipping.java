@@ -24,9 +24,9 @@ public class Flipping implements Mutation<TimeTable> {
         S, T, C, H, D;
     }
 
-    private static final String PARAMETER_COMPONENT = "Component";
-    private static final String PARAMETER_MAX_TUPPLES = "MaxTupples";
-    private static final String PARAMETER_PROBABILITY = "Probability"; // TODO: Remove this copy paste configuration shit code
+    public static final String PARAMETER_COMPONENT = "Component";
+    public static final String PARAMETER_MAX_TUPPLES = "MaxTupples";
+    public static final String PARAMETER_PROBABILITY = "Probability"; // TODO: Remove this copy paste configuration shit code
     private static final Random rand = new Random();
 
     private final Configuration configuration;
