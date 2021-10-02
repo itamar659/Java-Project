@@ -209,12 +209,6 @@ function  getTdDetails(teacherOrClass, name, lessons, day, hour){
     return string;
 }
 
-function disableButtons(condition){
-    $("#pause-engine").prop("disabled", condition);
-    $("#resume-engine").prop("disabled", condition);
-    $("#stop-engine").prop("disabled", condition);
-}
-
 function updateUserInfo(startEngineInterval) {
     $.ajax({
         url: ENGINES_URL,
