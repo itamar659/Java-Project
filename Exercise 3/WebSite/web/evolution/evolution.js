@@ -547,12 +547,12 @@ function DayTimeOrientedSelected(){
 
 var mutationsAdded = 0
 function addMutation(){
-    if(mutationsAdded === 0){
-        $("#mutation-div-body").removeClass("hider");
-    }
-    else{
-        var d = $("#mutation-div-body").clone().attr('id', 'mutation-div-body' + mutationsAdded).appendTo("#mutation-div");
-    }
+    // if(mutationsAdded === 0){
+    //     $("#mutation-div-body").removeClass("hider");
+    // }
+    // else{
+        var d = $("#mutation-div-body").clone().attr('id', 'mutation-div-body' + mutationsAdded).removeClass("hider").appendTo("#mutation-div");
+ //   }
 
     mutationsAdded++;
 }
