@@ -65,7 +65,6 @@ function pauseEngineOnClick() {
     });
 }
 
-
 function resumeEngineOnClick() {
     $("#resume-engine").on("click", function(e) {
 
@@ -143,7 +142,6 @@ function solutionOrientedChange(type, name){
     $("#stamTitle").html(type + " " + name);
     createSolutionTable(type,name);
 }
-
 
 function createSolutionTable(teacherOrClass, name){
     if(EVO_ENGINE !== undefined){
@@ -265,18 +263,20 @@ function updateLabels(res){
 
 function setConfigFormSubmitAction(){
     $("#config-form").submit(function () {
-        var data = objectifyForm($(this).serializeArray());
-        data['action'] = 'update';
+        if(checkFormValidationAndToggleDisabledPropOnSubmitButton()){
+            var data = objectifyForm($(this).serializeArray());
+            data['action'] = 'update';
 
-        console.log(data);
+            console.log(data);
 
-        $("#engine-details-card").removeClass("hider");
+            $("#engine-details-card").removeClass("hider");
 
-        $.ajax({
-            url: ENGINES_URL,
-            timeout: 2000,
-            data: data
-        });
+            $.ajax({
+                url: ENGINES_URL,
+                timeout: 2000,
+                data: data
+            });
+        }
         return false;
     });
 }
@@ -300,24 +300,21 @@ function validations(){
 }
 
 function checkFormValidationAndToggleDisabledPropOnSubmitButton(){
-    var arr = $('#config-form *').filter(':input');
     var isDisabled = false;
 
     $('#config-form input[type="text"]').each(function(){
         var input = $(this);
         if(!input.hasClass('ignored')){
-            if(input.hasClass('notValid') || input.val().length === 0){
-                $("#submit-config").prop("disabled", true);
+            if(input.val().length === 0) {
+                input.addClass('notValid');
                 isDisabled = true;
-                return false;
+            }else if(input.hasClass('notValid') && input.val().length > 0){
+                input.removeClass('notValid');
             }
         }
     });
 
-    if(!isDisabled){
-        $("#submit-config").prop("disabled", false);
-    }
-
+    return !isDisabled;
 }
 
 function positiveNumberValidation(id){
@@ -349,7 +346,6 @@ function objectifyForm(formArray) {
 
     return filterRetMap;
 }
-
 
 function arrangeJson(data){
     var initMatch = /^([a-z0-9]+?)\[/i;
@@ -415,10 +411,11 @@ function setCheckBoxChangesHelper(obj, objToChange){
     $(obj).change(function(){
         if(this.checked){
             $(objToChange).prop("disabled",false);
+            $(objToChange).removeClass("ignored");
         } else {
             $(objToChange).prop("disabled",true);
+            $(objToChange).addClass("ignored");
         }
-        checkFormValidationAndToggleDisabledPropOnSubmitButton();
     });
 }
 
@@ -459,7 +456,76 @@ function loadSiteInformation(json) {
     createCoursesCard(json.evoEngine.problem.courses);
     createRulesCard(json.evoEngine.problem.rules);
 
+    createUserListInfo();
     //todo: check if the engine configed already inorder to fill the config card
+}
+
+function createUserListInfo() {
+    $.ajax({
+        url: ENGINES_URL,
+        timeout: 2000,
+        data: {
+            action: "getUsersListInformation"
+        },
+        success: function(res) {
+            console.log(res);
+            buildUserListTable(res);
+        }
+    })
+}
+
+function buildUserListTable(res){
+    var tableBody = $("#user-list-table-body")[0];
+
+    var i = 0;
+    $.each(res, function(index, element){
+       var trRow = document.createElement("tr");
+
+        var tdNo = document.createElement("td");
+        var tdUsername = document.createElement("td");
+        var tdBestFitness = document.createElement("td");
+        var tdConfiguration = document.createElement("td");
+
+        tdNo.innerText = ++i;
+        tdUsername.innerText = element.username;
+        tdBestFitness.innerText = element.bestFitness;
+        //tdConfiguration.innerText = createConfigSection(element.username);
+
+        trRow.appendChild(tdNo);
+        trRow.appendChild(tdUsername);
+        trRow.appendChild(tdBestFitness);
+        trRow.appendChild(tdConfiguration);
+
+        tableBody.appendChild(trRow);
+    });
+}
+
+function createConfigSection(username){
+    var string = ""
+    $.ajax({
+        url: ENGINES_URL,
+        timeout: 2000,
+        data: {
+            action: "getEngine"
+        },
+        success: function(res) {
+            console.log(res);
+            string += buildConfigSection(res);
+        }
+    });
+    return string;
+}
+
+function buildConfigSection(evoEngine){
+    var string = "";
+
+    string += "Crossover:" + evoEngine.crossover.name + "\n";
+    $.each(evoEngine.crossover.configuration, function (key, value) {
+       string += key + ": " + value + "\n";
+    });
+    string += "Elitism: " + evoEngine.elitism + "\n";
+    string += "Population: " + evoEngine.populationSize + "\n";
+    string += "Selection:" + evoEngine.selection.name + "\n";
 }
 
 function createRulesCard(rules){
@@ -584,14 +650,17 @@ function createSectionClassesInfo(courseID2Hours, courses){
 
 function TruncationSelected(){
     $("#hidden-selection-form").removeClass("hider");
+    $("#hidden-selection-Input").removeClass("ignored");
     $("#hidden-selection-label").html("Top Percent");
 }
 function TournamentSelected(){
     $("#hidden-selection-form").removeClass("hider");
+    $("#hidden-selection-Input").removeClass("ignored");
     $("#hidden-selection-label").html("pte");
 }
 function RouletteWheelSelected() {
     $("#hidden-selection-form").removeClass("hider").addClass("hider");
+    $("#hidden-selection-Input").removeClass("ignored").addClass("ignored");
 }
 function AspectOrientedSelected(){
     $("#hidden-crossover-form").removeClass("hider");
@@ -599,12 +668,14 @@ function AspectOrientedSelected(){
 
     $("#hidden-crossoverAspect-form").removeClass("hider");
     $("#hidden-crossoverAspect-label").html("Orientation");
+    $("#hidden-crossoverAspect-Input").removeClass("ignored");
 }
 function DayTimeOrientedSelected(){
     $("#hidden-crossover-form").removeClass("hider");
     $("#hidden-crossover-label").html("CuttingPoints");
 
     $("#hidden-crossoverAspect-form").removeClass("hider").addClass("hider");
+    $("#hidden-crossoverAspect-Input").removeClass("ignored").addClass("ignored");
 }
 
 var mutationsAdded = 0

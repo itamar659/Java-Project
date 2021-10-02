@@ -24,10 +24,6 @@ label {
     display: none;
 }
 
-.border-div{
-    border: 1px solid black;
-}
-
 input.notValid {
     border: 1px solid red;
 }

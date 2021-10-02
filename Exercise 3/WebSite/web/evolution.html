@@ -85,6 +85,35 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">List Of Users Solving this Problem:
+                                    </h4>
+                                </div>
+                                <div class="content">
+                                    <div id="user-list-solving-div" class="ct-chart">
+                                        <div class="table-responsive table-full-width">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width: 6%">No.</th>
+                                                    <th>Username</th>
+                                                    <th>Best Fitness</th>
+                                                    <th>Configuration</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="user-list-table-body">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="header">
@@ -230,7 +259,7 @@
                                                     <div class="row mb-6" id="hidden-crossover-form" >
                                                         <label id="hidden-crossover-label" for="hidden-crossover-Input" class="col-sm-3 col-form-label">Cutting Points: </label>
                                                         <div class="col-sm-9">
-                                                            <input id="hidden-crossover-Input" class="ignored" type="text" name="crossoverCuttingPoints" aria-label="default input example">
+                                                            <input id="hidden-crossover-Input" type="text" name="crossoverCuttingPoints" aria-label="default input example">
                                                         </div>
                                                     </div>
                                                     <div class="row mb-6 hider" id="hidden-crossoverAspect-form">
@@ -266,7 +295,7 @@
                                                             <input type="text" class="ignored" name="maxTime" id="maxTimeText" disabled>
                                                         </div>
                                                     </div>
-                                                    <button type="submit" id="submit-config" class="btn btn-primary" disabled>Submit</button>
+                                                    <button type="submit" id="submit-config" class="btn btn-primary">Submit</button>
                                                 </div>
                                                 <div id="mutation-div" class="col-md-6">
                                                     <label for="population" class="col-sm-3 col-form-label">Mutations: </label>
@@ -275,7 +304,7 @@
                                                             <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                                                         </svg>
                                                     </button>
-                                                    <div id="mutation-div-body" class="row border-div hider">
+                                                    <div id="mutation-div-body" class="row hider">
                                                         <select onchange="window[this.value+'Selected'](this);" id="selectMutation" class="col-sm-4 form-select form-select-sm" aria-label=".form-select-sm example">
                                                             <option value="Flipper" selected>Flipper</option>
                                                             <option value="Sizer">Sizer</option>
@@ -337,7 +366,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div id="result-card" class="row hider">
                         <div class="col-md-12">
                             <div class="card">
