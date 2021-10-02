@@ -8,6 +8,8 @@ var engineStatus = "idle";
 
 $(function () {
     ajaxLoggedInUsername();
+    ajaxUserListInfo();
+
     setCheckBoxChanges();
     validations();
 
@@ -18,7 +20,7 @@ $(function () {
 
     setConfigFormSubmitAction();
 
-    //todo: check if user already configed this problem.
+    setInterval(ajaxUserListInfo, refreshRate);
 
     $.ajax({
         url: ENGINES_URL,
@@ -27,7 +29,9 @@ $(function () {
             EVO_ENGINE = json.evoEngine;
             loadSiteInformation(json);
             showBestSolutionOnClick();
-            availableSolution(json);
+
+            //todo: check if user already configured this problem - If so, fill the configuration form (todo low priority)
+            alreadyConfigured(json); // <--
         },
         error: function(errorObj) {
             e = errorObj;
@@ -36,7 +40,7 @@ $(function () {
     });
 })
 
-function availableSolution(response) {
+function alreadyConfigured(response) {
     if (response.evoEngine.crossover != null) {
         $("#engine-details-card").removeClass("hider");
 
@@ -483,11 +487,10 @@ function loadSiteInformation(json) {
     createCoursesCard(json.evoEngine.problem.courses);
     createRulesCard(json.evoEngine.problem.rules);
 
-    createUserListInfo();
     //todo: check if the engine configed already inorder to fill the config card
 }
 
-function createUserListInfo() {
+function ajaxUserListInfo() {
     $.ajax({
         url: ENGINES_URL,
         timeout: 2000,
@@ -503,6 +506,7 @@ function createUserListInfo() {
 
 function buildUserListTable(res){
     var tableBody = $("#user-list-table-body")[0];
+    tableBody.innerHTML = "";
 
     var i = 0;
     $.each(res, function(index, element){
@@ -511,17 +515,22 @@ function buildUserListTable(res){
         var tdNo = document.createElement("td");
         var tdUsername = document.createElement("td");
         var tdBestFitness = document.createElement("td");
-        var tdConfiguration = document.createElement("td");
+        var tdGeneration = document.createElement("td");
+        //var tdConfiguration = document.createElement("td");
 
         tdNo.innerText = ++i;
         tdUsername.innerText = element.username;
         tdBestFitness.innerText = element.bestFitness;
+        tdGeneration.innerText = element.currentGeneration;
         //tdConfiguration.innerText = createConfigSection(element.username);
+
+        // TODO: Display configuration after clicking an individual user
 
         trRow.appendChild(tdNo);
         trRow.appendChild(tdUsername);
         trRow.appendChild(tdBestFitness);
-        trRow.appendChild(tdConfiguration);
+        trRow.appendChild(tdGeneration);
+        //trRow.appendChild(tdConfiguration);
 
         tableBody.appendChild(trRow);
     });
