@@ -53,6 +53,8 @@ function availableSolution(response) {
                 buttonsConfig_stopEngine();
             }
         }
+
+        updateUserInfo();
     }
 }
 
