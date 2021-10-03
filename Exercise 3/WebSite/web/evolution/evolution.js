@@ -159,10 +159,12 @@ function TeacherOrClassesSelectedHelper(text){
 //this function gets executed via the html file on change of #selectClassOrTeacher <select> element.
 function solutionOrientedChange(type, name){
     $("#stamTitle").html(type + " " + name);
+
+
     createSolutionTable(type,name);
 }
 
-function createSolutionTable(teacherOrClass, name){
+function createSolutionTable(teacherOrClass, name, evoEngine){
     if(EVO_ENGINE !== undefined){
         var days = EVO_ENGINE.problem.days;
         var hours = EVO_ENGINE.problem.hours;
@@ -237,6 +239,13 @@ function updateUserInfo(startEngineInterval) {
             console.log(res);
             updateLabels(res);
             if(engineStatus === "stopped" || res.engineStatus === "COMPLETED"){
+                $.ajax({
+                    url: ENGINES_URL,
+                    timeout: 2000,
+                    success: function(json) {
+                        EVO_ENGINE = json.evoEngine;
+                    }
+                });
                 buttonsConfig_stopEngine();
                 clearInterval(startEngineInterval);
             } else if(engineStatus === "paused") {
