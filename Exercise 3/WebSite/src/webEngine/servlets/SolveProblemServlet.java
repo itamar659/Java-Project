@@ -110,6 +110,7 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
                 } catch (Exception ignored) {
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 }
+                break;
             default:
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 break;

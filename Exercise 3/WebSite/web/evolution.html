@@ -13,13 +13,33 @@
 
 
     <script type="text/javascript" src="helpers/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="common/boostrap.min.js"></script>
     <script type="text/javascript" src="helpers/context-path-helper.js"></script>
     <script type="text/javascript" src="evolution/evolution.js"></script>
     <title>Evolution Algorithm is awesome!</title>
 </head>
-<body>
-    <div class="wrapper">
 
+<body>
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Config information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="wrapper">
         <div class="sidebar" data-color="azure">
             <!--
                 Tip 1: you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple"
@@ -48,6 +68,8 @@
         </div>
 
         <div class="main-panel">
+
+            <button id="modal-button" type="button" class="btn btn-primary" style="display: none;" data-toggle="modal" data-target="#exampleModalCenter"></button>
 
             <nav class="navbar navbar-default navbar-fixed">
                 <div class="container-fluid">
@@ -209,7 +231,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="config-div" class="row">
+                    <div class="row" id="config-div" >
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="header">
@@ -330,7 +352,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="engine-details-card" class="row hider">
+                    <div class="row hider" id="engine-details-card" >
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="header">
@@ -370,7 +392,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="result-card" class="row hider">
+                    <div class="row hider" id="result-card" >
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="header">
@@ -410,6 +432,39 @@
                             </div>
                         </div>
                     </div>
+<!--                    <div class="row">-->
+<!--                        <div class="col-md-12">-->
+<!--                            <div class="card">-->
+<!--                                <div class="col-xs-1">-->
+<!--                                    <h4>Online</h4>-->
+<!--                                    <div class="clearfix">-->
+<!--                                        <div class="input">-->
+
+<!--                                            &lt;!&ndash; place holder to show the users list &ndash;&gt;-->
+<!--                                            <ul id="userslist">-->
+<!--                                            </ul>-->
+
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-xs-4">-->
+<!--                                    <div class="content">-->
+<!--                                        <div id="chatwindow">-->
+<!--                                            <h4>Chat</h4>-->
+<!--                                            &lt;!&ndash; place holder to hold all the chat lines &ndash;&gt;-->
+<!--                                            <div id="chatarea" class="span6"></div>-->
+
+<!--                                            &lt;!&ndash; The actual form through which you send data back to the user &ndash;&gt;-->
+<!--                                            <form id="chatform" method="POST" action="sendChat">-->
+<!--                                                <input type="text" id="userstring" name="userstring"/>-->
+<!--                                                <input type="submit" value="Send"/>-->
+<!--                                            </form>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
             </div>
         </div>

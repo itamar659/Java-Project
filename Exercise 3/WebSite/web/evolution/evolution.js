@@ -53,9 +53,39 @@ function openUserConfigurationOnClick(event) {
     });
 }
 
+function buildConfigSection(evoEngine){
+    var string = "";
+
+    if(evoEngine.crossover !== undefined){
+        string += "Population: " + evoEngine.populationSize + "\n";
+        string += "Elitism: " + evoEngine.elitism + "\n";
+        string += "Crossover:" + evoEngine.crossover.name + "\n";
+        $.each(evoEngine.crossover.configurations, function (key, value) {
+            string += key + ": " + value + "\n";
+        });
+        string += "Selection:" + evoEngine.selection.name + "\n";
+        if(evoEngine.selection.configurations !== undefined){
+            $.each(evoEngine.selection.configurations, function (key, value) {
+                string += key + ": " + value + "\n";
+            });
+        }
+
+
+    }else{
+        string += "This user have not configed is engine yet;";
+    }
+
+    return string;
+}
+
 function popupConfiguration(json) {
     console.log(json);
     // TODO: Display configuration.
+    var dec = buildConfigSection(json.evoEngine);
+    var tst = dec.replace(/\n/g, '<br />')
+    $(".modal-body").html(tst);
+    $("#modal-button").click();
+
 }
 
 function alreadyConfigured(response) {
@@ -224,7 +254,7 @@ function createSolutionTable(teacherOrClass, name, evoEngine){
     }
 }
 
-function  getTdDetails(teacherOrClass, name, lessons, day, hour){
+function getTdDetails(teacherOrClass, name, lessons, day, hour){
     var string = "";
 
     var res = lessons.filter(item => {
@@ -537,59 +567,26 @@ function buildUserListTable(res){
 
     var i = 0;
     $.each(res, function(index, element){
-       var trRow = document.createElement("tr");
-       trRow.onclick = openUserConfigurationOnClick;
+        var trRow = document.createElement("tr");
+        trRow.onclick = openUserConfigurationOnClick;
 
         var tdNo = document.createElement("td");
         var tdUsername = document.createElement("td");
         var tdBestFitness = document.createElement("td");
         var tdGeneration = document.createElement("td");
-        //var tdConfiguration = document.createElement("td");
 
         tdNo.innerText = ++i;
         tdUsername.innerText = element.username;
         tdBestFitness.innerText = element.bestFitness;
         tdGeneration.innerText = element.currentGeneration;
-        //tdConfiguration.innerText = createConfigSection(element.username);
-
-        // TODO: Display configuration after clicking an individual user
 
         trRow.appendChild(tdNo);
         trRow.appendChild(tdUsername);
         trRow.appendChild(tdBestFitness);
         trRow.appendChild(tdGeneration);
-        //trRow.appendChild(tdConfiguration);
 
         tableBody.appendChild(trRow);
     });
-}
-
-function createConfigSection(username){
-    var string = ""
-    $.ajax({
-        url: ENGINES_URL,
-        timeout: 2000,
-        data: {
-            action: "getEngine"
-        },
-        success: function(res) {
-            console.log(res);
-            string += buildConfigSection(res);
-        }
-    });
-    return string;
-}
-
-function buildConfigSection(evoEngine){
-    var string = "";
-
-    string += "Crossover:" + evoEngine.crossover.name + "\n";
-    $.each(evoEngine.crossover.configuration, function (key, value) {
-       string += key + ": " + value + "\n";
-    });
-    string += "Elitism: " + evoEngine.elitism + "\n";
-    string += "Population: " + evoEngine.populationSize + "\n";
-    string += "Selection:" + evoEngine.selection.name + "\n";
 }
 
 function createRulesCard(rules){
