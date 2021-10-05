@@ -544,7 +544,6 @@ function loadSiteInformation(json) {
     createCoursesCard(json.evoEngine.problem.courses);
     createRulesCard(json.evoEngine.problem.rules);
 
-    //todo: check if the engine configed already inorder to fill the config card
 }
 
 function ajaxUserListInfo() {

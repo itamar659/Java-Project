@@ -38,7 +38,6 @@
                     </li>
                     <li class="nav-item active active-pro">
                         <a class="nav-link active" href="#" onclick="logout()">
-                            <img style="float:left;" src="common/logout.png" alt="logout"/>
                             <p>Logout</p>
                         </a>
                     </li>
@@ -52,15 +51,31 @@
                 <div class="container-fluid">
                     <section class="upload-section">
                         <form id="upload-form" action="upload" enctype="multipart/form-data" method="post">
-                            <div class="left-form-side">
-                                <input id="file-input" class="hide-input" type="file" accept="text/xml" />
-                                <label>Upload Problem:</label>
-                                <label for="file-input" class="button">Choose a file</label>
-                                <label class="file-path"></label>
+                            <div class="row">
+                                <div class="left-form-side">
+                                    <input id="file-input" class="hide-input" type="file" accept="text/xml" />
+                                    <label>Upload Problem:</label>
+                                    <label for="file-input" class="button">Choose a file</label>
+                                    <label class="file-path"></label>
+                                </div>
+                                <div class="right-form-side">
+                                    <label class="upload-result"></label>
+                                    <input class="button upload-button" disabled type="submit" value="Upload File" name="upload">
+                                </div>
                             </div>
-                            <div class="right-form-side">
-                                <label class="upload-result"></label>
-                                <input class="button upload-button" disabled type="submit" value="Upload File" name="upload">
+                            <div class="row">
+                                <div class="left-form-side">
+                                    <h4>
+                                        Hey :
+                                        <span class="username-logged-in"></span>
+                                    </h4>
+                                </div>
+                                <div class="right-form-side">
+                                    <a class="nav-link active" href="#" onclick="logout()">
+                                        <img style="float:left;" src="common/logout.png" alt="logout"/>
+                                        <p>Logout</p>
+                                    </a>
+                                </div>
                             </div>
                         </form>
                     </section>

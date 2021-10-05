@@ -13,6 +13,17 @@ $(function () {
 
     setInterval(ajaxUsersList, refreshRate);
     setInterval(ajaxProblemList, refreshRate);
+
+    $.ajax({
+        url: ENGINES_URL,
+        timeout: 2000,
+        data: {
+            action: "getUserInfo"
+        },
+        success: function(res) {
+            $("#username-logged-in").html(res.username);
+        }
+    })
 })
 
 // TODO - Move to different more general js file
