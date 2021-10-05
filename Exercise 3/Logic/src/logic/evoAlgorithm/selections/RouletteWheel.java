@@ -42,7 +42,7 @@ public class RouletteWheel implements Selection<TimeTable> {
             }
         }
 
-        System.out.printf("Roulette Wheel error. Couldn't find the solution at range '%f' of '%f'.%s%n", selectFitness, rouletteSize);
-        return population.getSolutionByIndex(population.getSize());
+        System.out.printf("Roulette Wheel bug. Couldn't find the solution at range '%f' of '%f'.%n", selectFitness, rouletteSize);
+        return population.getSolutionByIndex(population.getSize() - 1);
     }
 }
