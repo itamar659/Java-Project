@@ -5,7 +5,6 @@ import com.google.gson.FieldAttributes;
 import engine.base.EvolutionEngine;
 import engine.base.stopConditions.MaxFitnessStopCondition;
 import engine.base.stopConditions.MaxGenerationsStopCondition;
-import engine.base.stopConditions.StopCondition;
 
 public class StopConditionStrategy implements ExclusionStrategy {
 

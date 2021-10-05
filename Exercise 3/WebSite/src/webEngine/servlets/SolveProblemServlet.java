@@ -183,7 +183,7 @@ public class SolveProblemServlet extends BaseSecurityHttpServlet {
 
         // Start the algorithm
         Thread resumeThread = new Thread(resume ? engine::resumeAlgorithm : engine::startAlgorithm);
-        resumeThread.setName(user.getUsername() + " Thread");
+        resumeThread.setName(user.getUsername() + " Thread. ProblemID " + user.getActiveProblem());
         resumeThread.start();
     }
 

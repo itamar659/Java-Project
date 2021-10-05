@@ -25,6 +25,11 @@ public class RouletteWheel implements Selection<TimeTable> {
 
         Population<TimeTable> newPopulation = population.initializeSubPopulation(population.getSize());
         for (int i = 0; i < population.getSize(); i++) {
+            if (Arrays.stream(population.getSolutions())
+                    .mapToDouble(Solution::getFitness)
+                    .sum() != rouletteSize) {
+                System.out.println("Not Same!");
+            }
             newPopulation.setSolutionByIndex(i, selectSolution(population, rouletteSize));
         }
 
