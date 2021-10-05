@@ -32,7 +32,13 @@ public abstract class Population<T> implements Serializable {
     }
 
     public void sort() {
-        Arrays.sort(solutions, (o1, o2) -> Float.compare(o2.getFitness(), o1.getFitness()));
+        try {
+            Arrays.sort(solutions, (o1, o2) -> Float.compare(o2.getFitness(), o1.getFitness()));
+        } catch (Exception e) {
+            Arrays.sort(solutions, (o1, o2) -> Float.compare(o2.getFitness(), o1.getFitness()));
+            System.out.println(e.getMessage());
+            e.getStackTrace();
+        }
     }
 
     public Population<T> mergePopulations(Population<T> p1) {

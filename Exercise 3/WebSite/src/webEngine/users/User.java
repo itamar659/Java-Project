@@ -11,6 +11,10 @@ public class User {
     private Integer activeProblem;
     private Map<Integer, Engine> problemID2Engine;
 
+    public Integer getActiveProblem() {
+        return activeProblem;
+    }
+
     public final Set<Integer> getSolvingProblemID() {
         return solvingProblemID;
     }
